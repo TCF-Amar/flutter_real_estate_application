@@ -6,12 +6,12 @@ import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/auth/views/widgets/auth_button.dart';
 import 'package:real_estate_app/features/auth/views/widgets/auth_divider.dart';
-import 'package:real_estate_app/features/auth/views/widgets/register_widgets.dart';
+import 'package:real_estate_app/features/auth/views/widgets/sign_up_widgets.dart';
 import 'package:real_estate_app/features/auth/views/widgets/sign_in_with_others.dart';
 
 // ignore: must_be_immutable
-class RegisterScreen extends GetView<AuthController> {
-  RegisterScreen({super.key});
+class   SignUpScreen extends GetView<AuthController> {
+  SignUpScreen({super.key});
 
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();

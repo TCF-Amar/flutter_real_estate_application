@@ -13,8 +13,8 @@ import 'package:real_estate_app/features/auth/views/widgets/auth_divider.dart';
 import 'package:real_estate_app/features/auth/controllers/validator/auth_validators.dart';
 
 // ignore: must_be_immutable
-class LoginScreen extends GetView<AuthController> {
-  LoginScreen({super.key});
+class SignInScreen extends GetView<AuthController> {
+  SignInScreen({super.key});
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
