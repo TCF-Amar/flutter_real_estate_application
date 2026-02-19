@@ -2,52 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/app_button.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
-class SelectCountryScreen extends StatefulWidget {
+class SelectCountryScreen extends GetView<AuthController> {
   const SelectCountryScreen({super.key});
 
   @override
-  State<SelectCountryScreen> createState() => _SelectCountryScreenState();
-}
-
-class _SelectCountryScreenState extends State<SelectCountryScreen> {
-  String? _selectedCountry;
-
-  final List<Map<String, String>> _countries = [
-    {'name': 'United Arab Emirates', 'flag': '🇦🇪'},
-    {'name': 'Singapore', 'flag': '🇸🇬'},
-    {'name': 'United States', 'flag': '🇺🇸'},
-    {'name': 'United Kingdom', 'flag': '🇬🇧'},
-  ];
-
-  void _handleContinue() {
-    if (_selectedCountry == null) {
-      Get.snackbar(
-        'Error',
-        'Please select a country',
-        backgroundColor: AppColors.error.withValues(alpha: 0.8),
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        margin: const EdgeInsets.all(16),
-      );
-      return;
-    }
-
-    Get.snackbar(
-      'Success',
-      'Country selected: $_selectedCountry',
-      backgroundColor: AppColors.success.withValues(alpha: 0.8),
-      colorText: AppColors.white,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(16),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // Set status bar to dark content (for light background)
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -61,7 +24,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Header
+            // Header — back button
             Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -93,7 +56,6 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
                   children: [
                     const SizedBox(height: 16),
 
-                    // Title
                     AppText(
                       "Select Country",
                       fontSize: 24,
@@ -103,7 +65,6 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
 
                     const SizedBox(height: 16),
 
-                    // Subtitle
                     AppText(
                       "Select the Country You're Interested in?",
                       fontSize: 16,
@@ -118,90 +79,98 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
                       fontSize: 14,
                       color: AppColors.background.withValues(alpha: 0.6),
                       height: 1.5,
+                      overflow: TextOverflow.clip,
                     ),
 
                     const SizedBox(height: 32),
 
-                    // Country List
+                    // Country list — each tile is individually reactive
                     Expanded(
                       child: ListView.builder(
-                        itemCount: _countries.length,
+                        itemCount: controller.countries.length,
                         itemBuilder: (context, index) {
-                          final country = _countries[index];
-                          final isSelected =
-                              _selectedCountry == country['name'];
+                          final country = controller.countries[index];
 
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedCountry = country['name'];
-                                });
-                              },
-                              borderRadius: BorderRadius.circular(12),
-                              child: Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? AppColors.primary.withValues(alpha: 0.1)
-                                      : AppColors.background.withValues(
-                                          alpha: 0.03,
-                                        ),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
+                          return Obx(() {
+                            final isSelected =
+                                controller.selectedCountry.value ==
+                                country['name'];
+
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: InkWell(
+                                onTap: () =>
+                                    controller.selectCountry(country['name']!),
+                                borderRadius: BorderRadius.circular(12),
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
                                     color: isSelected
-                                        ? AppColors.primary
-                                        : Colors.transparent,
-                                    width: 1.5,
+                                        ? AppColors.primary.withValues(
+                                            alpha: 0.1,
+                                          )
+                                        : AppColors.background.withValues(
+                                            alpha: 0.03,
+                                          ),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? AppColors.primary
+                                          : Colors.transparent,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      // Flag
+                                      Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          border: Border.all(
+                                            color: AppColors.background
+                                                .withValues(alpha: 0.1),
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            country['flag']!,
+                                            style: const TextStyle(
+                                              fontSize: 24,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      const SizedBox(width: 16),
+
+                                      // Country Name
+                                      Expanded(
+                                        child: AppText(
+                                          country['name']!,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.background,
+                                        ),
+                                      ),
+
+                                      // Check icon
+                                      if (isSelected)
+                                        Icon(
+                                          Icons.check_circle,
+                                          color: AppColors.primary,
+                                          size: 24,
+                                        ),
+                                    ],
                                   ),
                                 ),
-                                child: Row(
-                                  children: [
-                                    // Flag
-                                    Container(
-                                      width: 40,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                        border: Border.all(
-                                          color: AppColors.background
-                                              .withValues(alpha: 0.1),
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          country['flag']!,
-                                          style: const TextStyle(fontSize: 24),
-                                        ),
-                                      ),
-                                    ),
-
-                                    const SizedBox(width: 16),
-
-                                    // Country Name
-                                    Expanded(
-                                      child: AppText(
-                                        country['name']!,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.background,
-                                      ),
-                                    ),
-
-                                    // Check Icon
-                                    if (isSelected)
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: AppColors.primary,
-                                        size: 24,
-                                      ),
-                                  ],
-                                ),
                               ),
-                            ),
-                          );
+                            );
+                          });
                         },
                       ),
                     ),
@@ -215,7 +184,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
               padding: const EdgeInsets.all(24),
               child: AppButton(
                 text: "Continue",
-                onPressed: _handleContinue,
+                onPressed: controller.handleContinue,
                 backgroundColor: AppColors.primary,
                 textColor: AppColors.white,
               ),

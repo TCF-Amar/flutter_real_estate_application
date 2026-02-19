@@ -40,6 +40,7 @@ class AppText extends StatelessWidget {
       maxLines: maxLines,
       overflow: overflow,
       textAlign: textAlign,
+      textScaler: TextScaler.noScaling,
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,

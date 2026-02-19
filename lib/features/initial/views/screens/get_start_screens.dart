@@ -42,7 +42,7 @@ class _GetStartScreensState extends State<GetStartScreens> {
   void _handleNext(int currentPageIndex) {
     if (currentPageIndex == _pages.length - 1) {
       // Navigate to login on the last page
-      Get.toNamed(AppRoutes.login);
+      Get.toNamed(AppRoutes.signin);
     } else {
       // Animate to next page
       _pageController.animateToPage(

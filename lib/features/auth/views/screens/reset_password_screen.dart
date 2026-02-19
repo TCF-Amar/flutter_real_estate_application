@@ -19,7 +19,6 @@ class ResetPasswordScreen extends StatelessWidget {
 
   void _handleResetPassword() {
     if (_formKey.currentState!.validate()) {
-      // TODO: Reset password with new password
       Get.snackbar(
         'Success',
         'Password reset successfully',
@@ -30,7 +29,7 @@ class ResetPasswordScreen extends StatelessWidget {
       );
 
       // Navigate back to login
-      Get.offAllNamed(AppRoutes.login);
+      Get.offAllNamed(AppRoutes.signin);
     }
   }
 

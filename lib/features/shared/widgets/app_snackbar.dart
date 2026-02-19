@@ -2,56 +2,72 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AppSnackbar {
-  static void success(String message, {String title = "Success"}) {
-    _show(
-      title,
-      message,
-      backgroundColor: Colors.green.withValues(alpha: 0.8),
-      icon: const Icon(Icons.check_circle, color: Colors.white),
-    );
-  }
+  static void success(String message, {String? title}) => _show(
+    message,
+    title: title ?? 'Success',
+    color: Colors.green,
+    icon: Icons.check_circle,
+  );
 
-  static void error(String message, {String title = "Error"}) {
-    _show(
-      title,
-      message,
-      backgroundColor: Colors.red.withValues(alpha: 0.8),
-      icon: const Icon(Icons.error, color: Colors.white),
-    );
-  }
+  static void error(String message, {String? title}) => _show(
+    message,
+    title: title ?? 'Error',
+    color: Colors.red,
+    icon: Icons.error,
+  );
 
-  static void info(String message, {String title = "Info"}) {
-    _show(
-      title,
-      message,
-      backgroundColor: Colors.blue.withValues(alpha: 0.8),
-      icon: const Icon(Icons.info, color: Colors.white),
-    );
-  }
+  static void info(String message, {String? title}) => _show(
+    message,
+    title: title ?? 'Info',
+    color: Colors.blue,
+    icon: Icons.info,
+  );
 
   static void _show(
-    String title,
     String message, {
-    required Color backgroundColor,
-    required Widget icon,
+    required String title,
+    required Color color,
+    required IconData icon,
   }) {
-    if (Get.isSnackbarOpen) {
-      Get.closeCurrentSnackbar();
-    }
+    final context = Get.context;
+    if (context == null) return;
 
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: backgroundColor,
-      colorText: Colors.white,
-      icon: icon,
-      margin: const EdgeInsets.all(15),
-      borderRadius: 12,
-      duration: const Duration(seconds: 3),
-      isDismissible: true,
-      dismissDirection: DismissDirection.horizontal,
-      snackStyle: SnackStyle.FLOATING,
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: color.withValues(alpha: 0.92),
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 3),
+        dismissDirection: DismissDirection.horizontal,
+        content: Row(
+          children: [
+            Icon(icon, color: Colors.white, size: 22),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    message,
+                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -16,4 +16,8 @@ class AppColors {
   static const Color error = Color(0xFFFF5F57);
 
   static Color? get white => Colors.white;
+
+  static Color? get black => Colors.black;
+
+  static Color? get grey => Colors.grey;
 }

@@ -9,6 +9,8 @@ import 'package:real_estate_app/features/auth/views/screens/verity_code.dart';
 import 'package:real_estate_app/features/initial/views/screens/get_start_screens.dart';
 import 'package:real_estate_app/features/initial/views/screens/splash_screen.dart';
 
+import 'package:real_estate_app/features/main/views/screens/main_screen.dart';
+
 class AppPages {
   static final pages = <GetPage>[
     GetPage(
@@ -17,11 +19,12 @@ class AppPages {
       // binding: SplashBinding(),
     ),
     GetPage(name: AppRoutes.getStart, page: () => GetStartScreens()),
-    GetPage(name: AppRoutes.login, page: () => SignInScreen()),
-    GetPage(name: AppRoutes.register, page: () => SignUpScreen()),
+    GetPage(name: AppRoutes.signin, page: () => SignInScreen()),
+    GetPage(name: AppRoutes.signup, page: () => SignUpScreen()),
     GetPage(name: AppRoutes.verifyCode, page: () => VerifyCodeScreen()),
     GetPage(name: AppRoutes.forgotPassword, page: () => ForgotPasswordScreen()),
     GetPage(name: AppRoutes.resetPassword, page: () => ResetPasswordScreen()),
     GetPage(name: AppRoutes.selectCountry, page: () => SelectCountryScreen()),
+    GetPage(name: AppRoutes.main, page: () => MainScreen()),
   ];
 }

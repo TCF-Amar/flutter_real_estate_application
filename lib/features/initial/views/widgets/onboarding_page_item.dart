@@ -78,18 +78,21 @@ class OnboardingPageItem extends StatelessWidget {
       right: 0,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            OnboardingPageIndicator(
-              pageCount: totalPages,
-              currentPage: currentPage,
-            ),
-            const SizedBox(height: 24),
-            OnboardingPageContent(pageData: pageData),
-            const SizedBox(height: 34),
-            OnboardingNavigationButton(onPressed: onPressed),
-          ],
+        child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OnboardingPageIndicator(
+                pageCount: totalPages,
+                currentPage: currentPage,
+              ),
+              const SizedBox(height: 24),
+              OnboardingPageContent(pageData: pageData),
+              const SizedBox(height: 34),
+              OnboardingNavigationButton(onPressed: onPressed),
+            ],
+          ),
         ),
       ),
     );
