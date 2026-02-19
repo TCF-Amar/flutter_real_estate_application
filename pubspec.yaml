@@ -17,6 +17,7 @@ dependencies:
   flutter_svg: ^2.2.3
   logger: ^2.6.2
   flutter_secure_storage: ^10.0.0
+  carousel_slider: ^5.1.2
 
 dev_dependencies:
   flutter_test:

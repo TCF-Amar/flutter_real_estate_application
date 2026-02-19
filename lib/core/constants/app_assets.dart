@@ -13,6 +13,7 @@ class _Icons {
   final person = "assets/icons/person.svg";
   final heart = "assets/icons/heart.svg";
   final booking = "assets/icons/booking.svg";
+  final filter = "assets/icons/filter.svg";
 }
 
 class _Images {

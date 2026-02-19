@@ -10,6 +10,7 @@ import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/core/storage/token_storage.dart';
 import 'package:real_estate_app/core/utils/typedef.dart';
 import 'package:real_estate_app/features/auth/models/auth_response.dart';
+import 'package:real_estate_app/features/auth/models/current_user_model.dart';
 import 'package:real_estate_app/features/auth/models/sign_up_request_model.dart';
 import 'package:real_estate_app/features/auth/models/sign_up_response_model.dart';
 
@@ -65,7 +66,6 @@ class AuthServices extends GetxService {
 
   Future<Result<SignUpResponseModel>> signUp(SignUpRequestModel model) async {
     try {
-      print(model.toJson());
       final response = await _dioHelper.request(
         ApiRequest(
           url: ApiEndpoints.signUp,
@@ -74,7 +74,6 @@ class AuthServices extends GetxService {
         ),
       );
       final signUpResponse = SignUpResponseModel.fromJson(response.data);
-      print(signUpResponse.otp);
       return Right(signUpResponse);
     } on AppException catch (e) {
       return Left(ApiException.map(e));
@@ -110,14 +109,13 @@ class AuthServices extends GetxService {
 
   Future<Result<bool>> resendOtp(String email) async {
     try {
-      final res = await _dioHelper.request(
+      await _dioHelper.request(
         ApiRequest(
           url: ApiEndpoints.resendOtp,
           method: ApiMethod.post,
           body: {'email': email},
         ),
       );
-      print(res.data);
       return const Right(true);
     } on AppException catch (e) {
       return Left(ApiException.map(e));
@@ -137,6 +135,22 @@ class AuthServices extends GetxService {
         ),
       );
       return const Right(true);
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
+
+  FutureResult<CurrentUserModel> getCurrentUser() async {
+    try {
+      final response = await _dioHelper.request(
+        ApiRequest(url: ApiEndpoints.currentUser, method: ApiMethod.get),
+      );
+      final user = CurrentUserModel.fromJson(
+        response.data as Map<String, dynamic>,
+      );
+      return Right(user);
     } on AppException catch (e) {
       return Left(ApiException.map(e));
     } catch (e) {

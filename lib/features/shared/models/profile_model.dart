@@ -33,7 +33,7 @@ class ProfileModel {
       locationAccess: json['location_access'],
       appLanguage: json['app_language'],
       onboardingStep: json['onboarding_step'],
-      onboardingCompleted: json['onboarding_completed'],
+      onboardingCompleted: json['onboarding_completed'] ?? false,
       onboardingCompletedAt: json['onboarding_completed_at'] != null
           ? DateTime.parse(json['onboarding_completed_at'])
           : null,

@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/core/services/auth_services.dart';
 import 'package:real_estate_app/features/auth/models/sign_up_request_model.dart';
+import 'package:real_estate_app/features/shared/models/user_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
 
 class AuthController extends GetxController {
@@ -15,10 +16,31 @@ class AuthController extends GetxController {
   final RxBool _isLoading = false.obs;
   bool get isLoading => _isLoading.value;
 
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  // }
+  final Rxn<UserModel> user = Rxn<UserModel>();
+
+  @override
+  void onInit() {
+    super.onInit();
+    _init();
+    // logout();
+  }
+
+  void _init() async {
+    await getCurrentUser();
+  }
+
+  Future<void> getCurrentUser() async {
+    final result = await _authServices.getCurrentUser();
+    result.fold(
+      (failure) {
+        log.e('Failed to fetch user: ${failure.message}');
+      },
+      (userData) {
+        log.d(userData.data.user.fullName);
+        user.value = userData.data.user;
+      },
+    );
+  }
 
   final TextEditingController signInEmailController = TextEditingController();
   final TextEditingController signInPasswordController =
@@ -36,10 +58,11 @@ class AuthController extends GetxController {
         _clearSignInFields();
         AppSnackbar.error(failure.message);
       },
-      (response) {
+      (response) async {
         if (response.data?.token != null) {
           AppSnackbar.success('Login successful');
           log.d(response.data?.token);
+          await getCurrentUser();
           Get.offAllNamed(AppRoutes.main);
         } else {
           _clearSignInFields();
@@ -123,7 +146,7 @@ class AuthController extends GetxController {
     _isLoading.value = false;
   }
 
-  // ── Verify Code ───────────────────────────────────────────
+
   final RxString otpEmail = ''.obs;
 
   final List<TextEditingController> codeControllers = List.generate(

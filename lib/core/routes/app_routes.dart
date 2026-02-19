@@ -9,4 +9,7 @@ class AppRoutes {
   static const String resetPassword = "/reset-password";
   static const String selectCountry = "/select-country";
   static const String main = "/main";
+  static const String search = "/search";
+  static const String searchResult = "/search-result";
+  static const String propertyDetails = "/property-details";
 }
