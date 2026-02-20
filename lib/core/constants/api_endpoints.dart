@@ -25,4 +25,5 @@ class ApiEndpoints {
 
   //? filter
   static const String filterData = "$_buyer/filter-options";
+  static const String searchProperties = "$_buyer/search";
 }

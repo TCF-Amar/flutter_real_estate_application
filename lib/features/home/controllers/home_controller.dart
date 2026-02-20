@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:real_estate_app/features/home/models/home_data_model.dart';
+import 'package:real_estate_app/features/explore/models/property_model.dart';
 import 'package:real_estate_app/core/services/home_services.dart';
 
 class HomeController extends GetxController {

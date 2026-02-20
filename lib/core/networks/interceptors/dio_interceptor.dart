@@ -20,6 +20,11 @@ class DioInterceptors extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    log.i(options.path);
+    log.i(options.method);
+    log.i(options.headers);
+    log.i(options.queryParameters);
+    log.i(options.data);
     if (options.path.contains(ApiEndpoints.refreshToken)) {
       log.d('⟳ Refresh token request — skipping auth header');
       return handler.next(options);

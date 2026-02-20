@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/networks/dio_client.dart';
 import 'package:real_estate_app/core/networks/exceptions/dio_exceptions.dart';
 import 'package:real_estate_app/core/networks/exceptions/exceptions.dart';
@@ -22,6 +23,7 @@ class ApiRequest {
 }
 
 class DioHelper {
+  final Logger logger = Logger();
   final DioClient dioClient;
   DioHelper(this.dioClient);
 
@@ -33,6 +35,7 @@ class DioHelper {
         responseType: ResponseType.json,
         contentType: 'application/json',
       );
+      
 
       final response = await dioClient.dio.request<T>(
         request.url,
@@ -42,8 +45,10 @@ class DioHelper {
       );
       return response;
     } on DioException catch (e) {
+      logger.e(e);
       throw DioExceptions.map(e);
     } catch (e) {
+      logger.e(e);
       throw UnknownException(message: 'Unexpected error: $e');
     }
   }

@@ -20,6 +20,7 @@ class PropertyFilterData {
   final List<String> cities;
   final Map<String, String> propertyCategories;
   final Map<String, String> propertyTypes;
+  final Map<String, String>? listingCategories;
   final List<BhkOption> bhkOptions;
   final List<String> amenities;
   final List<PriceRangeOption> priceRanges;
@@ -29,6 +30,12 @@ class PropertyFilterData {
     required this.cities,
     required this.propertyCategories,
     required this.propertyTypes,
+    this.listingCategories = const {
+      "For Buy": "for_buy",
+      "For Sale": "for_sale",
+      "For Rent": "for_rent",
+      "For Tenants": "for_tenants",
+    },
     required this.bhkOptions,
     required this.amenities,
     required this.priceRanges,

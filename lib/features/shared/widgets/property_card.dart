@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
-import 'package:real_estate_app/features/home/models/home_data_model.dart';
+import 'package:real_estate_app/features/explore/models/property_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
@@ -148,7 +147,7 @@ class PropertyCard extends StatelessWidget {
                       Expanded(
                         child: AppText(
                           '${item.locality ?? ''}${item.locality != null && item.city != null ? ', ' : ''}${item.city ?? ''}',
-                          fontSize: 13,
+                          fontSize: 12,
                           color: AppColors.grey,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -162,7 +161,7 @@ class PropertyCard extends StatelessWidget {
                     children: [
                       AppText(
                         "\$ ${item.basePrice}",
-                        fontSize: 13,
+                        fontSize: 12,
                         fontWeight: FontWeight.w700,
                         color: AppColors.primary,
                       ),
@@ -247,8 +246,10 @@ class _SpecIcon extends StatelessWidget {
         const SizedBox(width: 4),
         AppText(
           isArea ? "$value sq.ft" : value,
-          fontSize: 12,
+          fontSize: 10,
           fontWeight: FontWeight.w500,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           color: AppColors.grey,
         ),
       ],

@@ -54,7 +54,7 @@ class ExploreDeveloperCard extends StatelessWidget {
               child: Image.network(
                 logo,
                 fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => const Icon(
+                errorBuilder: (_, _, __) => const Icon(
                   Icons.business_rounded,
                   color: AppColors.primary,
                 ),
