@@ -124,7 +124,7 @@ class ResetPasswordScreen extends StatelessWidget {
                     child: AppText(
                       "Create a strong password for your account.",
                       fontSize: 14,
-                      color: AppColors.white?.withValues(alpha: 0.7),
+                      color: AppColors.white.withValues(alpha: 0.7),
                       textAlign: TextAlign.center,
                     ),
                   ),

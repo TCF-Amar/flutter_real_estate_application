@@ -66,7 +66,7 @@ class VerifyCodeScreen extends GetView<AuthController> {
                     "We've sent a 6-digit code to your email — enter it below to verify your account.",
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.white?.withValues(alpha: 0.9),
+                    color: AppColors.white.withValues(alpha: 0.9),
                     textAlign: TextAlign.center,
                   ),
                 ),

@@ -126,7 +126,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                     child: AppText(
                       "Enter your registered email address or phone number, and we'll send you a code to reset your password.",
                       fontSize: 14,
-                      color: AppColors.white?.withValues(alpha: 0.7),
+                      color: AppColors.white.withValues(alpha: 0.7),
                       textAlign: TextAlign.center,
                       height: 1.5,
                     ),

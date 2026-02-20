@@ -19,12 +19,12 @@ class SearchScreen extends StatelessWidget {
                 Container(
                   // padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppColors.grey?.withValues(alpha: 0.3),
+                    color: AppColors.grey.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: IconButton(
                     icon: Icon(Icons.arrow_back_ios_new),
-                    color: AppColors.white?.withValues(alpha: 0.8),
+                    color: AppColors.white.withValues(alpha: 0.8),
                     iconSize: 20,
                     onPressed: () {
                       Get.back();
@@ -34,7 +34,7 @@ class SearchScreen extends StatelessWidget {
                 AppText(
                   "Search",
                   fontSize: 18,
-                  color: AppColors.black?.withValues(alpha: 0.8),
+                  color: AppColors.black.withValues(alpha: 0.8),
                   fontWeight: FontWeight.w500,
                 ),
                 SizedBox(width: 40),
@@ -52,20 +52,20 @@ class SearchScreen extends StatelessWidget {
                   ),
                   hintText: "Search",
                   hintStyle: TextStyle(
-                    color: AppColors.black?.withValues(alpha: 0.6),
+                    color: AppColors.black.withValues(alpha: 0.6),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.grey!),
+                    borderSide: BorderSide(color: AppColors.grey),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.grey!),
+                    borderSide: BorderSide(color: AppColors.grey),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.grey!),
+                    borderSide: BorderSide(color: AppColors.grey),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   suffixIcon: Icon(Icons.close, color: AppColors.grey),
@@ -85,7 +85,7 @@ class SearchScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.grey!.withValues(alpha: 0.3),
+                      color: AppColors.grey.withValues(alpha: 0.3),
                       blurRadius: 10,
                       offset: Offset(0, -4),
                     ),

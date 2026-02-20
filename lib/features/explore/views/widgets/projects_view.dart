@@ -14,9 +14,11 @@ class ProjectsView extends StatelessWidget {
     final ExploreController exploreController = Get.find<ExploreController>();
     final HomeController homeController = Get.find<HomeController>();
 
-    return Column(
+    return ListView(
+      shrinkWrap: true,
+
       children: [
-        // Filter Chips
+        // Text("Projects"),
         SizedBox(
           height: 32,
           child: ListView.separated(
@@ -41,8 +43,7 @@ class ProjectsView extends StatelessWidget {
                       border: Border.all(
                         color: isSelected
                             ? AppColors.primary
-                            : AppColors.grey?.withValues(alpha: 0.3) ??
-                                  Colors.grey,
+                            : AppColors.grey.withValues(alpha: 0.3),
                       ),
                     ),
                     alignment: Alignment.center,
@@ -63,34 +64,33 @@ class ProjectsView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        // Listing
-        Expanded(
-          child: Obx(() {
-            if (homeController.isLoading.value) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        Obx(() {
+          if (homeController.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            final properties =
-                homeController.featuredProperties; // Using featured for demo
-            if (properties.isEmpty) {
-              return const Center(child: Text("No properties found"));
-            }
+          final properties =
+              homeController.featuredProperties; // Using featured for demo
+          if (properties.isEmpty) {
+            return const Center(child: Text("No properties found"));
+          }
 
-            return ListView.separated(
-              padding: const EdgeInsets.only(bottom: 20),
-              itemCount: properties.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                return PropertyCard(
-                  item: properties[index],
-                  onTap: () {
-                    // Navigate to details
-                  },
-                );
-              },
-            );
-          }),
-        ),
+          return ListView.separated(
+            padding: const EdgeInsets.only(bottom: 20),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: properties.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 16),
+            itemBuilder: (context, index) {
+              return PropertyCard(
+                item: properties[index],
+                onTap: () {
+                  // Navigate to details
+                },
+              );
+            },
+          );
+        }),
       ],
     );
   }

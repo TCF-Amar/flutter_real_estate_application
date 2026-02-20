@@ -269,7 +269,7 @@ class _PlaceholderImage extends StatelessWidget {
         color: Colors.grey.shade200,
         child: Icon(
           Icons.image_not_supported_rounded,
-          color: AppColors.grey?.withValues(alpha: 0.3),
+          color: AppColors.grey.withValues(alpha: 0.3),
           size: 40,
         ),
       ),

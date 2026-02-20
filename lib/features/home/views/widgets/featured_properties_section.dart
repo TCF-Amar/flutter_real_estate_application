@@ -47,7 +47,7 @@ class _FeaturedPropertiesSectionState extends State<FeaturedPropertiesSection> {
               'Featured Properties',
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: AppColors.black?.withValues(alpha: 0.70),
+              color: AppColors.black.withValues(alpha: 0.70),
             ),
           ),
 
@@ -87,7 +87,7 @@ class _FeaturedPropertiesSectionState extends State<FeaturedPropertiesSection> {
                 decoration: BoxDecoration(
                   color: _currentPage == i
                       ? AppColors.primary
-                      : AppColors.black?.withValues(alpha: 0.30),
+                      : AppColors.black.withValues(alpha: 0.30),
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -128,7 +128,7 @@ class _FeaturedCard extends StatelessWidget {
                     errorBuilder: (context, error, stackTrace) {
                       return Icon(
                         Icons.image_not_supported_rounded,
-                        color: AppColors.grey?.withValues(alpha: 0.5),
+                        color: AppColors.grey.withValues(alpha: 0.5),
                         size: 50,
                       );
                     },

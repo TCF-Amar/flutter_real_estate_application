@@ -34,7 +34,7 @@ class _RecommendedSectionState extends State<RecommendedSection> {
                 'Recommended for You',
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: AppColors.black?.withValues(alpha: 0.8),
+                color: AppColors.black.withValues(alpha: 0.8),
               ),
             ],
           ),

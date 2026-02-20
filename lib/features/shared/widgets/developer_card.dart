@@ -48,7 +48,7 @@ class ExploreDeveloperCard extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppColors.grey!.withValues(alpha: 0.1),
+                  color: AppColors.grey.withValues(alpha: 0.1),
                 ),
               ),
               child: Image.network(

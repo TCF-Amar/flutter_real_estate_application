@@ -104,7 +104,7 @@ class HomeHeroSection extends StatelessWidget {
                                   ),
                                   AppText(
                                     'Good to see you.',
-                                    color: AppColors.white?.withValues(
+                                    color: AppColors.white.withValues(
                                       alpha: 0.60,
                                     ),
                                     fontSize: 12,
@@ -159,7 +159,7 @@ class _NotificationBell extends StatelessWidget {
           ),
           child: Icon(
             Icons.notifications_outlined,
-            color: AppColors.white?.withValues(alpha: 0.5),
+            color: AppColors.white.withValues(alpha: 0.5),
             size: 30,
           ),
         ),

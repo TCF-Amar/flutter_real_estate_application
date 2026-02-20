@@ -52,7 +52,7 @@ class ExploreAgentCard extends StatelessWidget {
                     image,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Container(
-                      color: AppColors.grey?.withValues(alpha: 0.3),
+                      color: AppColors.grey.withValues(alpha: 0.3),
                       child: const Icon(Icons.person, color: Colors.grey),
                     ),
                   ),

@@ -8,6 +8,7 @@ import 'package:real_estate_app/features/explore/views/widgets/projects_view.dar
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 import 'package:real_estate_app/features/shared/widgets/explore_search_bar.dart';
 import 'package:real_estate_app/features/explore/views/widgets/property_filters.dart';
+import 'package:real_estate_app/features/shared/widgets/header_text.dart';
 
 class ExploreScreen extends GetView<ExploreController> {
   const ExploreScreen({super.key});
@@ -19,12 +20,10 @@ class ExploreScreen extends GetView<ExploreController> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: AppText(
-          "Explore",
-          fontSize: 20,
-          fontWeight: FontWeight.w500,
-          color: AppColors.black?.withValues(alpha: 0.6),
-        ),
+        title: HeaderText(text: "Explore"),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -89,14 +88,24 @@ class ExploreScreen extends GetView<ExploreController> {
             const SizedBox(height: 20),
 
             // Search Bar & Filter
-            ExploreSearchBar(
-              onTap: () {},
-              onFilterTap: () {
-                PropertyFilters.showFilters(
-                  context,
-                  controller.selectedTabIndex.value,
-                );
-              },
+            Obx(
+              () => ExploreSearchBar(
+                hintText: controller.selectedTabIndex.value == 0
+                    ? "Search by project"
+                    : controller.selectedTabIndex.value == 1
+                    ? "Search for agents"
+                    : "Search for developers",
+                controller: controller.searchController,
+                onChanged: (val) {
+                  controller.searchQuery.value = val;
+                },
+                onFilterTap: () {
+                  PropertyFilters.showFilters(
+                    context,
+                    controller.selectedTabIndex.value,
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 20),
 

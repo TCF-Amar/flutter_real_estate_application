@@ -64,7 +64,7 @@ class VerifyCodeInputField extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: AppColors.white?.withValues(alpha: 0.2) ?? Colors.white30,
+            color: AppColors.white.withValues(alpha: 0.2),
             width: 1.5,
           ),
         ),
@@ -174,7 +174,7 @@ class VerifyCodeResendRow extends StatelessWidget {
       children: [
         AppText(
           "Didn't receive the code? ",
-          color: AppColors.white?.withValues(alpha: 0.7),
+          color: AppColors.white.withValues(alpha: 0.7),
           fontSize: 14,
         ),
         if (canResend)
@@ -194,7 +194,7 @@ class VerifyCodeResendRow extends StatelessWidget {
         else
           AppText(
             "Resend in ${countdown}s",
-            color: AppColors.white?.withValues(alpha: 0.5),
+            color: AppColors.white.withValues(alpha: 0.5),
             fontSize: 14,
           ),
       ],
