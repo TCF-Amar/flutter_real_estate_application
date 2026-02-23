@@ -1,9 +1,13 @@
 import 'package:get/get.dart';
 import 'package:real_estate_app/features/explore/models/property_model.dart';
 import 'package:real_estate_app/core/services/home_services.dart';
+import 'package:real_estate_app/features/saved_properties/controllers/saved_properties_controller.dart';
 
 class HomeController extends GetxController {
   final HomeServices _homeServices = Get.find<HomeServices>();
+  // final PropertyServices propertyServices = Get.find<PropertyServices>();
+  final SavedPropertiesController favoritesController =
+      Get.find<SavedPropertiesController>();
 
   RxBool isLoading = false.obs;
   RxList<Property> featuredProperties = <Property>[].obs;
@@ -55,5 +59,30 @@ class HomeController extends GetxController {
     if (filter == 'Nearby' && recommendedProperties.isEmpty) {
       recommendedProperties.assignAll(allProperties);
     }
+  }
+
+  Future<void> toggleFavorite({
+    required String type,
+    required int propertyId,
+  }) async {
+    final index = allProperties.indexWhere(
+      (property) => property.id == propertyId,
+    );
+    if (index == -1) return;
+    final property = allProperties[index];
+    final updatedProperty = property.copyWith(
+      isFavorited: !(property.isFavorited ?? false),
+    );
+    allProperties[index] = updatedProperty;
+    featuredProperties[index] = updatedProperty;
+    recommendedProperties[index] = updatedProperty;
+    allProperties.refresh();
+    featuredProperties.refresh();
+    recommendedProperties.refresh();
+    await favoritesController.toggleFavorite(
+      type: type,
+      propertyId: propertyId,
+    );
+
   }
 }

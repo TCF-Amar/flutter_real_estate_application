@@ -6,164 +6,178 @@ import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/core/storage/token_storage.dart';
 
 class DioInterceptors extends Interceptor {
+  final Dio dio;
+  final TokenStorage tokenStorage;
   final Logger log = Logger();
-  final TokenStorage _tokenStorage;
-  final Dio _dio;
 
   bool _isRefreshing = false;
-  final List<_PendingRequest> _pendingRequests = [];
+  final List<_PendingRequest> _queue = [];
 
-  DioInterceptors(this._tokenStorage, this._dio);
+  DioInterceptors({required this.dio, required this.tokenStorage});
 
+  // ==========================
+  // REQUEST
+  // ==========================
   @override
   void onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    log.i(options.path);
-    log.i(options.method);
-    log.i(options.headers);
-    log.i(options.queryParameters);
-    log.i(options.data);
     if (options.path.contains(ApiEndpoints.refreshToken)) {
-      log.d('⟳ Refresh token request — skipping auth header');
       return handler.next(options);
     }
 
-    final token = await _tokenStorage.getToken();
-    if (token != null) {
+    final token = await tokenStorage.getToken();
+    if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
-      log.d('→ [${options.method}] ${options.path}');
-    } else {
-      log.w('→ [${options.method}] ${options.path} — no token');
     }
+
     handler.next(options);
   }
 
+  // ==========================
+  // RESPONSE
+  // ==========================
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    log.i('✓ [${response.statusCode}] ${response.requestOptions.path}');
     handler.next(response);
   }
 
+  // ==========================
+  // ERROR
+  // ==========================
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     final status = err.response?.statusCode;
-    final path = err.requestOptions.path;
+    final requestOptions = err.requestOptions;
 
-    log.e('✗ [$status] $path — ${err.message}');
+    // 1️⃣ Handle No Internet
+    if (err.type == DioExceptionType.connectionError ||
+        err.type == DioExceptionType.unknown) {
+      log.w('No Internet Connection');
+      return handler.next(err);
+    }
 
-    // Only attempt refresh on 401 Unauthorized
-    if (status == 401 && !path.contains(ApiEndpoints.refreshToken)) {
+    // 2️⃣ Handle 401 Unauthorized
+    if (status == 401 &&
+        !requestOptions.path.contains(ApiEndpoints.refreshToken)) {
+      // Prevent infinite retry loop
+      if (requestOptions.extra['isRetry'] == true) {
+        await _forceLogout();
+        return handler.next(err);
+      }
+
+      // If already refreshing → queue request
       if (_isRefreshing) {
-        log.d('⏳ Refresh in progress — queuing request: $path');
-        _pendingRequests.add(_PendingRequest(err.requestOptions, handler));
+        _queue.add(_PendingRequest(requestOptions, handler));
         return;
       }
 
       _isRefreshing = true;
-      log.i('⟳ Attempting token refresh...');
 
-      final refreshed = await _tryRefreshToken();
+      final refreshed = await _refreshToken();
 
       if (refreshed) {
-        log.i(
-          '✓ Token refreshed — retrying ${_pendingRequests.length + 1} request(s)',
-        );
-
+        // Retry original request
         try {
-          final response = await _retryRequest(err.requestOptions);
+          final response = await _retry(
+            requestOptions..extra['isRetry'] = true,
+          );
           handler.resolve(response);
         } catch (e) {
-          log.e('✗ Retry failed for $path: $e');
           handler.next(err);
         }
 
-        for (final pending in _pendingRequests) {
+        // Retry queued requests
+        for (final pending in _queue) {
           try {
-            final response = await _retryRequest(pending.options);
+            final response = await _retry(
+              pending.options..extra['isRetry'] = true,
+            );
             pending.handler.resolve(response);
           } catch (e) {
-            log.e('✗ Retry failed for ${pending.options.path}: $e');
             pending.handler.next(err);
           }
         }
       } else {
-        log.w('✗ Token refresh failed — forcing logout');
         await _forceLogout();
         handler.next(err);
-        for (final pending in _pendingRequests) {
+        for (final pending in _queue) {
           pending.handler.next(err);
         }
       }
 
-      _pendingRequests.clear();
+      _queue.clear();
       _isRefreshing = false;
       return;
     }
 
+    // 3️⃣ Optional: Handle 403 (No logout)
     if (status == 403) {
-      log.w('⛔ 403 Forbidden — forcing logout');
-      await _forceLogout();
+      log.w('Access forbidden — no logout');
+      return handler.next(err);
     }
 
     handler.next(err);
   }
 
-  Future<bool> _tryRefreshToken() async {
+  // ==========================
+  // REFRESH TOKEN
+  // ==========================
+  Future<bool> _refreshToken() async {
     try {
-      final refreshToken = await _tokenStorage.getRefreshToken();
-      if (refreshToken == null || refreshToken.isEmpty) {
-        log.w('⟳ No refresh token stored');
-        return false;
-      }
+      final refreshToken = await tokenStorage.getRefreshToken();
+      if (refreshToken == null || refreshToken.isEmpty) return false;
 
-      log.d('⟳ POST ${ApiEndpoints.refreshToken}');
-      final response = await _dio.post(
+      final response = await dio.post(
         ApiEndpoints.refreshToken,
         data: {'refresh_token': refreshToken},
         options: Options(headers: {'Authorization': null}),
       );
 
-      final data = response.data;
-      final newToken = data['data']?['token'] as String?;
-      final newRefreshToken = data['data']?['refresh_token'] as String?;
-      final expiresAt = data['data']?['expires_at'] as String?;
+      final data = response.data['data'];
+      final newToken = data['token'];
+      final newRefreshToken = data['refresh_token'];
+      final expiresAt = data['expires_at'];
 
-      if (newToken == null) {
-        log.w('⟳ Refresh response missing token');
-        return false;
-      }
+      if (newToken == null) return false;
 
-      await _tokenStorage.saveTokens(
+      await tokenStorage.saveTokens(
         newToken,
         newRefreshToken ?? refreshToken,
         expiresAt: expiresAt,
       );
-      log.i('✓ New token saved (expires: $expiresAt)');
+
       return true;
-    } catch (e) {
-      log.e('✗ Refresh token request failed: $e');
+    } catch (_) {
       return false;
     }
   }
 
-  Future<Response> _retryRequest(RequestOptions options) async {
-    final token = await _tokenStorage.getToken();
+  // ==========================
+  // RETRY REQUEST
+  // ==========================
+  Future<Response> _retry(RequestOptions options) async {
+    final token = await tokenStorage.getToken();
     options.headers['Authorization'] = 'Bearer $token';
-    log.d('↩ Retrying [${options.method}] ${options.path}');
-    return _dio.fetch(options);
+    return dio.fetch(options);
   }
 
+  // ==========================
+  // FORCE LOGOUT
+  // ==========================
   Future<void> _forceLogout() async {
-    log.w('🚪 Force logout — clearing tokens');
-    await _tokenStorage.deleteTokens();
+    await tokenStorage.deleteTokens();
     Get.offAllNamed(AppRoutes.signin);
   }
 }
 
+// ==========================
+// QUEUE MODEL
+// ==========================
 class _PendingRequest {
   final RequestOptions options;
   final ErrorInterceptorHandler handler;
+
   _PendingRequest(this.options, this.handler);
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/explore/controllers/explore_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 import 'package:real_estate_app/features/shared/widgets/property_card.dart';
@@ -18,8 +19,8 @@ class ProjectsView extends StatelessWidget {
         return ListView.separated(
           // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           itemCount: 5,
-          separatorBuilder: (_, __) => const SizedBox(height: 16),
-          itemBuilder: (_, __) => const PropertySkeleton(),
+          separatorBuilder: (_, _) => const SizedBox(height: 16),
+          itemBuilder: (_, _) => const PropertySkeleton(),
         );
       }
 
@@ -27,14 +28,15 @@ class ProjectsView extends StatelessWidget {
         controller: exploreController.scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.only(bottom: 20),
-        itemCount: 2 +
+        itemCount:
+            2 +
             (exploreController.filteredProperties.isEmpty
                 ? 1
                 : exploreController.filteredProperties.length +
-                    (exploreController.currentPage.value <
-                            exploreController.lastPage.value
-                        ? 1
-                        : 0)),
+                      (exploreController.currentPage.value <
+                              exploreController.lastPage.value
+                          ? 1
+                          : 0)),
         separatorBuilder: (context, index) {
           if (index == 0) return const SizedBox(height: 16);
           if (exploreController.filteredProperties.isEmpty && index == 1) {
@@ -50,21 +52,22 @@ class ProjectsView extends StatelessWidget {
             // Filter Header
             return SizedBox(
               height: 32,
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: ListView.builder(
+                clipBehavior: Clip.none,
+                physics: const NeverScrollableScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemCount: exploreController.propertyFilters.length,
-                separatorBuilder: (_, _) => const SizedBox(width: 8),
                 itemBuilder: (context, filterIndex) {
                   final isSelected =
-                      exploreController.selectedPropertyFilterIndex.value ==
-                      filterIndex;
+                      exploreController.selectedIndex.value == filterIndex;
                   return GestureDetector(
                     onTap: () {
                       exploreController.changePropertyFilter(filterIndex);
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
+
+                      margin: const EdgeInsets.only(right: 5),
                       decoration: BoxDecoration(
                         color: isSelected ? AppColors.primary : Colors.white,
                         borderRadius: BorderRadius.circular(10),
@@ -78,10 +81,12 @@ class ProjectsView extends StatelessWidget {
                       child: AppText(
                         exploreController.propertyFilters[filterIndex],
                         fontSize: 12,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.w500,
-                        color:
-                            isSelected ? Colors.white : AppColors.textSecondary,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                        color: isSelected
+                            ? Colors.white
+                            : AppColors.textSecondary,
                       ),
                     ),
                   );
@@ -109,7 +114,20 @@ class ProjectsView extends StatelessWidget {
             return PropertyCard(
               item: exploreController.filteredProperties[propertyIndex],
               onTap: () {
-                // Navigate to details
+                Get.toNamed(
+                  AppRoutes.propertyDetails,
+                  arguments: {
+                    "id":
+                        exploreController.filteredProperties[propertyIndex].id,
+                  },
+                );
+              },
+              onFavoriteTap: () {
+                exploreController.updateFavorite(
+                  type: "property",
+                  propertyId:
+                      exploreController.filteredProperties[propertyIndex].id,
+                );
               },
             );
           }

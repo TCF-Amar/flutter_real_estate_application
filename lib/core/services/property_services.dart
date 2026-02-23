@@ -1,15 +1,20 @@
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/constants/api_endpoints.dart';
 import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:real_estate_app/core/networks/dio_helper.dart';
 import 'package:real_estate_app/core/networks/exceptions/api_exceptions.dart';
 import 'package:real_estate_app/core/networks/exceptions/exceptions.dart';
 import 'package:real_estate_app/core/utils/typedef.dart';
+import 'package:real_estate_app/features/explore/models/property_detail_response.dart';
 import 'package:real_estate_app/features/explore/models/property_filter_model.dart';
 import 'package:real_estate_app/features/explore/models/property_response.dart';
+import 'package:real_estate_app/features/saved_properties/models/saved_property.dart';
+import 'package:real_estate_app/features/saved_properties/models/saved_response.dart';
 
 class PropertyServices extends GetxService {
+  final Logger log = Logger();
   final DioHelper dioHelper = Get.find<DioHelper>();
 
   final city = "".obs;
@@ -80,9 +85,62 @@ class PropertyServices extends GetxService {
           queryParameters: queryParams,
         ),
       );
-     
+
       final propertyResponse = PropertyResponse.fromJson(response.data);
       return Right(propertyResponse);
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+  FutureResult<SavedResponse> toggleFavorite({
+    required String type,
+    required int propertyId,
+  }) async {
+    try {
+      final response = await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.toggleFavorite,
+          method: ApiMethod.post,
+          body: {"type": type, "id": propertyId},
+        ),
+      );
+      log.d(response.data);
+      return Right(SavedResponse.fromJson(response.data));
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+  FutureResult<List<SavedProperty>> getSavedProperties() async {
+    try {
+      final response = await dioHelper.request(
+        ApiRequest(url: ApiEndpoints.getSavedProperties, method: ApiMethod.get),
+      );
+      return Right(
+        response.data.map((x) => SavedProperty.fromJson(x)).toList(),
+      );
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+  FutureResult<PropertyDetailResponse> getPropertyDetails(int id) async {
+    try {
+      final response = await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.getPropertyDetails(id),
+          method: ApiMethod.get,
+        ),
+      );
+      log.d(response.data);
+      return Right(PropertyDetailResponse.fromJson(response.data));
     } on AppException catch (e) {
       return Left(ApiException.map(e));
     } catch (e) {

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/constants/api_endpoints.dart';
 import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:real_estate_app/core/networks/dio_helper.dart';
@@ -15,6 +16,7 @@ import 'package:real_estate_app/features/auth/models/sign_up_request_model.dart'
 import 'package:real_estate_app/features/auth/models/sign_up_response_model.dart';
 
 class AuthServices extends GetxService {
+  final Logger log = Logger();
   final DioHelper _dioHelper = Get.find<DioHelper>();
   final TokenStorage _tokenStorage = Get.find<TokenStorage>();
 
@@ -73,6 +75,7 @@ class AuthServices extends GetxService {
           body: model.toJson(),
         ),
       );
+      log.d(response.data);
       final signUpResponse = SignUpResponseModel.fromJson(response.data);
       return Right(signUpResponse);
     } on AppException catch (e) {
@@ -109,13 +112,14 @@ class AuthServices extends GetxService {
 
   Future<Result<bool>> resendOtp(String email) async {
     try {
-      await _dioHelper.request(
+      final res = await _dioHelper.request(
         ApiRequest(
           url: ApiEndpoints.resendOtp,
           method: ApiMethod.post,
           body: {'email': email},
         ),
       );
+      log.d(res.data);
       return const Right(true);
     } on AppException catch (e) {
       return Left(ApiException.map(e));
@@ -125,11 +129,11 @@ class AuthServices extends GetxService {
   }
 
   // change country
-  Future<Result<bool>> changeCountry(String country) async {
+  Future<Result<bool>> onboardBuyer(String country) async {
     try {
       await _dioHelper.request(
         ApiRequest(
-          url: ApiEndpoints.updateSettings,
+          url: ApiEndpoints.buyerOnboarding,
           method: ApiMethod.post,
           body: {'country': country},
         ),

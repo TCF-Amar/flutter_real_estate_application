@@ -1,3 +1,4 @@
+import 'package:real_estate_app/core/utils/safe_parser.dart';
 import 'package:real_estate_app/features/explore/models/property_model.dart';
 
 class PropertyResponse {
@@ -50,10 +51,10 @@ class Pagination {
 
   factory Pagination.fromJson(Map<String, dynamic> json) {
     return Pagination(
-      currentPage: json['current_page'] ?? 0,
-      lastPage: json['last_page'] ?? 0,
-      perPage: json['per_page'] ?? 0,
-      total: json['total'] ?? 0,
+      currentPage: toInt(json['current_page']) ?? 0,
+      lastPage: toInt(json['last_page']) ?? 0,
+      perPage: toInt(json['per_page']) ?? 0,
+      total: toInt(json['total']) ?? 0,
     );
   }
 }

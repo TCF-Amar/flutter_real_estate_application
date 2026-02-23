@@ -4,15 +4,24 @@ import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
 class HeaderText extends StatelessWidget {
   final String text;
-  const HeaderText({super.key, required this.text});
+  final double? fontSize;
+  final Color? color;
+  final FontWeight? fontWeight;
+  const HeaderText({
+    super.key,
+    required this.text,
+    this.fontSize,
+    this.color,
+    this.fontWeight,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppText(
       text,
-      fontSize: 18,
-      fontWeight: FontWeight.w500,
-      color: AppColors.black.withValues(alpha: 0.70),
+      fontSize: fontSize ?? 18,
+      fontWeight: fontWeight ?? FontWeight.w500,
+      color: color ?? AppColors.black.withValues(alpha: 0.70),
     );
   }
 }

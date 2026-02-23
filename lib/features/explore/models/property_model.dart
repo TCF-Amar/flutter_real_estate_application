@@ -1,3 +1,6 @@
+import 'package:real_estate_app/core/constants/environments.dart';
+import 'package:real_estate_app/core/utils/safe_parser.dart';
+
 class Property {
   final int id;
   final String title;
@@ -67,41 +70,50 @@ class Property {
 
   factory Property.fromJson(Map<String, dynamic> json) {
     return Property(
-      id: json['id'] as int,
-      title: json['title'] as String,
-      description: json['description'] as String?,
-      propertyCategory: json['property_category'] as String,
-      propertyType: json['property_type'] as String,
-      propertyMode: json['property_mode'] as String,
-      listingCategory: json['listing_category'] as String?,
-      city: json['city'] as String?,
-      isFeatured: json['is_featured'] as int,
-      state: json['state'] as String?,
-      locality: json['locality'] as String?,
-      basePrice: json['base_price'] as int?,
-      furnishingStatus: json['furnishing_status'] as String?,
-      possessionDate: json['possession_date'] as String?,
-      ageOfProperty: json['age_of_property'] as String?,
-      yearBuilt: json['year_built'] as int?,
-      parkingCoveredCount: json['parking_covered_count'] as int?,
-      parkingOpenCount: json['parking_open_count'] as int?,
-      plotAreaSqft: json['plot_area_sqft'] as int?,
-      buildingAreaSqft: json['building_area_sqft'] as int?,
-      formattedPrice: json['formatted_price'] as String?,
+      id: toInt(json['id']) ?? 0,
+      title: toStr(json['title']) ?? '',
+      description: toStr(json['description']),
+      propertyCategory: toStr(json['property_category']) ?? '',
+      propertyType: toStr(json['property_type']) ?? '',
+      propertyMode: toStr(json['property_mode']) ?? '',
+      listingCategory: toStr(json['listing_category']),
+      city: toStr(json['city']),
+      isFeatured: toInt(json['is_featured']) ?? 0,
+      state: toStr(json['state']),
+      locality: toStr(json['locality']),
+      basePrice: toInt(json['base_price']),
+      furnishingStatus: toStr(json['furnishing_status']),
+      possessionDate: toStr(json['possession_date']),
+      ageOfProperty: toStr(json['age_of_property']),
+      yearBuilt: toInt(json['year_built']),
+      parkingCoveredCount: toInt(json['parking_covered_count']),
+      parkingOpenCount: toInt(json['parking_open_count']),
+      plotAreaSqft: toInt(json['plot_area_sqft']),
+      buildingAreaSqft: toInt(json['building_area_sqft']),
+      formattedPrice: toStr(json['formatted_price']),
       priceRange: json['price_range'] != null
           ? PriceRange.fromJson(json['price_range'] as Map<String, dynamic>)
           : null,
-      bhkList: json['bhk_list'] as String?,
-      bathroomList: json['bathroom_list'] as String?,
-      areaRange: json['area_range'] as String?,
-      image: json['image'] as String?,
-      imagesCount: json['images_count'] as int,
-      amenities: (json['amenities'] as List<dynamic>)
-          .map((e) => Amenity.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      media: Media.fromJson(json['media'] as Map<String, dynamic>),
-      isFavorited: json['is_favorited'] as bool,
-      shareData: ShareData.fromJson(json['share_data'] as Map<String, dynamic>),
+      bhkList: toStr(json['bhk_list']),
+      bathroomList: toStr(json['bathroom_list']),
+      areaRange: toStr(json['area_range']),
+      image: toStr(json['image']),
+      imagesCount: toInt(json['images_count']) ?? 0,
+      amenities:
+          (json['amenities'] as List<dynamic>?)
+              ?.map((e) => Amenity.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      media: json['media'] != null
+          ? Media.fromJson(json['media'] as Map<String, dynamic>)
+          : Media(images: [], videos: [], documents: []),
+      isFavorited:
+          json['is_favorited'] == true ||
+          json['is_favorited'] == 1 ||
+          json['is_favorited']?.toString() == "true",
+      shareData: json['share_data'] != null
+          ? ShareData.fromJson(json['share_data'] as Map<String, dynamic>)
+          : ShareData(title: '', message: '', image: '', url: ''),
     );
   }
 
@@ -140,6 +152,74 @@ class Property {
       'share_data': shareData.toJson(),
     };
   }
+
+  Property copyWith({
+    int? id,
+    String? title,
+    String? description,
+    String? propertyCategory,
+    String? propertyType,
+    String? propertyMode,
+    String? listingCategory,
+    String? city,
+    int? isFeatured,
+    String? state,
+    String? locality,
+    int? basePrice,
+    String? furnishingStatus,
+    String? possessionDate,
+    String? ageOfProperty,
+    int? yearBuilt,
+    int? parkingCoveredCount,
+    int? parkingOpenCount,
+    int? plotAreaSqft,
+    int? buildingAreaSqft,
+    String? formattedPrice,
+    PriceRange? priceRange,
+    String? bhkList,
+    String? bathroomList,
+    String? areaRange,
+    String? image,
+    int? imagesCount,
+    List<Amenity>? amenities,
+    Media? media,
+    bool? isFavorited,
+    ShareData? shareData,
+  }) {
+    return Property(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      propertyCategory: propertyCategory ?? this.propertyCategory,
+      propertyType: propertyType ?? this.propertyType,
+      propertyMode: propertyMode ?? this.propertyMode,
+      listingCategory: listingCategory ?? this.listingCategory,
+      city: city ?? this.city,
+      isFeatured: isFeatured ?? this.isFeatured,
+      state: state ?? this.state,
+      locality: locality ?? this.locality,
+      basePrice: basePrice ?? this.basePrice,
+      furnishingStatus: furnishingStatus ?? this.furnishingStatus,
+      possessionDate: possessionDate ?? this.possessionDate,
+      ageOfProperty: ageOfProperty ?? this.ageOfProperty,
+      yearBuilt: yearBuilt ?? this.yearBuilt,
+      parkingCoveredCount: parkingCoveredCount ?? this.parkingCoveredCount,
+      parkingOpenCount: parkingOpenCount ?? this.parkingOpenCount,
+      plotAreaSqft: plotAreaSqft ?? this.plotAreaSqft,
+      buildingAreaSqft: buildingAreaSqft ?? this.buildingAreaSqft,
+      formattedPrice: formattedPrice ?? this.formattedPrice,
+      priceRange: priceRange ?? this.priceRange,
+      bhkList: bhkList ?? this.bhkList,
+      bathroomList: bathroomList ?? this.bathroomList,
+      areaRange: areaRange ?? this.areaRange,
+      image: image ?? this.image,
+      imagesCount: imagesCount ?? this.imagesCount,
+      amenities: amenities ?? this.amenities,
+      media: media ?? this.media,
+      isFavorited: isFavorited ?? this.isFavorited,
+      shareData: shareData ?? this.shareData,
+    );
+  }
 }
 
 class PriceRange {
@@ -149,7 +229,10 @@ class PriceRange {
   PriceRange({required this.min, required this.max});
 
   factory PriceRange.fromJson(Map<String, dynamic> json) {
-    return PriceRange(min: json['min'] as String, max: json['max'] as String);
+    return PriceRange(
+      min: toStr(json['min']) ?? '',
+      max: toStr(json['max']) ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -164,7 +247,7 @@ class Amenity {
   Amenity({required this.id, required this.name});
 
   factory Amenity.fromJson(Map<String, dynamic> json) {
-    return Amenity(id: json['id'] as int, name: json['name'] as String);
+    return Amenity(id: toInt(json['id']) ?? 0, name: toStr(json['name']) ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -181,15 +264,21 @@ class Media {
 
   factory Media.fromJson(Map<String, dynamic> json) {
     return Media(
-      images: (json['images'] as List<dynamic>)
-          .map((e) => MediaItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      videos: (json['videos'] as List<dynamic>)
-          .map((e) => MediaItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      documents: (json['documents'] as List<dynamic>)
-          .map((e) => MediaItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      images:
+          (json['images'] as List<dynamic>?)
+              ?.map((e) => MediaItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      videos:
+          (json['videos'] as List<dynamic>?)
+              ?.map((e) => MediaItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      documents:
+          (json['documents'] as List<dynamic>?)
+              ?.map((e) => MediaItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -219,11 +308,11 @@ class MediaItem {
 
   factory MediaItem.fromJson(Map<String, dynamic> json) {
     return MediaItem(
-      id: json['id'] as int,
-      url: json['url'] as String,
-      fileType: json['file_type'] as String,
-      documentType: json['document_type'] as String?,
-      mediaLevel: json['media_level'] as String,
+      id: toInt(json['id']) ?? 0,
+      url: "${Environments.baseUrl}${toStr(json['url'])}",
+      fileType: toStr(json['file_type']) ?? '',
+      documentType: toStr(json['document_type']),
+      mediaLevel: toStr(json['media_level']) ?? '',
     );
   }
 
@@ -253,10 +342,10 @@ class ShareData {
 
   factory ShareData.fromJson(Map<String, dynamic> json) {
     return ShareData(
-      title: json['title'] as String,
-      message: json['message'] as String,
-      image: json['image'] as String,
-      url: json['url'] as String,
+      title: toStr(json['title']) ?? '',
+      message: toStr(json['message']) ?? '',
+      image: toStr(json['image']) ?? '',
+      url: toStr(json['url']) ?? '',
     );
   }
 

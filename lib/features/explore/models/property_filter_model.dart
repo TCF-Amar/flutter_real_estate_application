@@ -1,3 +1,5 @@
+import 'package:real_estate_app/core/utils/safe_parser.dart';
+
 class PropertyFilterModel {
   final bool status;
   final PropertyFilterData data;
@@ -72,9 +74,9 @@ class BhkOption {
 
   factory BhkOption.fromJson(Map<String, dynamic> json) {
     return BhkOption(
-      value: json['value'],
-      label: json['label'],
-      count: json['count'],
+      value: toInt(json['value'])!,
+      label: toStr(json['label'])!,
+      count: toInt(json['count'])!,
     );
   }
 }
@@ -88,9 +90,9 @@ class PriceRangeOption {
 
   factory PriceRangeOption.fromJson(Map<String, dynamic> json) {
     return PriceRangeOption(
-      min: json['min'],
-      max: json['max'],
-      label: json['label'],
+      min: toInt(json['min'])!,
+      max: toInt(json['max']),
+      label: toStr(json['label'])!,
     );
   }
 }

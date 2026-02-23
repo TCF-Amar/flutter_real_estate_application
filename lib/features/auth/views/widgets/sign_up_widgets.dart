@@ -4,6 +4,7 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/auth/controllers/validator/auth_validators.dart';
 import 'package:real_estate_app/features/auth/views/widgets/auth_text_field.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/shared/widgets/header_text.dart';
 
 /// Back button + centered "Sign Up" title row.
 class RegisterHeader extends StatelessWidget {
@@ -31,9 +32,9 @@ class RegisterHeader extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        AppText(
-          "Sign Up",
-          fontSize: 24,
+        HeaderText(
+          text: 'Sign Up',
+          // fontSize: 24,
           fontWeight: FontWeight.w400,
           color: AppColors.white,
         ),

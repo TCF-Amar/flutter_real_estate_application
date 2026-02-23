@@ -4,43 +4,45 @@ import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/services/property_services.dart';
 import 'package:real_estate_app/features/explore/models/property_filter_model.dart';
 import 'package:real_estate_app/features/explore/models/property_model.dart';
+import 'package:real_estate_app/features/saved_properties/controllers/saved_properties_controller.dart';
+import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 
 class ExploreController extends GetxController {
+  //* Dependencies
   final Logger log = Logger();
   final PropertyServices propertyServices = Get.find<PropertyServices>();
-  final RxInt selectedTabIndex = 0.obs;
+  final SavedPropertiesController favoritesController =
+      Get.find<SavedPropertiesController>();
 
+  final HomeController homeController = Get.find<HomeController>();
+
+  //* Navigation & Search State
+  final RxInt selectedTabIndex = 0.obs;
   final RxBool _isLoading = false.obs;
   bool get isLoading => _isLoading.value;
-
   final TextEditingController searchController = TextEditingController();
   final RxString searchQuery = "".obs;
 
-  final List<String> propertyFilters = [
-    "All",
-    "Ready to move",
-    "Under Construction",
-  ];
-
   final Rx<PropertyFilterModel?> filterData = Rx<PropertyFilterModel?>(null);
 
+  //* Property Data State
   final RxList<Property> _properties = RxList<Property>([]);
   final RxList<Property> _filteredProperties = RxList<Property>([]);
   final RxBool _isEmpty = false.obs;
-
   List<Property> get properties => _properties;
   List<Property> get filteredProperties => _filteredProperties;
   bool get isEmpty => _isEmpty.value;
 
+  //* Pagination State
   final RxInt currentPage = 1.obs;
   final RxInt totalItems = 0.obs;
   final RxInt lastPage = 1.obs;
   final RxInt perPage = 5.obs;
-
   final ScrollController scrollController = ScrollController();
   final RxBool _isMoreLoading = false.obs;
   bool get isMoreLoading => _isMoreLoading.value;
 
+  //* Lifecycle Methods
   @override
   void onInit() {
     super.onInit();
@@ -71,6 +73,13 @@ class ExploreController extends GetxController {
     });
   }
 
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  //* Search Logic
   void _performSearch() {
     propertyServices.keywords.value = searchQuery.value;
     switch (selectedTabIndex.value) {
@@ -86,54 +95,60 @@ class ExploreController extends GetxController {
     }
   }
 
-  void fetchFilterData() async {
-    await _fetchFilterData();
-  }
-
-  Future<void> _fetchFilterData() async {
+  Future<void> projectSearch() async {
     _isLoading.value = true;
-    final result = await propertyServices.getFilterData();
-    result.fold((l) => null, (r) {
-      filterData.value = r;
-    });
+    await _fetchProperties();
     _isLoading.value = false;
   }
 
-  final RxInt selectedPropertyFilterIndex = 0.obs;
+  Future<void> agentSearch() async {
+    // Implement agent search logic
+  }
 
+  Future<void> developerSearch() async {
+    // Implement developer search logic
+  }
+
+  //* Tab & Status Filter Management
   void changeTab(int index) {
     selectedTabIndex.value = index;
   }
 
+  //* Filter Configuration
+  final List<String> propertyFilters = [
+    "All",
+    "Ready to move",
+    "Under Construction",
+  ];
+
+  final RxInt selectedIndex = 0.obs;
+
   void changePropertyFilter(int index) {
-    selectedPropertyFilterIndex.value = index;
-    final status = propertyFilters[index];
-    propertyServices.propertyStatus.value = status == "All" ? "" : status;
-    propertyServices.page.value = 1;
-    String str = "All";
-    if (str == "All") {
-      _filteredProperties.value = properties;
-    } else if (str == "Ready to move") {
-      _filteredProperties.value = properties
-          .where((p) => p.propertyType == "Ready to move")
-          .toList();
-    } else if (str == "Under Construction") {
-      _filteredProperties.value = properties
-          .where((p) => p.propertyType == "Under Construction")
-          .toList();
+    selectedIndex.value = index;
+    switch (selectedIndex.value) {
+      case 0:
+        _filteredProperties.value = properties;
+        break;
+      case 1:
+        _filteredProperties.value = properties
+            .where((p) => p.propertyType == "ready_to_move")
+            .toList();
+        break;
+      case 2:
+        _filteredProperties.value = properties
+            .where((p) => p.propertyType == "under_construction")
+            .toList();
+        break;
+      default:
+        _filteredProperties.value = properties;
     }
 
+    // Fetch from server with new status filter
     // projectSearch();
   }
 
-  void projectSearch() async {
-    await _fetchProperties();
-  }
-
-  void agentSearch() {}
-  void developerSearch() {}
-
-  // Filter State
+  //* Filter Sheet Logic (Advanced Filters)
+  final RxInt selectedPropertyFilterIndex = 0.obs;
   final RxDouble minPrice = 0.0.obs;
   final RxDouble maxPrice = 100000000.0.obs;
   final RxInt minArea = 0.obs;
@@ -152,7 +167,6 @@ class ExploreController extends GetxController {
     selectedBhk.assignAll(propertyServices.bhk);
     selectedAmenities.value = propertyServices.amenities.value;
 
-    // Find the label for the listing category from the slug
     final currentSlug = propertyServices.listingCategory.value;
     final categories = filterData.value?.data.listingCategories;
     if (categories != null && currentSlug.isNotEmpty) {
@@ -178,7 +192,6 @@ class ExploreController extends GetxController {
     propertyServices.bhk.assignAll(selectedBhk);
     propertyServices.amenities.value = selectedAmenities.value;
 
-    // Map label back to slug
     if (data != null && selectedListingCategories.value.isNotEmpty) {
       propertyServices.listingCategory.value =
           data.listingCategories?[selectedListingCategories.value] ?? '';
@@ -208,6 +221,20 @@ class ExploreController extends GetxController {
     searchController.clear();
     propertyServices.page.value = 1;
     _performSearch();
+  }
+
+  //* Data Fetching Methods
+  void fetchFilterData() async {
+    await _fetchFilterData();
+  }
+
+  Future<void> _fetchFilterData() async {
+    _isLoading.value = true;
+    final result = await propertyServices.getFilterData();
+    result.fold((l) => null, (r) {
+      filterData.value = r;
+    });
+    _isLoading.value = false;
   }
 
   Future<void> _fetchProperties() async {
@@ -240,6 +267,7 @@ class ExploreController extends GetxController {
     _isMoreLoading.value = false;
   }
 
+  //* Pagination & Refresh logic
   void fetchMoreProperties() async {
     if (currentPage.value < lastPage.value && !isMoreLoading) {
       propertyServices.page.value = currentPage.value + 1;
@@ -247,14 +275,31 @@ class ExploreController extends GetxController {
     }
   }
 
-  void refreshProperties() async {
+  Future<void> refreshProperties() async {
     resetFilters();
-    await _fetchProperties();
+    _properties.clear();
+    _filteredProperties.clear();
+    propertyServices.page.value = 1;
+    await projectSearch();
   }
 
-  @override
-  void onClose() {
-    scrollController.dispose();
-    super.onClose();
+  Future<void> updateFavorite({
+    required String type,
+    required int propertyId,
+  }) async {
+    final index = _properties.indexWhere((p) => p.id == propertyId);
+    if (index == -1) return;
+    final property = _properties[index];
+    final update = property.copyWith(isFavorited: !property.isFavorited);
+
+    _properties[index] = update;
+    _filteredProperties[index] = update;
+    _filteredProperties.refresh();
+    _properties.refresh();
+
+    await favoritesController.toggleFavorite(
+      type: type,
+      propertyId: propertyId,
+    );
   }
 }

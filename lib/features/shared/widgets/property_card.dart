@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/explore/models/property_model.dart';
-import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
 class PropertyCard extends StatelessWidget {
   final Property item;
   final VoidCallback? onTap;
-  const PropertyCard({super.key, required this.item, this.onTap});
+  final bool featured;
+  final VoidCallback? onFavoriteTap;
+  const PropertyCard({
+    super.key,
+    required this.item,
+    this.onTap,
+    this.featured = false,
+    this.onFavoriteTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +25,7 @@ class PropertyCard extends StatelessWidget {
       hoverColor: Colors.transparent,
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
-      onTap: () {
-        Get.toNamed(
-          AppRoutes.propertyDetails,
-          arguments: {'isFav': item.isFavorited.toString(), 'id': item.id},
-        );
-      },
+      onTap: () => onTap?.call(),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -66,7 +67,9 @@ class PropertyCard extends StatelessWidget {
                   left: 20,
                   child: Row(
                     children: [
-                      _TagBadge(label: 'Featured', color: Colors.white),
+                      featured
+                          ? _TagBadge(label: 'Featured', color: Colors.white)
+                          : SizedBox.shrink(),
                       const SizedBox(width: 6),
                       _TagBadge(
                         label: item.propertyMode
@@ -94,9 +97,7 @@ class PropertyCard extends StatelessWidget {
                   top: 20,
                   right: 20,
                   child: InkWell(
-                    onTap: () {
-                      AppSnackbar.info("Added to favorites");
-                    },
+                    onTap: () => onFavoriteTap?.call(),
                     child: Container(
                       width: 36,
                       height: 36,

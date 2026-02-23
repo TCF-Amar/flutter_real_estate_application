@@ -17,7 +17,7 @@ class DioClient {
   Dio _createDio() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: Environments.baseUrl,
+        baseUrl: "${Environments.baseUrl}/api",
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),
@@ -31,7 +31,9 @@ class DioClient {
         },
       ),
     );
-    dio.interceptors.add(DioInterceptors(Get.find<TokenStorage>(), dio));
+    dio.interceptors.add(
+      DioInterceptors(tokenStorage: Get.find<TokenStorage>(), dio: dio),
+    );
 
     return dio;
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 import 'package:real_estate_app/features/shared/widgets/property_card.dart';
@@ -40,10 +41,11 @@ class _RecommendedSectionState extends State<RecommendedSection> {
           ),
         ),
 
-        // Filter Categories
+        //! Filter Categories
         SizedBox(
           height: 35,
           child: ListView.separated(
+            // clipBehavior: Clip.antiAlias,
             padding: const EdgeInsets.symmetric(horizontal: 10),
             scrollDirection: Axis.horizontal,
             itemCount: _filters.length,
@@ -112,8 +114,22 @@ class _RecommendedSectionState extends State<RecommendedSection> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: properties.length,
             separatorBuilder: (context, index) => const SizedBox(height: 16),
-            itemBuilder: (context, index) =>
-                PropertyCard(item: properties[index]),
+            itemBuilder: (context, index) => PropertyCard(
+              item: properties[index],
+              featured: true,
+              onTap: () {
+                Get.toNamed(
+                  AppRoutes.propertyDetails,
+                  arguments: {'id': properties[index].id},
+                );
+              },
+              onFavoriteTap: () {
+                _controller.toggleFavorite(
+                  type: "property",
+                  propertyId: properties[index].id,
+                );
+              },
+            ),
           );
         }),
 

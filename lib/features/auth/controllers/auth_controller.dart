@@ -146,7 +146,6 @@ class AuthController extends GetxController {
     _isLoading.value = false;
   }
 
-
   final RxString otpEmail = ''.obs;
 
   final List<TextEditingController> codeControllers = List.generate(
@@ -288,7 +287,7 @@ class AuthController extends GetxController {
       return;
     }
     _isLoading.value = true;
-    final result = await _authServices.changeCountry(selectedCountry.value);
+    final result = await _authServices.onboardBuyer(selectedCountry.value);
     result.fold((failure) => AppSnackbar.error(failure.message), (_) {
       AppSnackbar.success('Country selected: ${selectedCountry.value}');
       Get.offAllNamed(AppRoutes.main);

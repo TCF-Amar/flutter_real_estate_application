@@ -12,6 +12,10 @@ class ApiEndpoints {
   static const String forgotPassword = "$_auth/forgot-password";
   static const String resetPassword = "$_auth/reset-password";
 
+  //? onboarding buyer
+  static const String _onboarding = "/onboarding";
+  static const String buyerOnboarding = "$_onboarding/buyer";
+
   //? buyer
   static const String _buyer = "/buyer";
   static const String getHomepageData = "$_buyer/homepage";
@@ -22,8 +26,13 @@ class ApiEndpoints {
 
   //? properties
   static const String properties = "/properties";
+  static String getPropertyDetails(int id) => "$_buyer/properties/$id";
 
   //? filter
   static const String filterData = "$_buyer/filter-options";
   static const String searchProperties = "$_buyer/search";
+
+  //? favorites
+  static const String toggleFavorite = "/favorites/toggle";
+  static const String getSavedProperties = "/favorites";
 }

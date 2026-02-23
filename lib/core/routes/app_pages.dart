@@ -16,6 +16,8 @@ import 'package:real_estate_app/features/main/views/screens/main_screen.dart';
 import 'package:real_estate_app/features/search/views/screens/search_result.dart';
 import 'package:real_estate_app/features/search/views/screens/search_screen.dart';
 
+import 'package:real_estate_app/features/explore/bindings/property_details_binding.dart';
+
 class AppPages {
   static final pages = <GetPage>[
     GetPage(
@@ -43,6 +45,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.propertyDetails,
       page: () => PropertyDetailsScreen(id: Get.arguments['id']),
+      binding: PropertyDetailsBinding(),
     ),
   ];
 }
