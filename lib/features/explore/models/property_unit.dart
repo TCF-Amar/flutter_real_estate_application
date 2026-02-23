@@ -1,3 +1,4 @@
+import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/core/utils/safe_parser.dart';
 
 class PropertyUnit {
@@ -80,7 +81,7 @@ class PropertyUnit {
     status: toStr(json['status']),
     availableUnits: toInt(json['available_units']),
     totalUnits: toInt(json['total_units']),
-    floorPlanImage: toStr(json['floor_plan_image']),
+    floorPlanImage: "${Environments.baseUrl}${toStr(json['floor_plan_image'])}",
   );
 
   Map<String, dynamic> toJson() => {

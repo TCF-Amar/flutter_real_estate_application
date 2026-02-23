@@ -7,12 +7,16 @@ class HeaderText extends StatelessWidget {
   final double? fontSize;
   final Color? color;
   final FontWeight? fontWeight;
+  final bool? shadow;
+  final Color? shadowColor;
   const HeaderText({
     super.key,
     required this.text,
     this.fontSize,
     this.color,
     this.fontWeight,
+    this.shadow,
+    this.shadowColor,
   });
 
   @override
@@ -22,6 +26,8 @@ class HeaderText extends StatelessWidget {
       fontSize: fontSize ?? 18,
       fontWeight: fontWeight ?? FontWeight.w500,
       color: color ?? AppColors.black.withValues(alpha: 0.70),
+      shadow: shadow ?? false,
+      shadowColor: shadowColor ?? Colors.white,
     );
   }
 }

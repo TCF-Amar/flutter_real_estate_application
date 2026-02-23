@@ -96,7 +96,9 @@ class MediaImages extends StatelessWidget {
                         onTap: () {
                           controller.updateCurrentIndex(index);
                         },
-                        child: Container(
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
                           // margin: const EdgeInsets.symmetric(horizontal: 2),
                           height: 8,
                           decoration: BoxDecoration(

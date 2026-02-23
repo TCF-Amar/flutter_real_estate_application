@@ -1,6 +1,7 @@
 import 'package:real_estate_app/core/utils/safe_parser.dart';
 import 'package:real_estate_app/features/explore/models/address.dart';
 import 'package:real_estate_app/features/explore/models/contact.dart';
+import 'package:real_estate_app/features/explore/models/project_overview_model.dart';
 import 'package:real_estate_app/features/explore/models/property_model.dart';
 import 'package:real_estate_app/features/explore/models/property_unit.dart';
 import 'package:real_estate_app/features/explore/models/reviews_summary.dart';
@@ -26,7 +27,7 @@ class PropertyDetail {
   final num? plotWidthFt;
   final num? plotLengthFt;
   final String? locality;
-  final Address? address;
+  final AddressModel? address;
   final Coordinates? coordinates;
   final num? basePrice;
   final String? priceRange;
@@ -34,8 +35,8 @@ class PropertyDetail {
   final String? leaseTerm;
   final num? maintenanceCharges;
   final String? maintenancePeriod;
-  final String? projectOverview;
-  final String? latestUpdate;
+  final ProjectOverviewModel? projectOverview;
+  final LatestUpdateModel? latestUpdate;
   final String? furnishingStatus;
   final int? parkingCoveredCount;
   final int? parkingOpenCount;
@@ -127,7 +128,7 @@ class PropertyDetail {
       plotLengthFt: toNum(json['plot_length_ft']),
       locality: toStr(json['locality']),
       address: json['address'] != null
-          ? Address.fromJson(json['address'])
+          ? AddressModel.fromJson(json['address'])
           : null,
       coordinates: json['coordinates'] != null
           ? Coordinates.fromJson(json['coordinates'])
@@ -138,8 +139,12 @@ class PropertyDetail {
       leaseTerm: toStr(json['lease_term']),
       maintenanceCharges: toNum(json['maintenance_charges']),
       maintenancePeriod: toStr(json['maintenance_period']),
-      projectOverview: toStr(json['project_overview']),
-      latestUpdate: toStr(json['latest_update']),
+      projectOverview: json['project_overview'] != null
+          ? ProjectOverviewModel.fromJson(json['project_overview'])
+          : null,
+      latestUpdate: json['latest_update'] != null
+          ? LatestUpdateModel.fromJson(json['latest_update'])
+          : null,
       furnishingStatus: toStr(json['furnishing_status']),
       parkingCoveredCount: toInt(json['parking_covered_count']),
       parkingOpenCount: toInt(json['parking_open_count']),
@@ -202,8 +207,8 @@ class PropertyDetail {
     'lease_term': leaseTerm,
     'maintenance_charges': maintenanceCharges,
     'maintenance_period': maintenancePeriod,
-    'project_overview': projectOverview,
-    'latest_update': latestUpdate,
+    'project_overview': projectOverview?.toJson(),
+    'latest_update': latestUpdate?.toJson(),
     'furnishing_status': furnishingStatus,
     'parking_covered_count': parkingCoveredCount,
     'parking_open_count': parkingOpenCount,
@@ -245,7 +250,7 @@ class PropertyDetail {
     num? plotWidthFt,
     num? plotLengthFt,
     String? locality,
-    Address? address,
+    AddressModel? address,
     Coordinates? coordinates,
     num? basePrice,
     String? priceRange,
@@ -253,8 +258,8 @@ class PropertyDetail {
     String? leaseTerm,
     num? maintenanceCharges,
     String? maintenancePeriod,
-    String? projectOverview,
-    String? latestUpdate,
+    ProjectOverviewModel? projectOverview,
+    LatestUpdateModel? latestUpdate,
     String? furnishingStatus,
     int? parkingCoveredCount,
     int? parkingOpenCount,
@@ -323,4 +328,7 @@ class PropertyDetail {
       shareData: shareData ?? this.shareData,
     );
   }
+
+  bool get isProject => propertyMode == "project";
+  bool get isNotCompleted => propertyType == "under_construction";
 }

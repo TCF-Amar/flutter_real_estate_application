@@ -18,11 +18,11 @@ class MainController extends GetxController {
   ];
 
   final List<NavItem> navItems = [
-    NavItem(icon: Assets.icons.home, label: "Home"),
-    NavItem(icon: Assets.icons.search, label: "Explore"),
-    NavItem(icon: Assets.icons.heart, label: "Favorites"),
-    NavItem(icon: Assets.icons.booking, label: "My Bookings"),
-    NavItem(icon: Assets.icons.person, label: "Profile"),
+    NavItem(icon: Assets.icons.home, iconSelected: Assets.icons.homeSelected, label: "Home"),
+    NavItem(icon: Assets.icons.search, iconSelected: Assets.icons.searchSelected, label: "Explore"),
+    NavItem(icon: Assets.icons.heart, iconSelected: Assets.icons.heartSelected, label: "Favorites"),
+    NavItem(icon: Assets.icons.booking, iconSelected: Assets.icons.bookingSelected, label: "My Bookings"),
+    NavItem(icon: Assets.icons.person, iconSelected: Assets.icons.personSelected, label: "Profile"),
   ];
 
   void changeIndex(int index) {

@@ -6,8 +6,13 @@ import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
 class NavItem {
   final String icon;
+  final String iconSelected;
   final String label;
-  const NavItem({required this.icon, required this.label});
+  const NavItem({
+    required this.icon,
+    required this.iconSelected,
+    required this.label,
+  });
 }
 
 class BottomNav extends StatelessWidget {
@@ -80,12 +85,8 @@ class BottomNav extends StatelessWidget {
                           : [],
                     ),
                     child: SvgPicture.asset(
-                      items[i].icon,
-                      width: 22,
-                      colorFilter: ColorFilter.mode(
-                        selected ? Colors.white : AppColors.textSecondary,
-                        BlendMode.srcIn,
-                      ),
+                      selected ? items[i].iconSelected : items[i].icon,
+                      width: 20,
                     ),
                   ),
                 ),

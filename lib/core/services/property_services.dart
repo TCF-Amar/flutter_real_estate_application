@@ -31,6 +31,7 @@ class PropertyServices extends GetxService {
   final perPage = 5.obs;
 
   final page = 1.obs;
+  final propertyType = "".obs;
 
   FutureResult<PropertyFilterModel> getFilterData() async {
     try {
@@ -76,6 +77,9 @@ class PropertyServices extends GetxService {
       }
       if (propertyStatus.value.isNotEmpty) {
         queryParams["property_status"] = propertyStatus.value;
+      }
+      if (propertyType.value.isNotEmpty) {
+        queryParams["property_type"] = propertyType.value;
       }
 
       final response = await dioHelper.request(

@@ -80,17 +80,17 @@ class ExploreController extends GetxController {
   }
 
   //* Search Logic
-  void _performSearch() {
+  Future<void> _performSearch() async {
     propertyServices.keywords.value = searchQuery.value;
     switch (selectedTabIndex.value) {
       case 0:
-        projectSearch();
+        await projectSearch();
         break;
       case 1:
-        agentSearch();
+        await agentSearch();
         break;
       case 2:
-        developerSearch();
+        await developerSearch();
         break;
     }
   }
@@ -123,28 +123,20 @@ class ExploreController extends GetxController {
 
   final RxInt selectedIndex = 0.obs;
 
-  void changePropertyFilter(int index) {
+  Future<void> changePropertyFilter(int index) async {
     selectedIndex.value = index;
-    switch (selectedIndex.value) {
-      case 0:
-        _filteredProperties.value = properties;
-        break;
-      case 1:
-        _filteredProperties.value = properties
-            .where((p) => p.propertyType == "ready_to_move")
-            .toList();
-        break;
-      case 2:
-        _filteredProperties.value = properties
-            .where((p) => p.propertyType == "under_construction")
-            .toList();
-        break;
-      default:
-        _filteredProperties.value = properties;
-    }
 
-    // Fetch from server with new status filter
-    // projectSearch();
+    // Reset all filters for a clean switch between main categories
+    await resetFilters(shouldFetch: false);
+
+    // Map index to property type slug
+    String type = "";
+    if (index == 1) type = "ready_to_move";
+    if (index == 2) type = "under_construction";
+
+    // Update service and trigger search
+    propertyServices.propertyType.value = type;
+    await projectSearch();
   }
 
   //* Filter Sheet Logic (Advanced Filters)
@@ -158,7 +150,7 @@ class ExploreController extends GetxController {
   final RxString selectedListingCategories = RxString('');
   final RxnString selectedStatus = RxnString();
   final RxnString selectedSort = RxnString();
-
+  final RxnString selectedPropertyType = RxnString();
   void initializeFilters() {
     minPrice.value = propertyServices.minPrice.value.toDouble();
     maxPrice.value = propertyServices.maxPrice.value.toDouble();
@@ -204,7 +196,9 @@ class ExploreController extends GetxController {
     Get.back();
   }
 
-  void resetFilters() {
+  Future<void> resetFilters({bool shouldFetch = true}) async {
+    log.d("Resetting all filters");
+    // Reset internal UI state
     minPrice.value = 0;
     maxPrice.value = 100000000;
     minArea.value = 0;
@@ -214,13 +208,28 @@ class ExploreController extends GetxController {
     selectedListingCategories.value = '';
     selectedStatus.value = null;
     selectedSort.value = null;
+    selectedPropertyType.value = null;
 
+    // Reset service state
     propertyServices.keywords.value = '';
     propertyServices.propertyStatus.value = '';
+    propertyServices.propertyType.value = '';
+    propertyServices.listingCategory.value = '';
+    propertyServices.amenities.value = '';
+    propertyServices.minPrice.value = 0;
+    propertyServices.maxPrice.value = 100000000;
+    propertyServices.minArea.value = null;
+    propertyServices.maxArea.value = null;
+    propertyServices.bhk.clear();
+    propertyServices.city.value = '';
+
     searchQuery.value = '';
     searchController.clear();
     propertyServices.page.value = 1;
-    _performSearch();
+
+    if (shouldFetch) {
+      await _performSearch();
+    }
   }
 
   //* Data Fetching Methods
@@ -276,11 +285,8 @@ class ExploreController extends GetxController {
   }
 
   Future<void> refreshProperties() async {
-    resetFilters();
-    _properties.clear();
-    _filteredProperties.clear();
-    propertyServices.page.value = 1;
-    await projectSearch();
+    selectedIndex.value = 0;
+    await resetFilters();
   }
 
   Future<void> updateFavorite({

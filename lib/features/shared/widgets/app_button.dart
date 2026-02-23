@@ -15,6 +15,9 @@ class AppButton extends StatelessWidget {
   final double? borderRadius;
   final Widget? icon;
   final bool fullWidth;
+  final bool showShadow;
+  final bool isBorder;
+  final Color? borderColor;
 
   const AppButton({
     super.key,
@@ -30,6 +33,9 @@ class AppButton extends StatelessWidget {
     this.borderRadius,
     this.icon,
     this.fullWidth = true,
+    this.showShadow = true,
+    this.isBorder = false,
+    this.borderColor,
   });
 
   @override
@@ -79,6 +85,13 @@ class AppButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadius ?? 12),
         ),
         minimumSize: fullWidth ? const Size(double.infinity, 0) : null,
+        shadowColor: showShadow
+            ? AppColors.black.withValues(alpha: 0.5)
+            : Colors.transparent,
+        elevation: showShadow ? 4 : 0,
+        side: isBorder
+            ? BorderSide(color: borderColor ?? AppColors.primary, width: 1)
+            : BorderSide.none,
       ),
       onPressed: isLoading ? null : onPressed,
       child: buttonChild,

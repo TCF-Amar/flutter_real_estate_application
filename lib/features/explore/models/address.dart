@@ -1,6 +1,6 @@
 import 'package:real_estate_app/core/utils/safe_parser.dart';
 
-class Address {
+class AddressModel {
   final String? line1;
   final String? line2;
   final String? city;
@@ -9,7 +9,7 @@ class Address {
   final String? zipcode;
   final String? locality;
 
-  const Address({
+  const AddressModel({
     this.line1,
     this.line2,
     this.city,
@@ -19,7 +19,7 @@ class Address {
     this.locality,
   });
 
-  factory Address.fromJson(Map<String, dynamic> json) => Address(
+  factory AddressModel.fromJson(Map<String, dynamic> json) => AddressModel(
     line1: toStr(json['line1']),
     line2: toStr(json['line2']),
     city: toStr(json['city']),

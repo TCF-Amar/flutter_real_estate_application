@@ -17,6 +17,8 @@ class AppText extends StatelessWidget {
   // behavior
   final int? maxLines;
   final TextOverflow overflow;
+  final bool? shadow;
+  final Color? shadowColor;
 
   const AppText(
     this.text, {
@@ -31,6 +33,8 @@ class AppText extends StatelessWidget {
     this.height,
     this.decoration,
     this.uppercase,
+    this.shadow,
+    this.shadowColor,
   });
 
   @override
@@ -48,6 +52,15 @@ class AppText extends StatelessWidget {
         letterSpacing: letterSpacing,
         height: height,
         decoration: decoration,
+        shadows: shadow == true
+            ? [
+                Shadow(
+                  color: shadowColor ?? Colors.black,
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       ),
     );
   }
