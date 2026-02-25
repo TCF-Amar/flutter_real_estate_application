@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:real_estate_app/core/services/property_services.dart';
+import 'package:real_estate_app/core/services/explore_services.dart';
 import 'package:real_estate_app/features/saved_properties/models/saved_property.dart';
 
 class SavedPropertiesController extends GetxController {
   final Logger log = Logger();
-  final PropertyServices propertyServices = Get.find<PropertyServices>();
+  final ExploreServices propertyServices = Get.find<ExploreServices>();
 
   final RxList<SavedProperty> _savedProperties = RxList<SavedProperty>([]);
   List<SavedProperty> get savedProperties => _savedProperties;

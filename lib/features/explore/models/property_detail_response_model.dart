@@ -1,13 +1,13 @@
-import 'package:real_estate_app/features/explore/models/property_detail.dart';
+import 'package:real_estate_app/features/explore/models/property_detail_model.dart';
 
-class PropertyDetailResponse {
+class PropertyDetailResponseModel {
   final bool status;
   final PropertyDetail? data;
 
-  const PropertyDetailResponse({required this.status, this.data});
+  const PropertyDetailResponseModel({required this.status, this.data});
 
-  factory PropertyDetailResponse.fromJson(Map<String, dynamic> json) {
-    return PropertyDetailResponse(
+  factory PropertyDetailResponseModel.fromJson(Map<String, dynamic> json) {
+    return PropertyDetailResponseModel(
       status: json['status'] as bool? ?? false,
       data: json['data'] != null
           ? PropertyDetail.fromJson(json['data'] as Map<String, dynamic>)

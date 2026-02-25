@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/features/explore/controllers/property_details_controller.dart';
-import 'package:real_estate_app/features/explore/models/property_detail.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
 class HeaderSection extends StatelessWidget {
-  final PropertyDetail property;
-  const HeaderSection({super.key, required this.property});
+  // final PropertyDetail property;
+  const HeaderSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<PropertyDetailsController>();
+    final property = controller.propertyDetail;
 
-    return property.media?.images.isNotEmpty ?? false
+    return property!.media?.images.isNotEmpty ?? false
         ? FlexibleSpaceBar(
-            background: Obx(
-              () => Stack(
+            background: Obx(() {
+              final currentIndex = controller.currentIndex;
+              final images = property.media!.images;
+              final image = (images.isNotEmpty && currentIndex < images.length)
+                  ? images[currentIndex]
+                  : null;
+
+              return Stack(
                 fit: StackFit.expand,
                 children: [
                   ClipRRect(
@@ -24,17 +30,14 @@ class HeaderSection extends StatelessWidget {
                       bottomRight: Radius.circular(25),
                     ),
                     child: Image.network(
+                      image?.url ?? property.shareData?.image.toString() ?? "",
+                      fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
                         return const Center(child: CircularProgressIndicator());
                       },
-                      (property.media?.images.isNotEmpty ?? false)
-                          ? property.media!.images[controller.currentIndex].url
-                          : property.shareData?.image.toString() ?? "",
-                      fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Center(
                         child: Container(
-                          // padding: const EdgeInsets.all(16),
                           height: double.infinity,
                           width: double.infinity,
                           decoration: BoxDecoration(
@@ -76,8 +79,8 @@ class HeaderSection extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-            ),
+              );
+            }),
           )
         : FlexibleSpaceBar(
             background: ClipRRect(

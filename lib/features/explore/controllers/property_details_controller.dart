@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:real_estate_app/core/services/property_services.dart';
-import 'package:real_estate_app/features/explore/models/property_detail.dart';
+import 'package:real_estate_app/core/services/explore_services.dart';
+import 'package:real_estate_app/features/explore/models/property_detail_model.dart';
 import 'package:real_estate_app/features/saved_properties/controllers/saved_properties_controller.dart';
 
 class PropertyDetailsController extends GetxController {
-  final PropertyServices propertyServices = Get.find<PropertyServices>();
+  final ExploreServices propertyServices = Get.find<ExploreServices>();
   final SavedPropertiesController savedPropertiesController =
       Get.find<SavedPropertiesController>();
   final Logger log = Logger();
@@ -58,5 +58,10 @@ class PropertyDetailsController extends GetxController {
 
   void updateCurrentIndex(int index) {
     _currentIndex.value = index;
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
   }
 }

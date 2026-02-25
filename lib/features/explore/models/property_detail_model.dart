@@ -1,10 +1,10 @@
 import 'package:real_estate_app/core/utils/safe_parser.dart';
-import 'package:real_estate_app/features/explore/models/address.dart';
-import 'package:real_estate_app/features/explore/models/contact.dart';
+import 'package:real_estate_app/features/explore/models/address_model.dart';
+import 'package:real_estate_app/features/explore/models/contact_model.dart';
 import 'package:real_estate_app/features/explore/models/project_overview_model.dart';
 import 'package:real_estate_app/features/explore/models/property_model.dart';
-import 'package:real_estate_app/features/explore/models/property_unit.dart';
-import 'package:real_estate_app/features/explore/models/reviews_summary.dart';
+import 'package:real_estate_app/features/explore/models/property_unit_model.dart';
+import 'package:real_estate_app/features/explore/models/reviews_summary_model.dart';
 
 class PropertyDetail {
   final int id;
@@ -43,14 +43,14 @@ class PropertyDetail {
   final String? possessionDate;
   final String? ageOfProperty;
   final String? formattedPrice;
-  final List<PropertyUnit>? units;
+  final List<PropertyUnitModel>? units;
   final Media? media;
   final List<Amenity>? amenities;
   final String? bhkList;
   final String? bathroomList;
   final String? areaRange;
-  final ReviewsSummary? reviewsSummary;
-  final Contact? contact;
+  final ReviewsSummaryModel? reviewsSummary;
+  final ContactModel? contact;
   final bool? isFavorited;
   final String? deepLink;
   final ShareData? shareData;
@@ -152,7 +152,7 @@ class PropertyDetail {
       ageOfProperty: toStr(json['age_of_property']),
       formattedPrice: toStr(json['formatted_price']),
       units: (json['units'] as List?)
-          ?.map((e) => PropertyUnit.fromJson(e))
+          ?.map((e) => PropertyUnitModel.fromJson(e))
           .toList(),
       media: json['media'] != null ? Media.fromJson(json['media']) : null,
       amenities: (json['amenities'] as List?)
@@ -162,10 +162,10 @@ class PropertyDetail {
       bathroomList: toStr(json['bathroom_list']),
       areaRange: toStr(json['area_range']),
       reviewsSummary: json['reviews_summary'] != null
-          ? ReviewsSummary.fromJson(json['reviews_summary'])
+          ? ReviewsSummaryModel.fromJson(json['reviews_summary'])
           : null,
       contact: json['contact'] != null
-          ? Contact.fromJson(json['contact'])
+          ? ContactModel.fromJson(json['contact'])
           : null,
       isFavorited:
           json['is_favorited'] == true ||
@@ -266,14 +266,14 @@ class PropertyDetail {
     String? possessionDate,
     String? ageOfProperty,
     String? formattedPrice,
-    List<PropertyUnit>? units,
+    List<PropertyUnitModel>? units,
     Media? media,
     List<Amenity>? amenities,
     String? bhkList,
     String? bathroomList,
     String? areaRange,
-    ReviewsSummary? reviewsSummary,
-    Contact? contact,
+    ReviewsSummaryModel? reviewsSummary,
+    ContactModel? contact,
     bool? isFavorited,
     String? deepLink,
     ShareData? shareData,
@@ -331,4 +331,8 @@ class PropertyDetail {
 
   bool get isProject => propertyMode == "project";
   bool get isNotCompleted => propertyType == "under_construction";
+  bool get forRent =>
+      listingCategory == "for_rent" ||
+      listingCategory == "For Rent" ||
+      propertyMode == "forRent";
 }

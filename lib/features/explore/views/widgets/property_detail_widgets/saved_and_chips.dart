@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/explore/models/property_detail.dart';
+import 'package:real_estate_app/features/explore/models/property_detail_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
 class SavedAndChips extends StatelessWidget {
@@ -10,25 +10,28 @@ class SavedAndChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        //? chips
-        _Chips(srt: property.propertyType.toString(), color: AppColors.primary),
-        _Chips(srt: property.propertyMode.toString(), color: Colors.green),
-        _Chips(
-          srt: property.listingCategory.toString(),
-          color: Colors.redAccent,
-        ),
-        const Spacer(),
-        IconButton(
-          style: IconButton.styleFrom(
-            backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+    return Container(
+      margin: const EdgeInsets.only(top: 12),
+      child: Row(
+        children: [
+          //? chips
+          _Chips(srt: property.propertyType.toString(), color: AppColors.primary),
+          _Chips(srt: property.propertyMode.toString(), color: Colors.green),
+          _Chips(
+            srt: property.listingCategory.toString(),
+            color: Colors.redAccent,
           ),
-          icon: const Icon(Icons.favorite, color: AppColors.primary),
-          onPressed: () {},
-        ),
-        //? saved
-      ],
+          const Spacer(),
+          IconButton(
+            style: IconButton.styleFrom(
+              backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+            ),
+            icon: const Icon(Icons.favorite, color: AppColors.primary),
+            onPressed: () {},
+          ),
+          //? saved
+        ],
+      ),
     );
   }
 }

@@ -1,3 +1,4 @@
+export 'title.dart';
 export 'media_images.dart';
 export 'address.dart';
 export 'map_preview.dart';
@@ -10,4 +11,6 @@ export 'header_section.dart';
 export 'amenities_features.dart';
 export 'configurations_unit_plans.dart';
 export 'video_preview.dart';
-
+export 'virtual_tour.dart';
+export 'developer_info.dart';
+export 'agent_info.dart';

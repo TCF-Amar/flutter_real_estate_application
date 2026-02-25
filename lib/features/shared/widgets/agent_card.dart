@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/features/explore/models/agent_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
 class ExploreAgentCard extends StatelessWidget {
-  final String name;
-  final String company;
-  final String image;
-  final double rating;
-  final String experience;
-  final String properties;
+  final AgentModel agent;
+
   final VoidCallback? onTap;
+  final VoidCallback? onFavoriteTap;
 
   const ExploreAgentCard({
     super.key,
-    required this.name,
-    required this.company,
-    required this.image,
-    required this.rating,
-    required this.experience,
-    required this.properties,
+    required this.agent,
     this.onTap,
+    this.onFavoriteTap,
   });
 
   @override
@@ -49,7 +45,7 @@ class ExploreAgentCard extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   decoration: const BoxDecoration(shape: BoxShape.circle),
                   child: Image.network(
-                    image,
+                    agent.image,
                     fit: BoxFit.cover,
                     errorBuilder: (_, _, _) => Container(
                       color: AppColors.grey.withValues(alpha: 0.3),
@@ -63,14 +59,14 @@ class ExploreAgentCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AppText(
-                        name,
+                        agent.name,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: AppColors.black,
                       ),
                       const SizedBox(height: 2),
                       AppText(
-                        "At $company",
+                        "At ${agent.agencyName}",
                         fontSize: 12,
                         color: AppColors.textSecondary,
                         maxLines: 1,
@@ -79,67 +75,138 @@ class ExploreAgentCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(
-                  Icons.favorite_border,
-                  size: 20,
-                  color: AppColors.primary,
+                GestureDetector(
+                  onTap: onFavoriteTap,
+                  child: Icon(
+                    Icons.favorite_border,
+                    size: 20,
+                    color: AppColors.primary,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            const Divider(height: 1, color: Color(0xFFEEEEEE)),
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _InfoItem(
-                  icon: Icons.star_rounded,
-                  label: "$rating (88 reviews)",
-                  iconColor: Colors.amber,
+                Row(
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SvgPicture.asset(
+                      Assets.icons.star,
+                      width: 20,
+                      height: 20,
+                      // color: AppColors.primary,
+                    ),
+                    const SizedBox(width: 4),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            AppText(
+                              agent.rating.toStringAsFixed(1),
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textSecondary,
+                            ),
+                            AppText(
+                              " (${agent.reviewCount} Reviews)",
+                              fontSize: 10,
+                              color: AppColors.grey,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        AppText(
+                          "Ratings",
+                          fontSize: 8,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                _InfoItem(
-                  icon: Icons.work_outline_rounded,
-                  label: "$experience Years",
-                  iconColor: AppColors.primary,
+                Row(
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SvgPicture.asset(
+                      Assets.icons.bag,
+                      width: 20,
+                      height: 20,
+                      // color: AppColors.primary,
+                    ),
+                    const SizedBox(width: 4),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText(
+                          agent.experience,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(height: 2),
+                        AppText(
+                          "Experience",
+                          fontSize: 8,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                _InfoItem(
-                  icon: Icons.home_work_outlined,
-                  label: "$properties properties",
-                  iconColor: AppColors.primary,
+                Row(
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SvgPicture.asset(
+                      Assets.icons.home_2,
+                      width: 20,
+                      height: 20,
+                      // color: AppColors.primary,
+                    ),
+                    const SizedBox(width: 4),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppText(
+                          "${agent.propertiesCount} Properties",
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(height: 2),
+                        AppText(
+                          "Listing",
+                          fontSize: 8,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
+            // const SizedBox(height: 12),
+            agent.description.isEmpty
+                ? const SizedBox()
+                : Container(
+                    margin: const EdgeInsets.only(top: 12),
+                    child: AppText(
+                      agent.description,
+                      fontSize: 12,
+                      color: AppColors.grey,
+                      maxLines: 5,
+                      // textAlign: TextAlign.justify,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _InfoItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color iconColor;
-
-  const _InfoItem({
-    required this.icon,
-    required this.label,
-    required this.iconColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, size: 14, color: iconColor),
-        const SizedBox(width: 4),
-        AppText(
-          label,
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textSecondary,
-        ),
-      ],
     );
   }
 }

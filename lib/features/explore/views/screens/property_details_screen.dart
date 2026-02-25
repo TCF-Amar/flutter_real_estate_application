@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Title;
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/explore/controllers/property_details_controller.dart';
+import 'package:real_estate_app/features/explore/views/widgets/property_detail_widgets/virtual_tour.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 import 'package:real_estate_app/features/shared/widgets/back_button.dart';
 import 'package:real_estate_app/features/shared/widgets/header_text.dart';
@@ -54,7 +55,7 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                   onPressed: () {},
                 ),
               ],
-              flexibleSpace: HeaderSection(property: property),
+              flexibleSpace: HeaderSection(),
             ),
 
             SliverToBoxAdapter(
@@ -65,50 +66,16 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                   children: [
                     //? media images
                     MediaImages(media: property.media!),
-                    const SizedBox(height: 16),
+
+                    //? saved and chips
                     SavedAndChips(property: property),
-                    const SizedBox(height: 16),
+
                     // title
-                    AppText(
-                      "${property.title.toString()} ${property.id.toString()}",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    AppText(
-                      property.configurationName.toString(),
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey,
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.location_on,
-                          color: AppColors.grey,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: AppText(
-                            "${property.address!.zipcode} ${property.address!.locality}, ${property.address!.city} ${property.address!.state}, ${property.address!.country}",
-                            fontSize: 12,
-                            overflow: TextOverflow.clip,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
+                    Title(property: property),
 
                     //! price and description
                     PriceAndDescription(property: property),
-                    // const SizedBox(height: 1),
+
                     //! Property overview
                     Overview(property: property),
 
@@ -127,12 +94,20 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                     Address(address: property.address!),
 
                     //! Amenities & Features
-                    AmenitiesFeatures(amenities: property.amenities ?? []),
+                    AmenitiesFeatures(amenities: property.amenities!),
 
                     //! Configurations & Unit Plans
-                    ConfigurationsUnitPlans(units: property.units ?? []),
-                    VideoPreview(video: property.media!.videos),
+                    ConfigurationsUnitPlans(),
+
+                    //! Videos
+                    VideoPreview(videos: property.media!.videos),
                     // const SizedBox(height: 1000), //
+                    //! Virtual Tour
+                    const VirtualTour(),
+
+                    property.isProject ? DeveloperInfo() : AgentInfo(),
+
+                    
                   ],
                 ),
               ),

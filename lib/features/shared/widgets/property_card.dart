@@ -69,7 +69,14 @@ class PropertyCard extends StatelessWidget {
                     children: [
                       featured
                           ? _TagBadge(label: 'Featured', color: Colors.white)
-                          : SizedBox.shrink(),
+                          : _TagBadge(
+                              label: item.listingCategory
+                                  .toString()
+                                  .split("_")
+                                  .map((e) => e.capitalizeFirst!)
+                                  .join(" "),
+                              color: Colors.white,
+                            ),
                       const SizedBox(width: 6),
                       _TagBadge(
                         label: item.propertyMode
@@ -129,12 +136,12 @@ class PropertyCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText(
-                    item.title,
+                    "${item.title} ${item.id}",
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.black,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    // maxLines: 1,
+                    overflow: TextOverflow.visible,
                   ),
                   const SizedBox(height: 6),
                   Row(
@@ -161,7 +168,8 @@ class PropertyCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AppText(
-                        "\$ ${item.basePrice}",
+                        
+                        "${item.formattedPrice}",
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                         color: AppColors.primary,

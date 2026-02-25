@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
@@ -37,92 +40,107 @@ class ExploreDeveloperCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            Container(
-              width: 50,
-              height: 50,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: AppColors.grey.withValues(alpha: 0.1),
-                ),
-              ),
-              child: Image.network(
-                logo,
-                fit: BoxFit.contain,
-                errorBuilder: (_, _, __) => const Icon(
-                  Icons.business_rounded,
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: AppText(
-                          name,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.black,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppColors.grey.withValues(alpha: 0.1),
                         ),
                       ),
-                      const Icon(
-                        Icons.favorite_border,
-                        size: 20,
-                        color: AppColors.primary,
+                      child: Image.network(
+                        logo,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, _, __) => const Icon(
+                          Icons.business_rounded,
+                          color: AppColors.primary,
+                        ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  AppText(
-                    "Mumbai, Maharashtra", // Placeholder or pass location
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      _StatItem(
-                        icon: Icons.apartment_rounded,
-                        label: "$projectCount Projects",
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppText(
+                            name,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.black,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          AppText(
+                            "Mumbai, Maharashtra",
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 16),
-                      _StatItem(
-                        icon: Icons.history_rounded,
-                        label: "$experience Years",
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    _StatItem(
+                      icon: Assets.icons.star,
+                      label: "$projectCount projects",
+                      subLabel: "Total",
+                    ),
+                    const SizedBox(width: 24),
+                    _StatItem(
+                      icon: Assets.icons.bag,
+                      label: "$experience+ Years",
+                      subLabel: "Experience",
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            // Heart icon - top right
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Icon(
+                Icons.favorite_border,
+                size: 24,
+                color: AppColors.primary,
               ),
             ),
-            const SizedBox(width: 8),
-            GestureDetector(
-              onTap: onViewDetails,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: AppText(
-                  "View",
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+            // View detail button - bottom right
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: GestureDetector(
+                onTap: onViewDetails,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: AppText(
+                    "View detail",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -134,22 +152,40 @@ class ExploreDeveloperCard extends StatelessWidget {
 }
 
 class _StatItem extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String label;
+  final String subLabel;
 
-  const _StatItem({required this.icon, required this.label});
+  const _StatItem({
+    required this.icon,
+    required this.label,
+    required this.subLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, size: 14, color: AppColors.grey),
+        SvgPicture.asset(
+          icon,
+          width: 16,
+          height: 16,
+          // color: AppColors.primary,
+        ),
         const SizedBox(width: 4),
-        AppText(
-          label,
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textSecondary,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppText(
+              label,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppColors.black,
+            ),
+            const SizedBox(height: 2),
+            AppText(subLabel, fontSize: 11, color: AppColors.textSecondary),
+          ],
         ),
       ],
     );

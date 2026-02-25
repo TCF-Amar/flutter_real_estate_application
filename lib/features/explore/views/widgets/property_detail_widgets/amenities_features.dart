@@ -17,35 +17,49 @@ class _AmenitiesFeaturesState extends State<AmenitiesFeatures> {
 
   @override
   Widget build(BuildContext context) {
+    // if (widget.amenities.isEmpty) return const SizedBox.shrink();
     return Container(
       margin: const EdgeInsets.only(top: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HeaderText(text: "Amenities & Features"),
-          Container(
-            margin: const EdgeInsets.only(top: 10),
-            padding: const EdgeInsets.all(10),
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 4,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 0,
-              ),
-              itemCount: _isExpanded
-                  ? widget.amenities.length
-                  : widget.amenities.length > 10
-                  ? 10
-                  : widget.amenities.length,
-              itemBuilder: (context, index) {
-                return _buildAmenitiesRow(widget.amenities[index].name);
-              },
-            ),
-          ),
+          widget.amenities.isEmpty
+              ? Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.all(10),
+                  child: Center(
+                    child: AppText(
+                      "No amenities information available.",
+                      fontSize: 13,
+                      color: AppColors.grey,
+                    ),
+                  ),
+                )
+              : Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.all(10),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 4,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 0,
+                        ),
+                    itemCount: _isExpanded
+                        ? widget.amenities.length
+                        : widget.amenities.length > 10
+                        ? 10
+                        : widget.amenities.length,
+                    itemBuilder: (context, index) {
+                      return _buildAmenitiesRow(widget.amenities[index].name);
+                    },
+                  ),
+                ),
           if (widget.amenities.length > 10)
             TextButton(
               style: TextButton.styleFrom(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/explore/models/address.dart';
+import 'package:real_estate_app/features/explore/models/address_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 import 'package:real_estate_app/features/shared/widgets/header_text.dart';
 
@@ -11,7 +11,7 @@ class Address extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

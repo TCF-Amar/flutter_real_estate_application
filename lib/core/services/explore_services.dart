@@ -7,13 +7,15 @@ import 'package:real_estate_app/core/networks/dio_helper.dart';
 import 'package:real_estate_app/core/networks/exceptions/api_exceptions.dart';
 import 'package:real_estate_app/core/networks/exceptions/exceptions.dart';
 import 'package:real_estate_app/core/utils/typedef.dart';
-import 'package:real_estate_app/features/explore/models/property_detail_response.dart';
-import 'package:real_estate_app/features/explore/models/property_filter_model.dart';
-import 'package:real_estate_app/features/explore/models/property_response.dart';
+import 'package:real_estate_app/features/explore/models/agent_details_response_model.dart';
+import 'package:real_estate_app/features/explore/models/agent_response_model.dart';
+import 'package:real_estate_app/features/explore/models/property_detail_response_model.dart';
+import 'package:real_estate_app/features/explore/models/property_filter.model.dart';
+import 'package:real_estate_app/features/explore/models/property_response_model.dart';
 import 'package:real_estate_app/features/saved_properties/models/saved_property.dart';
 import 'package:real_estate_app/features/saved_properties/models/saved_response.dart';
 
-class PropertyServices extends GetxService {
+class ExploreServices extends GetxService {
   final Logger log = Logger();
   final DioHelper dioHelper = Get.find<DioHelper>();
 
@@ -46,7 +48,7 @@ class PropertyServices extends GetxService {
     }
   }
 
-  FutureResult<PropertyResponse> searchProperties() async {
+  FutureResult<PropertyResponseModel> searchProperties() async {
     try {
       final queryParams = <String, dynamic>{
         "per_page": perPage.value,
@@ -90,7 +92,7 @@ class PropertyServices extends GetxService {
         ),
       );
 
-      final propertyResponse = PropertyResponse.fromJson(response.data);
+      final propertyResponse = PropertyResponseModel.fromJson(response.data);
       return Right(propertyResponse);
     } on AppException catch (e) {
       return Left(ApiException.map(e));
@@ -135,7 +137,7 @@ class PropertyServices extends GetxService {
     }
   }
 
-  FutureResult<PropertyDetailResponse> getPropertyDetails(int id) async {
+  FutureResult<PropertyDetailResponseModel> getPropertyDetails(int id) async {
     try {
       final response = await dioHelper.request(
         ApiRequest(
@@ -144,7 +146,47 @@ class PropertyServices extends GetxService {
         ),
       );
       log.d(response.data);
-      return Right(PropertyDetailResponse.fromJson(response.data));
+      return Right(PropertyDetailResponseModel.fromJson(response.data));
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+  //! =======================
+  //? Agent services
+  //! =======================
+
+  FutureResult<AgentResponseMode> getAgents() async {
+    try {
+      final queryParameters = <String, dynamic>{};
+      final response = await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.agents,
+          method: ApiMethod.get,
+          queryParameters: queryParameters,
+        ),
+      );
+      return Right(AgentResponseMode.fromJson(response.data!));
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+
+  FutureResult<AgentDetailsResponse> getAgentDetails(int id) async {
+    try {
+      final response = await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.getAgentDetails(id),
+          method: ApiMethod.get,
+        ),
+      );
+      log.d(response.data);
+      return Right(AgentDetailsResponse.fromJson(response.data));
     } on AppException catch (e) {
       return Left(ApiException.map(e));
     } catch (e) {

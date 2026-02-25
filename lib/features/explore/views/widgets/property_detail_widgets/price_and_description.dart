@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/utils/date_time_utils.dart';
-import 'package:real_estate_app/features/explore/models/property_detail.dart';
+import 'package:real_estate_app/features/explore/models/property_detail_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 import 'package:real_estate_app/features/shared/widgets/header_text.dart';
 
@@ -19,12 +19,14 @@ class _PriceAndDescriptionState extends State<PriceAndDescription> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 16),
+      margin: const EdgeInsets.only(top: 18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppText(
-            widget.property.isNotCompleted
+            widget.property.forRent
+                ? "${widget.property.formattedPrice?.toString()} / Month"
+                : widget.property.isNotCompleted
                 ? widget.property.priceRange?.toString() ?? 'Price on request'
                 : widget.property.formattedPrice?.toString() ??
                       widget.property.basePrice?.toString() ??
@@ -32,6 +34,7 @@ class _PriceAndDescriptionState extends State<PriceAndDescription> {
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: AppColors.primary,
+            overflow: TextOverflow.clip,
           ),
           const SizedBox(height: 14),
           if (widget.property.isNotCompleted) ...[

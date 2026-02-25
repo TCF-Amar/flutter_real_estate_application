@@ -1,7 +1,7 @@
 import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/core/utils/safe_parser.dart';
 
-class PropertyUnit {
+class PropertyUnitModel {
   final int id;
   final String? unitNumber;
   final int? bhk;
@@ -28,7 +28,7 @@ class PropertyUnit {
   final int? totalUnits;
   final String? floorPlanImage;
 
-  const PropertyUnit({
+  const PropertyUnitModel({
     required this.id,
     this.unitNumber,
     this.bhk,
@@ -56,7 +56,7 @@ class PropertyUnit {
     this.floorPlanImage,
   });
 
-  factory PropertyUnit.fromJson(Map<String, dynamic> json) => PropertyUnit(
+  factory PropertyUnitModel.fromJson(Map<String, dynamic> json) => PropertyUnitModel  (
     id: toInt(json['id']) ?? 0,
     unitNumber: toStr(json['unit_number']),
     bhk: toInt(json['bhk']),

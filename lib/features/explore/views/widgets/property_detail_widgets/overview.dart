@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/explore/models/property_detail.dart';
+import 'package:real_estate_app/features/explore/models/property_detail_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 import 'package:real_estate_app/features/shared/widgets/header_text.dart';
 
@@ -98,7 +98,11 @@ class Overview extends StatelessWidget {
         label: "Bathrooms",
         value: property.bathroomList?.toString() ?? "N/A",
       ),
-      _OverviewItem(icon: Icons.garage_outlined, label: "Garage", value: "0"),
+      _OverviewItem(
+        icon: Icons.garage_outlined,
+        label: "Garage",
+        value: property.parkingOpenCount?.toString() ?? "0",
+      ),
       _OverviewItem(
         iconPath: Assets.icons.calender,
         label: "Year Built",

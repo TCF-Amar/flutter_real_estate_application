@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:real_estate_app/core/services/property_services.dart';
-import 'package:real_estate_app/features/explore/models/property_filter_model.dart';
+import 'package:real_estate_app/core/services/explore_services.dart';
+import 'package:real_estate_app/features/explore/models/property_filter.model.dart';
 import 'package:real_estate_app/features/explore/models/property_model.dart';
 import 'package:real_estate_app/features/saved_properties/controllers/saved_properties_controller.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
@@ -10,7 +10,7 @@ import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 class ExploreController extends GetxController {
   //* Dependencies
   final Logger log = Logger();
-  final PropertyServices propertyServices = Get.find<PropertyServices>();
+  final ExploreServices propertyServices = Get.find<ExploreServices>();
   final SavedPropertiesController favoritesController =
       Get.find<SavedPropertiesController>();
 
@@ -46,9 +46,7 @@ class ExploreController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchFilterData();
-    projectSearch();
-
+    _init();
     // Trigger search when query changes (debounced)
     debounce(searchQuery, (_) {
       propertyServices.page.value = 1;
@@ -68,9 +66,16 @@ class ExploreController extends GetxController {
           !isLoading &&
           !isMoreLoading &&
           currentPage.value < lastPage.value) {
-        fetchMoreProperties();
+        _loadMoreProperties();
       }
     });
+  }
+
+  Future<void> _init() async {
+    fetchFilterData();
+    await projectSearch();
+    await agentSearch();
+    await developerSearch();
   }
 
   @override
@@ -103,6 +108,7 @@ class ExploreController extends GetxController {
 
   Future<void> agentSearch() async {
     // Implement agent search logic
+    // fetchAgentDetails();
   }
 
   Future<void> developerSearch() async {
@@ -136,7 +142,7 @@ class ExploreController extends GetxController {
 
     // Update service and trigger search
     propertyServices.propertyType.value = type;
-    await projectSearch();
+    projectSearch();
   }
 
   //* Filter Sheet Logic (Advanced Filters)
@@ -277,7 +283,14 @@ class ExploreController extends GetxController {
   }
 
   //* Pagination & Refresh logic
-  void fetchMoreProperties() async {
+  void _loadMoreProperties() {
+    if (currentPage.value < lastPage.value && !isMoreLoading) {
+      propertyServices.page.value = currentPage.value + 1;
+      _fetchProperties();
+    }
+  }
+
+  Future<void> fetchMoreProperties() async {
     if (currentPage.value < lastPage.value && !isMoreLoading) {
       propertyServices.page.value = currentPage.value + 1;
       await _fetchProperties();
@@ -308,4 +321,6 @@ class ExploreController extends GetxController {
       propertyId: propertyId,
     );
   }
+
+  
 }

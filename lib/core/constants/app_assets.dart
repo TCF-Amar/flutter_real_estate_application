@@ -25,6 +25,9 @@ class _Icons {
   final calender = "assets/icons/uit_calender.svg";
   final flor = "assets/icons/flor.svg";
   final progresses = "assets/icons/progress.svg";
+  final star = "assets/icons/solar_star.svg";
+  final home_2 = "assets/icons/home_2.svg";
+  final bag = "assets/icons/bag.svg";
 }
 
 class _Images {

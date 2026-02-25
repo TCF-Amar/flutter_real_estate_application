@@ -1,6 +1,6 @@
 import 'package:real_estate_app/core/utils/safe_parser.dart';
 
-class Contact {
+class ContactModel {
   final String? name;
   final String? company;
   final int? agentId;
@@ -11,7 +11,7 @@ class Contact {
   final String? experience;
   final int? propertiesCount;
 
-  const Contact({
+  const ContactModel({
     this.name,
     this.company,
     this.agentId,
@@ -23,7 +23,7 @@ class Contact {
     this.propertiesCount,
   });
 
-  factory Contact.fromJson(Map<String, dynamic> json) => Contact(
+  factory ContactModel.fromJson(Map<String, dynamic> json) => ContactModel(
     name: toStr(json['name']),
     company: toStr(json['company']),
     agentId: toInt(json['agent_id']),
