@@ -20,6 +20,9 @@ class ApiEndpoints {
   static const String _buyer = "/buyer";
   static const String getHomepageData = "$_buyer/homepage";
 
+  //? reviews
+  static String getPropertyReviews(int id) => "$_buyer/properties/$id/reviews";
+
   //? agents
   static const String agents = "$_buyer/agents";
   static String getAgentDetails(int id) => "$_buyer/agents/$id";

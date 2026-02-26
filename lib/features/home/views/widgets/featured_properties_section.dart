@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
-import 'package:real_estate_app/features/explore/models/property_model.dart';
+import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 

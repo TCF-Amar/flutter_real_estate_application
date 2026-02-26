@@ -25,8 +25,9 @@ class ExploreAgentCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.grey.withValues(alpha: 0.3)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.04),
@@ -65,22 +66,43 @@ class ExploreAgentCard extends StatelessWidget {
                         color: AppColors.black,
                       ),
                       const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          AppText(
+                            "At ",
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          AppText(
+                            agent.agencyName,
+                            fontSize: 12,
+                            color: Colors.lightBlue,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ],
+                      ),
                       AppText(
-                        "At ${agent.agencyName}",
-                        fontSize: 12,
+                        agent.location,
+                        fontSize: 10,
                         color: AppColors.textSecondary,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
                 GestureDetector(
                   onTap: onFavoriteTap,
-                  child: Icon(
-                    Icons.favorite_border,
-                    size: 20,
-                    color: AppColors.primary,
+
+                  child: CircleAvatar(
+                    child: Icon(
+                      Icons.favorite_border,
+                      size: 20,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
               ],

@@ -1,5 +1,5 @@
 import 'package:real_estate_app/features/explore/models/agent_model.dart';
-import 'package:real_estate_app/features/explore/models/pagination_model.dart';
+import 'package:real_estate_app/features/shared/models/pagination_model.dart';
 
 
 class AgentResponseMode {

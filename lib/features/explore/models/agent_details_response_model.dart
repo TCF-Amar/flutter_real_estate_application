@@ -1,8 +1,6 @@
 import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/core/utils/safe_parser.dart';
-import 'package:real_estate_app/features/explore/models/agent_model.dart';
-import 'package:real_estate_app/features/explore/models/property_model.dart';
-import 'package:real_estate_app/features/explore/models/review_model.dart';
+import 'package:real_estate_app/features/property/models/property_model.dart';
 
 class AgentDetailsResponse {
   final bool status;
@@ -40,7 +38,6 @@ class AgentDetailModel {
   final String? description;
   final double rating;
   final int reviewCount;
-  final List<ReviewModel> reviews;
   final int propertiesCount;
   final List<Property> properties;
 
@@ -60,7 +57,6 @@ class AgentDetailModel {
     this.description,
     required this.rating,
     required this.reviewCount,
-    required this.reviews,
     required this.propertiesCount,
     required this.properties,
   });
@@ -86,15 +82,7 @@ class AgentDetailModel {
         description: toStr(json['description']),
         rating: toDouble(json['rating']) ?? 0.0,
         reviewCount: toInt(json['review_count']) ?? 0,
-        reviews: (json['reviews'] is List)
-            ? (json['reviews'] as List<dynamic>)
-                  .map(
-                    (e) => ReviewModel.fromJson(
-                      e is Map<String, dynamic> ? e : {},
-                    ),
-                  )
-                  .toList()
-            : [],
+        
         propertiesCount: toInt(json['properties_count']) ?? 0,
         properties: (json['properties'] is List)
             ? (json['properties'] as List<dynamic>)
@@ -123,7 +111,6 @@ class AgentDetailModel {
         description: null,
         rating: 0.0,
         reviewCount: 0,
-        reviews: [],
         propertiesCount: 0,
         properties: [],
       );
@@ -147,29 +134,10 @@ class AgentDetailModel {
       'description': description,
       'rating': rating,
       'review_count': reviewCount,
-      'reviews': reviews.map((e) => e.toJson()).toList(),
       'properties_count': propertiesCount,
       'properties': properties.map((e) => e.toJson()).toList(),
     };
   }
 
-  AgentModel? toAgentModel() {
-    try {
-      return AgentModel(
-        id: id,
-        name: name,
-        image: image ?? '',
-        agencyName: agencyName,
-        location: location ?? '',
-        experience: experience ?? '',
-        roleType: roleType,
-        rating: rating,
-        reviewCount: reviewCount,
-        propertiesCount: propertiesCount,
-        description: description ?? '',
-      );
-    } catch (_) {
-      return null;
-    }
-  }
+
 }

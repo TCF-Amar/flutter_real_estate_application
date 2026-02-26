@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/explore/models/property_model.dart';
+import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
 class PropertyCard extends StatelessWidget {
@@ -118,9 +118,7 @@ class PropertyCard extends StatelessWidget {
                               ? Icons.favorite
                               : Icons.favorite_border,
                           size: 20,
-                          color: item.isFavorited
-                              ? Colors.red
-                              : AppColors.primary,
+                          color: AppColors.primary,
                         ),
                       ),
                     ),
@@ -168,7 +166,6 @@ class PropertyCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AppText(
-                        
                         "${item.formattedPrice}",
                         fontSize: 12,
                         fontWeight: FontWeight.w700,

@@ -61,20 +61,19 @@ class AgentModel {
     };
   }
 
-  // entity
-  factory AgentModel.fromEntity(AgentDetailModel entity) {
+  factory AgentModel.fromAgentDetailModel(AgentDetailModel agent) {
     return AgentModel(
-      id: entity.id,
-      name: entity.name,
-      image: entity.image!,
-      agencyName: entity.agencyName,
-      location: entity.location!,
-      experience: entity.experience!,
-      roleType: entity.roleType,
-      rating: entity.rating,
-      reviewCount: entity.reviewCount,
-      propertiesCount: entity.propertiesCount,
-      description: entity.description!,
+      id: agent.id,
+      name: agent.name,
+      image: agent.image!,
+      agencyName: agent.agencyName,
+      location: agent.location!,
+      experience: agent.experience!,
+      roleType: agent.roleType,
+      rating: agent.rating,
+      reviewCount: agent.reviewCount,
+      propertiesCount: agent.propertiesCount,
+      description: agent.description!,
     );
   }
 }

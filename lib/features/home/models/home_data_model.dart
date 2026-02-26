@@ -1,4 +1,4 @@
-import 'package:real_estate_app/features/explore/models/property_model.dart';
+import 'package:real_estate_app/features/property/models/property_model.dart';
 
 class HomepageData {
   final List<Property> featuredProperties;

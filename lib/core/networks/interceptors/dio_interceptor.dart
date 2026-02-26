@@ -63,7 +63,9 @@ class DioInterceptors extends Interceptor {
         !requestOptions.path.contains(ApiEndpoints.refreshToken)) {
       // Prevent infinite retry loop
       if (requestOptions.extra['isRetry'] == true) {
-        await _forceLogout();
+        log.w("Retry also failed — skipping logout");
+
+        // await _forceLogout();
         return handler.next(err);
       }
 

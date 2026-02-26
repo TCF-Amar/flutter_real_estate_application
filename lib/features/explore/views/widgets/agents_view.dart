@@ -11,7 +11,7 @@ class AgentsView extends StatelessWidget {
     final controller = Get.find<AgentController>();
     // Dummy Data
     return Obx(() {
-      if (controller.isLoading.value) {
+      if (controller.isLoadingList.value) {
         return const Center(child: CircularProgressIndicator());
       }
       if (controller.agents.isEmpty) {

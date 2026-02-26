@@ -13,22 +13,22 @@ class DevelopersView extends StatelessWidget {
         "logo": "https://logodix.com/logo/1828873.png", // Example logo
         "name": "Lodha Group ${index + 1}",
         "projectCount": 15 + index,
-        "experience": "${8 + index}",
+        "experience": "${8 + index}+ Years",
       },
     );
 
     return ListView.separated(
       padding: const EdgeInsets.only(bottom: 20),
       itemCount: developers.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 16),
+      separatorBuilder: (_, _) => const SizedBox(height: 16),
       itemBuilder: (context, index) {
         final dev = developers[index];
-        return ExploreDeveloperCard(
+        return DeveloperCard(
           logo: dev["logo"] as String,
           name: dev["name"] as String,
           projectCount: dev["projectCount"] as int,
           experience: dev["experience"] as String,
-          onTap: () {},
+          onTapToggle: () {},
           onViewDetails: () {},
         );
       },

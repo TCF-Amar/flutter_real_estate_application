@@ -1,18 +1,17 @@
 import 'package:get/get.dart';
-import 'package:real_estate_app/features/explore/models/property_model.dart';
+import 'package:real_estate_app/features/property/controllers/property_controller.dart';
+import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/core/services/home_services.dart';
-import 'package:real_estate_app/features/saved_properties/controllers/saved_properties_controller.dart';
+import 'package:real_estate_app/features/saved/controllers/favorite_controller.dart';
 
 class HomeController extends GetxController {
   final HomeServices _homeServices = Get.find<HomeServices>();
-  // final PropertyServices propertyServices = Get.find<PropertyServices>();
-  final SavedPropertiesController favoritesController =
-      Get.find<SavedPropertiesController>();
 
   RxBool isLoading = false.obs;
   RxList<Property> featuredProperties = <Property>[].obs;
   RxList<Property> allProperties = <Property>[].obs;
   RxList<Property> recommendedProperties = <Property>[].obs;
+  final FavoriteController favoritesController = Get.find<FavoriteController>();
 
   @override
   void onInit() {
@@ -54,24 +53,19 @@ class HomeController extends GetxController {
       }).toList(),
     );
 
-    // If "Nearby" doesn't have a specific category, we might want to show all or use a different logic.
-    // For now, mirroring the user's intent of filtering by category if it's not 'All'.
     if (filter == 'Nearby' && recommendedProperties.isEmpty) {
       recommendedProperties.assignAll(allProperties);
     }
   }
 
-  Future<void> toggleFavorite({
-    required String type,
-    required int propertyId,
-  }) async {
+  void updateFavorite(int propertyId) {
     final index = allProperties.indexWhere(
       (property) => property.id == propertyId,
     );
     if (index == -1) return;
     final property = allProperties[index];
     final updatedProperty = property.copyWith(
-      isFavorited: !(property.isFavorited ?? false),
+      isFavorited: !(property.isFavorited),
     );
     allProperties[index] = updatedProperty;
     featuredProperties[index] = updatedProperty;
@@ -79,10 +73,14 @@ class HomeController extends GetxController {
     allProperties.refresh();
     featuredProperties.refresh();
     recommendedProperties.refresh();
-    await favoritesController.toggleFavorite(
-      type: type,
+  }
+
+  void toggleFavorite({required int propertyId}) {
+    updateFavorite(propertyId);
+    Get.find<PropertyController>().updateFavoriteData(propertyId);
+    favoritesController.toggleFavorite(
+      type: "property",
       propertyId: propertyId,
     );
-
   }
 }

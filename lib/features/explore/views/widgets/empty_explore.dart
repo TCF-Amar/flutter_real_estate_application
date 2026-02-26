@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/explore/controllers/explore_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/app_button.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
@@ -11,7 +9,6 @@ class EmptyExplore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<ExploreController>();
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -33,7 +30,7 @@ class EmptyExplore extends StatelessWidget {
             const SizedBox(height: 24),
             AppButton(
               onPressed: () {
-                controller.refreshProperties();
+                // controller.refreshProperties();
               },
               text: 'Explore All Properties',
             ),
@@ -45,7 +42,7 @@ class EmptyExplore extends StatelessWidget {
               backgroundColor: Colors.transparent,
               textColor: AppColors.textSecondary,
               onPressed: () {
-                controller.resetFilters();
+                // controller.resetFilters();
               },
               text: 'Reset Filters',
             ),

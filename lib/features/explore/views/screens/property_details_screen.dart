@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart' hide Title;
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/explore/controllers/property_details_controller.dart';
-import 'package:real_estate_app/features/explore/views/widgets/property_detail_widgets/virtual_tour.dart';
+import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 import 'package:real_estate_app/features/shared/widgets/back_button.dart';
 import 'package:real_estate_app/features/shared/widgets/header_text.dart';
 
-import '../widgets/property_detail_widgets/index.dart';
+import '../../../property/views/widgets/property_detail_widgets/index.dart';
 
 class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
   final int id;
@@ -105,9 +104,18 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                     //! Virtual Tour
                     const VirtualTour(),
 
-                    property.isProject ? DeveloperInfo() : AgentInfo(),
+                    property.isProject
+                        ? DeveloperInfo()
+                        : AgentInfo(contact: property.contact!),
 
-                    
+                    //! Reviews & Ratings
+                    ReviewsAndRatings(
+                      reviewsSummary: property.reviewsSummary!,
+                      reviews: controller.reviews,
+                      hasMore: controller.hasMore,
+                      isLoadingMore: controller.isLoadingMoreReviews,
+                      onLoadMore: controller.loadMoreReviews,
+                    ),
                   ],
                 ),
               ),

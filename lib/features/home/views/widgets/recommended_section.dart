@@ -125,7 +125,7 @@ class _RecommendedSectionState extends State<RecommendedSection> {
               },
               onFavoriteTap: () {
                 _controller.toggleFavorite(
-                  type: "property",
+                  // type: "property",
                   propertyId: properties[index].id,
                 );
               },
