@@ -8,7 +8,7 @@ import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/auth/controllers/validator/auth_validators.dart';
 import 'package:real_estate_app/features/auth/views/widgets/auth_button.dart';
 import 'package:real_estate_app/features/auth/views/widgets/auth_text_field.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   ResetPasswordScreen({super.key});

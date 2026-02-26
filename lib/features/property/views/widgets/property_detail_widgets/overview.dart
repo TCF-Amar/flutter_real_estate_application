@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/property/models/property_detail_model.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
-import 'package:real_estate_app/features/shared/widgets/header_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
+
 
 class Overview extends StatelessWidget {
   final PropertyDetail property;
@@ -141,12 +140,7 @@ class Overview extends StatelessWidget {
               const SizedBox(width: 8),
             ],
             if (item.iconPath != null) ...[
-              SvgPicture.asset(
-                item.iconPath!,
-                // colorFilter: ColorFilter.mode(AppColors.grey, BlendMode.srcIn),
-                width: 22,
-                height: 22,
-              ),
+              AppSvg(path: item.iconPath!, width: 22, height: 22),
               const SizedBox(width: 8),
             ],
             Expanded(

@@ -4,9 +4,7 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/utils/price_formatter.dart';
 import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
 import 'package:real_estate_app/features/property/models/property_unit_model.dart';
-import 'package:real_estate_app/features/shared/widgets/app_button.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
-import 'package:real_estate_app/features/shared/widgets/header_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ConfigurationsUnitPlans extends StatelessWidget {
   // final List<PropertyUnit> units;

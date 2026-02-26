@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:real_estate_app/features/property/controllers/property_controller.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/core/services/home_services.dart';
-import 'package:real_estate_app/features/saved/controllers/favorite_controller.dart';
+import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 
 class HomeController extends GetxController {
   final HomeServices _homeServices = Get.find<HomeServices>();

@@ -9,11 +9,12 @@ import 'package:real_estate_app/core/networks/exceptions/exceptions.dart';
 import 'package:real_estate_app/core/utils/typedef.dart';
 import 'package:real_estate_app/features/explore/models/agent_details_response_model.dart';
 import 'package:real_estate_app/features/explore/models/agent_response_model.dart';
+import 'package:real_estate_app/features/favorite/models/favorite_response_model.dart';
 import 'package:real_estate_app/features/property/models/property_detail_response_model.dart';
 import 'package:real_estate_app/features/property/models/property_filter.model.dart';
 import 'package:real_estate_app/features/property/models/property_response_model.dart';
-import 'package:real_estate_app/features/saved/models/saved_property.dart';
-import 'package:real_estate_app/features/saved/models/saved_response.dart';
+import 'package:real_estate_app/features/property/models/review_request_model.dart';
+import 'package:real_estate_app/features/favorite/models/saved_response.dart';
 import 'package:real_estate_app/features/shared/models/review_response_model.dart';
 
 class ExploreServices extends GetxService {
@@ -124,14 +125,13 @@ class ExploreServices extends GetxService {
     }
   }
 
-  FutureResult<List<SavedProperty>> getSavedProperties() async {
+  FutureResult<FavoriteResponseModel> getSavedProperties() async {
     try {
       final response = await dioHelper.request(
         ApiRequest(url: ApiEndpoints.getSavedProperties, method: ApiMethod.get),
       );
-      return Right(
-        response.data.map((x) => SavedProperty.fromJson(x)).toList(),
-      );
+      log.d(response.data);
+      return Right(FavoriteResponseModel.fromJson(response.data));
     } on AppException catch (e) {
       return Left(ApiException.map(e));
     } catch (e) {
@@ -159,7 +159,7 @@ class ExploreServices extends GetxService {
   FutureResult<ReviewResponse> getReviews(
     int id, {
     int page = 1,
-    int perPage = 5,
+    int perPage = 3,
   }) async {
     try {
       final queryParameters = <String, dynamic>{
@@ -168,7 +168,7 @@ class ExploreServices extends GetxService {
       };
       final response = await dioHelper.request(
         ApiRequest(
-          url: ApiEndpoints.getPropertyReviews(id),
+          url: ApiEndpoints.propertyReviews(id),
           method: ApiMethod.get,
           queryParameters: queryParameters,
         ),
@@ -182,6 +182,43 @@ class ExploreServices extends GetxService {
     }
   }
 
+  FutureResult<bool> addReview(
+    int id,
+    ReviewRequestModel reviewRequestModel,
+  ) async {
+    try {
+      final response = await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.propertyReviews(id),
+          method: ApiMethod.post,
+          body: reviewRequestModel.toJson(),
+        ),
+      );
+      log.d(response.data);
+      return Right(true);
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+  FutureResult<PropertyResponseModel> getSimilarProperties(int id) async {
+    try {
+      final response = await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.similarProperties(id),
+          method: ApiMethod.get,
+        ),
+      );
+      log.d(response.data);
+      return Right(PropertyResponseModel.fromJson(response.data));
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
   //! =======================
   //? Agent services
   //! =======================

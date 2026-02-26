@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 
@@ -49,8 +49,8 @@ class ExploreSearchFilter extends StatelessWidget {
                     onTap: () {
                       handleSearch();
                     },
-                    child: SvgPicture.asset(
-                      Assets.icons.search,
+                    child: AppSvg(
+                      path: Assets.icons.search,
                       width: 22,
                       height: 22,
                     ),
@@ -84,14 +84,11 @@ class ExploreSearchFilter extends StatelessWidget {
               ],
             ),
             child: Center(
-              child: SvgPicture.asset(
-                Assets.icons.filter,
+              child: AppSvg(
+                path: Assets.icons.filter,
                 width: 30,
                 height: 30,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
-                  BlendMode.srcIn,
-                ),
+                color: Colors.white,
               ),
             ),
           ),

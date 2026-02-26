@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
-import 'package:real_estate_app/features/shared/widgets/app_button.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
+
 
 class SelectCountryScreen extends GetView<AuthController> {
   const SelectCountryScreen({super.key});

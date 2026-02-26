@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
@@ -167,12 +167,7 @@ class _StatItem extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SvgPicture.asset(
-          icon,
-          width: 20,
-          height: 20,
-          // color: AppColors.primary,
-        ),
+        AppSvg(path: icon, width: 20, height: 20),
         const SizedBox(width: 4),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart' hide Title;
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/property/views/widgets/property_detail_widgets/index.dart';
 import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
-import 'package:real_estate_app/features/shared/widgets/back_button.dart';
-import 'package:real_estate_app/features/shared/widgets/header_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
   final int id;
@@ -13,6 +12,7 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
 
   @override
   Widget build(BuildContext context) {
+    final authController = Get.find<AuthController>();
     return Scaffold(
       body: Obx(() {
         if (controller.isLoading) {
@@ -66,7 +66,7 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                     MediaImages(media: property.media!),
 
                     //? saved and chips
-                    SavedAndChips(property: property),
+                    SavedAndChips(),
 
                     // title
                     Title(property: property),
@@ -115,6 +115,12 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                       isLoadingMore: controller.isLoadingMoreReviews,
                       onLoadMore: controller.loadMoreReviews,
                     ),
+
+                    //! Similar Properties
+                    SimilarProperties(),
+
+                    //! Location Map
+                    ContactMessage(),
                   ],
                 ),
               ),
@@ -138,32 +144,44 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
           child: Row(
             children: [
               Expanded(
-                child: OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(12),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: AppColors.primary,
+                      child: AppImage(
+                        path: authController.userProfile.value?.profileImage,
+                        radius: BorderRadius.circular(50),
+                        errorIcon: Icons.person,
+                      ),
                     ),
-                  ),
-                  child: const AppText("Contact Seller"),
+                    const SizedBox(width: 8),
+                    Column(
+                      mainAxisSize: .min,
+                      crossAxisAlignment: .start,
+                      children: [
+                        AppText(
+                          authController
+                                  .user
+                                  .value!
+                                  .fullName
+                                  ?.capitalizeFirst ??
+                              "User",
+                          fontWeight: .bold,
+                        ),
+                        AppText(
+                          authController.userProfile.value?.country ?? "N/A",
+                          fontSize: 10,
+                          color: AppColors.grey,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const AppText("Book a Visit"),
-                ),
+                child: AppButton(text: "Book Visit", onPressed: () {}),
               ),
             ],
           ),

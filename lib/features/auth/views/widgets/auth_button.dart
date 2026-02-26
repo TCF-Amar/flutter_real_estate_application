@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:real_estate_app/features/shared/widgets/app_button.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 /// AuthButton is now a simple wrapper around AppButton for backward compatibility
 /// You can use AppButton directly in new code

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/shared/widgets/app_button.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class SignInWithOthers extends StatelessWidget {
   final bool? isLoading;
@@ -16,7 +15,7 @@ class SignInWithOthers extends StatelessWidget {
         AppButton(
           backgroundColor: AppColors.white,
           textColor: AppColors.textPrimary,
-          icon: SvgPicture.asset(Assets.icons.google),
+          icon: AppSvg(path: Assets.icons.google),
           text: "Continue with Google",
           onPressed: () {},
           isLoading: isLoading ?? false,
@@ -25,7 +24,7 @@ class SignInWithOthers extends StatelessWidget {
         AppButton(
           backgroundColor: AppColors.white,
           textColor: AppColors.textPrimary,
-          icon: SvgPicture.asset(Assets.icons.apple),
+          icon: AppSvg(path: Assets.icons.apple),
           text: "Continue with Apple",
           onPressed: () {},
           isLoading: isLoading ?? false,

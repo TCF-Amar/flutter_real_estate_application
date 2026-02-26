@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/explore/models/agent_model.dart';
@@ -114,12 +114,7 @@ class ExploreAgentCard extends StatelessWidget {
                 Row(
                   // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SvgPicture.asset(
-                      Assets.icons.star,
-                      width: 20,
-                      height: 20,
-                      // color: AppColors.primary,
-                    ),
+                    AppSvg(path: Assets.icons.star, width: 20, height: 20),
                     const SizedBox(width: 4),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,12 +148,7 @@ class ExploreAgentCard extends StatelessWidget {
                 Row(
                   // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SvgPicture.asset(
-                      Assets.icons.bag,
-                      width: 20,
-                      height: 20,
-                      // color: AppColors.primary,
-                    ),
+                    AppSvg(path: Assets.icons.bag, width: 20, height: 20),
                     const SizedBox(width: 4),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,12 +173,7 @@ class ExploreAgentCard extends StatelessWidget {
                 Row(
                   // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SvgPicture.asset(
-                      Assets.icons.home_2,
-                      width: 20,
-                      height: 20,
-                      // color: AppColors.primary,
-                    ),
+                    AppSvg(path: Assets.icons.home_2, width: 20, height: 20),
                     const SizedBox(width: 4),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

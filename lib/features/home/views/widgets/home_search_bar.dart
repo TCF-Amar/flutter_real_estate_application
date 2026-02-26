@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
@@ -52,12 +52,9 @@ class HomeSearchBar extends StatelessWidget implements PreferredSizeWidget {
               margin: const EdgeInsets.only(right: 16),
               width: 25,
 
-              child: SvgPicture.asset(
-                Assets.icons.search,
-                colorFilter: ColorFilter.mode(
-                  AppColors.primary.withValues(alpha: 0.5),
-                  BlendMode.srcIn,
-                ),
+              child: AppSvg(
+                path: Assets.icons.search,
+                color: AppColors.primary,
               ),
             ),
           ],

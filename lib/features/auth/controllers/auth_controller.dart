@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/core/services/auth_services.dart';
+import 'package:real_estate_app/features/auth/models/current_user_model.dart';
 import 'package:real_estate_app/features/auth/models/sign_up_request_model.dart';
+import 'package:real_estate_app/features/shared/models/profile_model.dart';
 import 'package:real_estate_app/features/shared/models/user_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
 
@@ -17,6 +19,10 @@ class AuthController extends GetxController {
   bool get isLoading => _isLoading.value;
 
   final Rxn<UserModel> user = Rxn<UserModel>();
+  final Rxn<ProfileModel> userProfile = Rxn<ProfileModel>();
+
+  final Rxn<CurrentUserModel> _currentUser = Rxn<CurrentUserModel>();
+  CurrentUserModel? get currentUser => _currentUser.value;
 
   @override
   void onInit() {
@@ -38,6 +44,8 @@ class AuthController extends GetxController {
       (userData) {
         log.d(userData.data.user.fullName);
         user.value = userData.data.user;
+        userProfile.value = userData.data.profile;
+        _currentUser.value = userData;
       },
     );
   }

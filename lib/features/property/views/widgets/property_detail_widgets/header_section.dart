@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class HeaderSection extends StatelessWidget {
   // final PropertyDetail property;
@@ -24,37 +24,14 @@ class HeaderSection extends StatelessWidget {
               return Stack(
                 fit: StackFit.expand,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
+                  AppImage(
+                    path:
+                        image?.url ??
+                        property.shareData?.image.toString() ??
+                        "",
+                    radius: BorderRadius.only(
                       bottomLeft: Radius.circular(25),
                       bottomRight: Radius.circular(25),
-                    ),
-                    child: Image.network(
-                      image?.url ?? property.shareData?.image.toString() ?? "",
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                      errorBuilder: (context, error, stackTrace) => Center(
-                        child: Container(
-                          height: double.infinity,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withValues(alpha: 0.8),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Image.network(
-                            property.shareData?.image.toString() ?? "",
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Icon(
-                              Icons.hide_image_outlined,
-                              color: Colors.white.withValues(alpha: 0.8),
-                              size: 50,
-                            ),
-                          ),
-                        ),
-                      ),
                     ),
                   ),
                   Positioned(

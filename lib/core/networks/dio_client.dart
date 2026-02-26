@@ -17,7 +17,7 @@ class DioClient {
   Dio _createDio() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: "${Environments.baseUrl}/api",
+        baseUrl: Environments.baseUrl,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),

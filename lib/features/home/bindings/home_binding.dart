@@ -4,7 +4,7 @@ import 'package:real_estate_app/core/services/explore_services.dart';
 import 'package:real_estate_app/features/explore/controllers/agent_controller.dart';
 import 'package:real_estate_app/features/explore/controllers/explore_controller.dart';
 import 'package:real_estate_app/features/property/controllers/property_controller.dart';
-import 'package:real_estate_app/features/saved/controllers/favorite_controller.dart';
+import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 
 class HomeBinding extends Bindings {
@@ -13,7 +13,7 @@ class HomeBinding extends Bindings {
     // 1. Services first — no dependencies
     Get.put(HomeServices());
     Get.put(ExploreServices(), permanent: true);
-    Get.put(FavoriteController(), permanent: true);
+    Get.lazyPut(() => FavoriteController(), fenix: true);
 
     // 2. Controllers that only depend on services
     Get.put(HomeController());

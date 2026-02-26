@@ -1,4 +1,3 @@
-import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/core/utils/safe_parser.dart';
 
 class ReviewModel {
@@ -29,7 +28,7 @@ class ReviewModel {
       comment: toStr(json['comment']) ?? '',
       createdAt: toStr(json['created_at']) ?? '',
       reviewerName: toStr(json['reviewer_name']) ?? '',
-      reviewerImage: "${Environments.baseUrl}${toStr(json['reviewer_image'])}",
+      reviewerImage: toStr(json['reviewer_image']),
       reviewerId: toInt(json['reviewer_id']) ?? 0,
       isMine: json['is_mine'] == true,
     );

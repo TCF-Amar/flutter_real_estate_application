@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/string_extensions.dart';
+import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/property/models/property_detail_model.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class SavedAndChips extends StatelessWidget {
-  final PropertyDetail property;
-  const SavedAndChips({super.key, required this.property});
+  // final PropertyDetail property;
+  const SavedAndChips({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<PropertyDetailsController>();
+    final property = controller.propertyDetail!;
     return Container(
       margin: const EdgeInsets.only(top: 12),
       child: Row(
         children: [
           //? chips
-          _Chips(srt: property.propertyType.toString(), color: AppColors.primary),
+          _Chips(
+            srt: property.propertyType.toString(),
+            color: AppColors.primary,
+          ),
           _Chips(srt: property.propertyMode.toString(), color: Colors.green),
           _Chips(
             srt: property.listingCategory.toString(),
@@ -26,8 +31,15 @@ class SavedAndChips extends StatelessWidget {
             style: IconButton.styleFrom(
               backgroundColor: AppColors.primary.withValues(alpha: 0.1),
             ),
-            icon: const Icon(Icons.favorite, color: AppColors.primary),
-            onPressed: () {},
+            icon: Icon(
+              property.isFavorited ?? false
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: AppColors.primary,
+            ),
+            onPressed: () {
+              controller.toggleFavorite();
+            },
           ),
           //? saved
         ],

@@ -5,7 +5,7 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/auth/views/widgets/auth_button.dart';
 import 'package:real_estate_app/features/auth/views/widgets/verify_code_widgets.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class VerifyCodeScreen extends GetView<AuthController> {
   const VerifyCodeScreen({super.key});

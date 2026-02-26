@@ -6,8 +6,8 @@ import 'package:real_estate_app/features/explore/controllers/explore_controller.
 import 'package:real_estate_app/features/explore/views/widgets/agents_view.dart';
 import 'package:real_estate_app/features/explore/views/widgets/developers_view.dart';
 import 'package:real_estate_app/features/property/views/screens/property_screen.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
-import 'package:real_estate_app/features/shared/widgets/header_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
+
 
 class ExploreScreen extends GetView<ExploreController> {
   const ExploreScreen({super.key});

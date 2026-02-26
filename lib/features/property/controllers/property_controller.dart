@@ -5,7 +5,7 @@ import 'package:real_estate_app/core/services/explore_services.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/property/models/property_filter.model.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
-import 'package:real_estate_app/features/saved/controllers/favorite_controller.dart';
+import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 
 class PropertyController extends GetxController {
   final Logger log = Logger();

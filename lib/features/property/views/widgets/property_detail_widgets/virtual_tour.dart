@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:panorama_viewer/panorama_viewer.dart';
-import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
-import 'package:real_estate_app/features/shared/widgets/header_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
+
 
 class VirtualTour extends StatelessWidget {
   const VirtualTour({super.key});
@@ -38,32 +37,7 @@ class VirtualTour extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               color: Colors.grey[300],
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: PanoramaViewer(
-                child: Image.network(
-
-                  url,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return const Center(child: CircularProgressIndicator(color: AppColors.primary,));
-                  },
-                  errorBuilder: (context, error, stackTrace) => Center(
-                    child: Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      color: Colors.grey.withValues(alpha: 0.8),
-                      child: const Icon(
-                        Icons.hide_image_outlined,
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            child: AppPanoramaView(path: url),
           ),
         ],
       ),

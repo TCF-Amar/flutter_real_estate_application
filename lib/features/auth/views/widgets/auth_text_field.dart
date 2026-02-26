@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text_form_field.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class AuthTextField extends StatelessWidget {
   final String label;

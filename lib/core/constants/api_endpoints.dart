@@ -1,7 +1,12 @@
 class ApiEndpoints {
-  //? Auth endpoints
-  static const String _auth = "/auth";
+  // ── Base paths ───────────────────────────────────────────────────────────
+  static const String _base = "/api";
+  static const String _auth = "$_base/auth";
+  static const String _buyer = "$_base/buyer";
+  static const String _onboarding = "$_base/onboarding";
+  static const String _favorites = "$_base/favorites";
 
+  // ── Auth ─────────────────────────────────────────────────────────────────
   static const String login = "$_auth/login";
   static const String signUp = "$_auth/register/buyer";
   static const String verifyOtp = "$_auth/verify-otp";
@@ -12,33 +17,30 @@ class ApiEndpoints {
   static const String forgotPassword = "$_auth/forgot-password";
   static const String resetPassword = "$_auth/reset-password";
 
-  //? onboarding buyer
-  static const String _onboarding = "/onboarding";
+  // ── Onboarding ───────────────────────────────────────────────────────────
   static const String buyerOnboarding = "$_onboarding/buyer";
 
-  //? buyer
-  static const String _buyer = "/buyer";
+  // ── Home ─────────────────────────────────────────────────────────────────
   static const String getHomepageData = "$_buyer/homepage";
 
-  //? reviews
-  static String getPropertyReviews(int id) => "$_buyer/properties/$id/reviews";
-
-  //? agents
-  static const String agents = "$_buyer/agents";
-  static String getAgentDetails(int id) => "$_buyer/agents/$id";
-  //? settings
-  static const String updateSettings = "$_buyer/settings/update";
-  static const String getSettings = "$_buyer/settings";
-
-  //? properties
-  static const String properties = "/properties";
+  // ── Properties ───────────────────────────────────────────────────────────
   static String getPropertyDetails(int id) => "$_buyer/properties/$id";
+  static String similarProperties(int id) => "$_buyer/properties/$id/similar";
+  static String propertyReviews(int id) => "$_buyer/properties/$id/reviews";
 
-  //? filter
+  // ── Search & Filter ──────────────────────────────────────────────────────
   static const String filterData = "$_buyer/filter-options";
   static const String searchProperties = "$_buyer/search";
 
-  //? favorites
-  static const String toggleFavorite = "/favorites/toggle";
-  static const String getSavedProperties = "/favorites";
+  // ── Agents ───────────────────────────────────────────────────────────────
+  static const String agents = "$_buyer/agents";
+  static String getAgentDetails(int id) => "$_buyer/agents/$id";
+
+  // ── Settings ─────────────────────────────────────────────────────────────
+  static const String getSettings = "$_buyer/settings";
+  static const String updateSettings = "$_buyer/settings/update";
+
+  // ── Favorites ────────────────────────────────────────────────────────────
+  static const String getSavedProperties = _favorites;
+  static const String toggleFavorite = "$_favorites/toggle";
 }

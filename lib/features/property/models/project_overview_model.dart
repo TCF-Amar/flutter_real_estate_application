@@ -1,4 +1,3 @@
-import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/core/utils/safe_parser.dart';
 
 class ProjectOverviewModel {
@@ -81,7 +80,7 @@ class LatestUpdateModel {
       title: toStr(json['title']),
       description: toStr(json['description']),
       images: (json['images'] as List<dynamic>?)
-          ?.map((e) => "${Environments.baseUrl}${toStr(e)}")
+          !.map((e) => toStr(e)!)
           .toList(),
     );
   }

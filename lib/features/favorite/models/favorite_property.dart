@@ -1,4 +1,4 @@
-class SavedProperty {
+class FavoriteProperty {
   final int? id;
   final String? title;
   final String? propertyCategory;
@@ -18,7 +18,7 @@ class SavedProperty {
   final bool? isFavorited;
   final String? ownerImage;
 
-  SavedProperty({
+  FavoriteProperty({
     this.id,
     this.title,
     this.propertyCategory,
@@ -39,8 +39,8 @@ class SavedProperty {
     this.ownerImage,
   });
 
-  factory SavedProperty.fromJson(Map<String, dynamic> json) {
-    return SavedProperty(
+  factory FavoriteProperty.fromJson(Map<String, dynamic> json) {
+    return FavoriteProperty(
       id: json['id'] as int?,
       title: json['title'] as String?,
       propertyCategory: json['property_category'] as String?,
@@ -89,7 +89,7 @@ class SavedProperty {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is SavedProperty && id == other.id;
+      identical(this, other) || other is FavoriteProperty && id == other.id;
 
   @override
   int get hashCode => id.hashCode;

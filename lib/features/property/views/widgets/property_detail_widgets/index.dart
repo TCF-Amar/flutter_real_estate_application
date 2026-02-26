@@ -15,4 +15,6 @@ export 'virtual_tour.dart';
 export 'developer_info.dart';
 export 'agent_info.dart';
 export 'reviews_and_ratings.dart';
+export 'similar_properties.dart';
+export 'contact_message.dart';
 

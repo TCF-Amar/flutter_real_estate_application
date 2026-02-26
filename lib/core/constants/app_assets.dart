@@ -28,6 +28,12 @@ class _Icons {
   final star = "assets/icons/solar_star.svg";
   final home_2 = "assets/icons/home_2.svg";
   final bag = "assets/icons/bag.svg";
+  final location = "assets/icons/location.svg";
+  final upload = "assets/icons/upload.svg";
+  final pana = "assets/icons/pana.svg";
+  final iconsDate = "assets/icons/icons_date.svg";
+  final bed = "assets/icons/bed.svg";
+  final bath = "assets/icons/bath.svg";
 }
 
 class _Images {

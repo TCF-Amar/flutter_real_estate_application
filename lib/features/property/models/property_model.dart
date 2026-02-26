@@ -1,4 +1,3 @@
-import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/core/utils/safe_parser.dart';
 
 class Property {
@@ -309,7 +308,7 @@ class MediaItem {
   factory MediaItem.fromJson(Map<String, dynamic> json) {
     return MediaItem(
       id: toInt(json['id']) ?? 0,
-      url: "${Environments.baseUrl}${toStr(json['url'])}",
+      url: toStr(json['url']) ?? '',
       fileType: toStr(json['file_type']) ?? '',
       documentType: toStr(json['document_type']),
       mediaLevel: toStr(json['media_level']) ?? '',

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/utils/date_time_utils.dart';
 import 'package:real_estate_app/features/property/models/property_detail_model.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
-import 'package:real_estate_app/features/shared/widgets/header_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class PriceAndDescription extends StatefulWidget {
   final PropertyDetail property;
@@ -47,63 +46,60 @@ class _PriceAndDescriptionState extends State<PriceAndDescription> {
             const SizedBox(height: 14),
           ],
 
-          Container(
-            // margin: const EdgeInsets.only(top: 14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                HeaderText(
-                  text: "Property Description",
-                  // fontSize: 16,
-                  // fontWeight: FontWeight.bold,
-                  // color: AppColors.black.withValues(alpha: 0.5),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              HeaderText(
+                text: "Property Description",
+                // fontSize: 16,
+                // fontWeight: FontWeight.bold,
+                // color: AppColors.black.withValues(alpha: 0.5),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.grey.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.grey.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: AppText(
-                          widget.property.description?.toString() ??
-                              "No description available",
-                          fontSize: 12,
-                          maxLines: _isExpanded ? null : 5,
-                          fontWeight: FontWeight.w400,
-                          overflow: _isExpanded
-                              ? TextOverflow.clip
-                              : TextOverflow.ellipsis,
-                        ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: AppText(
+                        widget.property.description?.toString() ??
+                            "No description available",
+                        fontSize: 12,
+                        maxLines: _isExpanded ? null : 5,
+                        fontWeight: FontWeight.w400,
+                        overflow: _isExpanded
+                            ? TextOverflow.clip
+                            : TextOverflow.ellipsis,
                       ),
-                      if (widget.property.description != null &&
-                          widget.property.description!.length > 150)
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              _isExpanded = !_isExpanded;
-                            });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: AppText(
-                              _isExpanded ? "Show Less" : "Show More",
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primary,
-                            ),
+                    ),
+                    if (widget.property.description != null &&
+                        widget.property.description!.length > 150)
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            _isExpanded = !_isExpanded;
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: AppText(
+                            _isExpanded ? "Show Less" : "Show More",
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
                           ),
                         ),
-                    ],
-                  ),
-                  //
+                      ),
+                  ],
                 ),
-              ],
-            ),
+                //
+              ),
+            ],
           ),
         ],
       ),

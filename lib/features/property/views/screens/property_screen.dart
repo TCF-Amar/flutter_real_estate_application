@@ -4,19 +4,14 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/property/controllers/property_controller.dart';
 import 'package:real_estate_app/features/property/views/widgets/property_filters.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
-import 'package:real_estate_app/features/shared/widgets/explore_search_filter.dart';
-import 'package:real_estate_app/features/shared/widgets/property_card.dart';
-import 'package:real_estate_app/features/shared/widgets/property_skeleton.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class PropertyScreen extends GetView<PropertyController> {
   const PropertyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Single top-level Obx — all reactive reads happen at the TOP of the
-    // builder, not inside lazy delegates (itemBuilder, separatorBuilder).
-    // This ensures GetX properly tracks every observable on each build.
+    
     return Obx(() {
       final isLoading = controller.isLoading;
       final isMoreLoading = controller.isMoreLoading;

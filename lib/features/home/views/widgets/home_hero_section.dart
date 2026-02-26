@@ -3,10 +3,9 @@ import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
+import 'package:real_estate_app/features/shared/widgets/app_image.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
-/// Collapsible hero background that lives inside [FlexibleSpaceBar].
-/// Shows the avatar, greeting, headline and fades away on scroll.
 class HomeHeroSection extends StatelessWidget {
   final double topPadding;
   final double searchBarHeight;
@@ -73,23 +72,10 @@ class HomeHeroSection extends StatelessWidget {
                         final user = auth.user.value;
                         return Row(
                           children: [
-                            CircleAvatar(
-                              radius: 22,
-                              backgroundColor: Colors.white24,
-                              backgroundImage:
-                                  (user?.profileImage != null &&
-                                      user!.profileImage!.isNotEmpty)
-                                  ? NetworkImage(user.profileImage!)
-                                  : null,
-                              child:
-                                  (user?.profileImage == null ||
-                                      user!.profileImage!.isEmpty)
-                                  ? const Icon(
-                                      Icons.person,
-                                      color: Colors.white,
-                                      size: 28,
-                                    )
-                                  : null,
+                            AppImage(
+                              radius: BorderRadius.circular(22),
+                              path: user?.profileImage,
+                              errorIcon: Icons.person,
                             ),
                             const SizedBox(width: 12),
                             Expanded(

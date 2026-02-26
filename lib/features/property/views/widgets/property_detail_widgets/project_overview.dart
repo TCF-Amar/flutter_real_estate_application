@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/utils/date_time_utils.dart';
 import 'package:real_estate_app/features/property/models/project_overview_model.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ProjectOverview extends StatelessWidget {
   final ProjectOverviewModel overview;
@@ -53,14 +52,11 @@ class ProjectOverview extends StatelessWidget {
           children: [
             Row(
               children: [
-                SvgPicture.asset(
-                  Assets.icons.progresses,
+                AppSvg(
+                  path: Assets.icons.progresses,
                   width: 20,
                   height: 20,
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.primary,
-                    BlendMode.srcIn,
-                  ),
+                  color: AppColors.primary,
                 ),
                 const SizedBox(width: 8),
                 AppText(

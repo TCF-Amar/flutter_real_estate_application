@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 
@@ -56,13 +56,10 @@ class ExploreSearchBar extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                SvgPicture.asset(
-                  Assets.icons.search,
+                AppSvg(
+                  path: Assets.icons.search,
                   width: 20,
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.textSecondary,
-                    BlendMode.srcIn,
-                  ),
+                  color: AppColors.textSecondary,
                 ),
               ],
             ),
@@ -79,13 +76,10 @@ class ExploreSearchBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
-              child: SvgPicture.asset(
-                Assets.icons.filter,
+              child: AppSvg(
+                path: Assets.icons.filter,
                 width: 22,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
-                  BlendMode.srcIn,
-                ),
+                color: Colors.white,
               ),
             ),
           ),

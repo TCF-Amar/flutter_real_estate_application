@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/features/explore/controllers/agent_controller.dart';
 import 'package:real_estate_app/features/shared/models/contact_model.dart';
-import 'package:real_estate_app/features/shared/widgets/agent_card.dart';
-import 'package:real_estate_app/features/shared/widgets/header_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class AgentInfo extends StatelessWidget {
   final ContactModel contact;

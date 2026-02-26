@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 
 class AppTextFormField extends StatefulWidget {
@@ -113,12 +113,12 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
                 onTap: _togglePasswordVisibility,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: SvgPicture.asset(
-                    _obscureText ? Assets.icons.eyeOff : Assets.icons.eyeOn,
-                    colorFilter: ColorFilter.mode(
-                      widget.iconColor ?? Theme.of(context).iconTheme.color!,
-                      BlendMode.srcIn,
-                    ),
+                  child: AppSvg(
+                    path: _obscureText
+                        ? Assets.icons.eyeOff
+                        : Assets.icons.eyeOn,
+                    color:
+                        widget.iconColor ?? Theme.of(context).iconTheme.color,
                   ),
                 ),
               )

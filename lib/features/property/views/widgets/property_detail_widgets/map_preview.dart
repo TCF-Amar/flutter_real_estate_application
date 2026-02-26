@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
-import 'package:real_estate_app/features/shared/widgets/header_text.dart';
+
+import 'package:real_estate_app/features/shared/widgets/index.dart';
+
 
 class MapPreview extends StatelessWidget {
   const MapPreview({super.key});

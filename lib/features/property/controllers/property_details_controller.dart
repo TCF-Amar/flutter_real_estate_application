@@ -1,10 +1,16 @@
+import 'package:flutter/src/widgets/editable_text.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/services/explore_services.dart';
+import 'package:real_estate_app/features/home/controllers/home_controller.dart';
+import 'package:real_estate_app/features/property/controllers/property_controller.dart';
 import 'package:real_estate_app/features/property/models/property_detail_model.dart';
-import 'package:real_estate_app/features/saved/controllers/favorite_controller.dart';
+import 'package:real_estate_app/features/property/models/property_model.dart';
+import 'package:real_estate_app/features/property/models/review_request_model.dart';
+import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 import 'package:real_estate_app/features/shared/models/pagination_model.dart';
 import 'package:real_estate_app/features/shared/models/review_model.dart';
+import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
 
 class PropertyDetailsController extends GetxController {
   final ExploreServices propertyServices = Get.find<ExploreServices>();
@@ -30,7 +36,13 @@ class PropertyDetailsController extends GetxController {
       propertyId.value = id;
       fetchPropertyDetails(id);
       fetchReviews(id);
+      fetchSimilarProperties(id);
     }
+    ever(propertyId, (id) {
+      fetchPropertyDetails(id);
+      fetchReviews(id);
+      fetchSimilarProperties(id);
+    });
   }
 
   Future<void> fetchPropertyDetails(int id) async {
@@ -45,12 +57,18 @@ class PropertyDetailsController extends GetxController {
     _isLoading.value = false;
   }
 
-  Future<void> toggleFavorite() async {
+  void toggleFavorite() {
     if (propertyDetail == null) return;
 
     final currentStatus = propertyDetail!.isFavorited ?? false;
+    Get.find<PropertyController>().updateFavoriteData(propertyId.value);
+    Get.find<HomeController>().updateFavorite(propertyId.value);
     final updated = propertyDetail!.copyWith(isFavorited: !currentStatus);
     _propertyDetail.value = updated;
+    favoriteController.toggleFavorite(
+      type: "property",
+      propertyId: propertyId.value,
+    );
   }
 
   void updateCurrentIndex(int index) {
@@ -72,6 +90,8 @@ class PropertyDetailsController extends GetxController {
       _currentIndex.value = propertyDetail!.media!.images.length - 1;
     }
   }
+
+  // ─── Reviews ─────────────────────────────────────────────────────────────
 
   final RxList<ReviewModel> _reviews = RxList<ReviewModel>();
   List<ReviewModel> get reviews => _reviews;
@@ -129,5 +149,58 @@ class PropertyDetailsController extends GetxController {
       _pagination.value = r.data.pagination;
     });
     _isLoadingReviews.value = false;
+  }
+
+  TextEditingController commentController = TextEditingController();
+  final RxInt _rating = 0.obs;
+  int get rating => _rating.value;
+
+  void setRating(int rating) {
+    _rating.value = rating;
+  }
+
+  Future<void> addReview(int id) async {
+    _isLoadingReviews.value = true;
+    log.d("Adding review for property $id");
+    log.d("Rating: $rating");
+    log.d("Comment: ${commentController.text}");
+    final result = await propertyServices.addReview(
+      id,
+      ReviewRequestModel(rating: rating, comment: commentController.text),
+    );
+    result.fold(
+      (l) {
+        log.e("Error adding review: ${l.message}");
+        AppSnackbar.info(l.message);
+      },
+      (r) {
+        log.d("Review added successfully");
+      },
+    );
+    fetchReviews(id);
+    commentController.clear();
+    _rating.value = 0;
+    _isLoadingReviews.value = false;
+  }
+
+  // ─── Similar Properties ──────────────────────────────────────────────────
+
+  final RxList<Property> _similarProperties = RxList<Property>();
+  List<Property> get similarProperties => _similarProperties;
+
+  final RxBool _isLoadingSimilar = false.obs;
+  bool get isLoadingSimilar => _isLoadingSimilar.value;
+
+  Future<void> fetchSimilarProperties(int id) async {
+    _isLoadingSimilar.value = true;
+    final result = await propertyServices.getSimilarProperties(id);
+    result.fold(
+      (l) => log.e("Error fetching similar properties: ${l.message}"),
+      (r) {
+        log.d("Fetched similar properties: ${r.data.length}");
+        _similarProperties.value = r.data;
+      },
+    );
+    _isLoadingSimilar.value = false;
   }
 }

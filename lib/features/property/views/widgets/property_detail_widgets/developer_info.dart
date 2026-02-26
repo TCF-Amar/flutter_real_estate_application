@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:real_estate_app/features/shared/widgets/developer_card.dart';
-import 'package:real_estate_app/features/shared/widgets/header_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class DeveloperInfo extends StatelessWidget {
   const DeveloperInfo({super.key});
