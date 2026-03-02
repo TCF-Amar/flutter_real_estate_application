@@ -1,7 +1,9 @@
-import 'package:flutter/src/widgets/editable_text.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:real_estate_app/core/services/explore_services.dart';
+import 'package:real_estate_app/core/services/property_services.dart';
+import 'package:real_estate_app/features/agent/controllers/agent_controller.dart';
+import 'package:real_estate_app/features/agent/models/agent_model.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/property/controllers/property_controller.dart';
 import 'package:real_estate_app/features/property/models/property_detail_model.dart';
@@ -13,8 +15,9 @@ import 'package:real_estate_app/features/shared/models/review_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
 
 class PropertyDetailsController extends GetxController {
-  final ExploreServices propertyServices = Get.find<ExploreServices>();
-  final FavoriteController favoriteController = Get.find<FavoriteController>();
+  late final PropertyServices propertyServices;
+  late final FavoriteController favoriteController;
+  late final AgentController agentController;
   final Logger log = Logger();
 
   final Rxn<PropertyDetail> _propertyDetail = Rxn<PropertyDetail>();
@@ -31,6 +34,9 @@ class PropertyDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    propertyServices = Get.find<PropertyServices>();
+    favoriteController = Get.find<FavoriteController>();
+    agentController = Get.find<AgentController>();
     final id = Get.arguments['id'];
     if (id != null) {
       propertyId.value = id;
@@ -69,6 +75,7 @@ class PropertyDetailsController extends GetxController {
       type: "property",
       propertyId: propertyId.value,
     );
+    favoriteController.fetchSavedProperties();
   }
 
   void updateCurrentIndex(int index) {
@@ -91,6 +98,31 @@ class PropertyDetailsController extends GetxController {
     }
   }
 
+  final RxBool _isLoadingAgent = false.obs;
+  bool get isLoadingAgent => _isLoadingAgent.value;
+
+  Future<AgentModel?> fetchAgentById(int id) async {
+    // Fast path: already cached
+    if (agentController.agentCache.containsKey(id)) {
+      log.d('Agent $id served from cache');
+      return agentController.agentCache[id];
+    }
+
+    // Slow path: fetch from API
+    _isLoadingAgent.value = true;
+    AgentModel? agent;
+    try {
+      final result = await agentController.services.getAgentDetails(id);
+      result.fold((l) => log.e('fetchAgentById($id) error: ${l.message}'), (r) {
+        agent = AgentModel.fromAgentDetailModel(r);
+        agentController.agentCache[id] = agent!;
+        log.d('Fetched agent $id: ${r.name}');
+      });
+    } finally {
+      _isLoadingAgent.value = false;
+    }
+    return agent;
+  }
   // ─── Reviews ─────────────────────────────────────────────────────────────
 
   final RxList<ReviewModel> _reviews = RxList<ReviewModel>();
@@ -202,5 +234,12 @@ class PropertyDetailsController extends GetxController {
       },
     );
     _isLoadingSimilar.value = false;
+  }
+
+  @override
+  void onClose() {
+    // Called automatically by GetX when the propertyDetails route is popped.
+    commentController.dispose();
+    super.onClose();
   }
 }

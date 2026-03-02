@@ -23,6 +23,7 @@ class MediaImages extends StatelessWidget {
                 SizedBox(
                   height: 70,
                   child: ListView.builder(
+                    clipBehavior: Clip.none,
                     scrollDirection: Axis.horizontal,
 
                     itemCount: media.images.length,

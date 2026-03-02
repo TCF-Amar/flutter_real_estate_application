@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
-class AgentFilterSheet extends StatefulWidget {
-  const AgentFilterSheet({super.key});
+class DeveloperFilterSheet extends StatefulWidget {
+  const DeveloperFilterSheet({super.key});
 
   @override
-  State<AgentFilterSheet> createState() => _AgentFilterSheetState();
+  State<DeveloperFilterSheet> createState() => _DeveloperFilterSheetState();
 }
 
-class _AgentFilterSheetState extends State<AgentFilterSheet> {
+class _DeveloperFilterSheetState extends State<DeveloperFilterSheet> {
   final TextEditingController _locationController = TextEditingController();
   final List<String> _selectedRating = ['5 stars'];
-  String? _selectedExperience;
+  String? _selectedYearsActive;
+  String? _selectedProjectsCount;
 
   final List<String> _ratingOptions = [
     '5 stars',
@@ -21,12 +22,14 @@ class _AgentFilterSheetState extends State<AgentFilterSheet> {
     '2 stars',
     '1 stars',
   ];
-  final List<String> _experienceOptions = [
-    '1+ Years',
-    '3+ Years',
-    '5+ Years',
-    '10+ Years',
+  final List<String> _yearsActiveOptions = [
+    '1-3 Years',
+    '3-5 Years',
+    '5-10 Years',
+    '10-15 Years',
+    '15+ Years',
   ];
+  final List<String> _projectsCountOptions = ['1-5', '5-10', '10-20', '20+'];
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +67,10 @@ class _AgentFilterSheetState extends State<AgentFilterSheet> {
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
+              // Close with gray circle cross if needed, using standard icon for now as per other sheets
               IconButton(
-                icon: const Icon(Icons.cancel, color: Colors.grey),
+                // Matching other sheets, though design shows just 'x' in circle.
+                icon: Icon(Icons.cancel, color: Colors.grey[400]),
                 onPressed: () => Navigator.pop(context),
               ),
             ],
@@ -109,6 +114,74 @@ class _AgentFilterSheetState extends State<AgentFilterSheet> {
                   ),
                   const SizedBox(height: 24),
 
+                  // Years active
+                  const AppText(
+                    'Years active',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        hint: const Text('Select'),
+                        value: _selectedYearsActive,
+                        items: _yearsActiveOptions.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedYearsActive = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // No. of projects
+                  const AppText(
+                    'No. of projects',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        hint: const Text('Select'),
+                        value: _selectedProjectsCount,
+                        items: _projectsCountOptions.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedProjectsCount = newValue;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
                   // Rating
                   const AppText(
                     'Rating',
@@ -126,8 +199,7 @@ class _AgentFilterSheetState extends State<AgentFilterSheet> {
                         selected: isSelected,
                         onSelected: (selected) {
                           setState(() {
-                            _selectedRating
-                                .clear(); // Single select behavior for rating usually? Images show '5 stars' selected. Assuming single select or multi. Let's do single for logic simplicity unless multi required. Image shows '5 stars' selected with 'x'.
+                            _selectedRating.clear();
                             if (selected) {
                               _selectedRating.add(rating);
                             }
@@ -153,40 +225,6 @@ class _AgentFilterSheetState extends State<AgentFilterSheet> {
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 24),
-
-                  // Experience
-                  const AppText(
-                    'Experience',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        hint: const Text('Select'),
-                        value: _selectedExperience,
-                        items: _experienceOptions.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            _selectedExperience = newValue;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 80),
                 ],
               ),
@@ -201,7 +239,8 @@ class _AgentFilterSheetState extends State<AgentFilterSheet> {
                     setState(() {
                       _locationController.clear();
                       _selectedRating.clear();
-                      _selectedExperience = null;
+                      _selectedYearsActive = null;
+                      _selectedProjectsCount = null;
                     });
                   },
                   style: OutlinedButton.styleFrom(

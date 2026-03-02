@@ -82,5 +82,6 @@ class HomeController extends GetxController {
       type: "property",
       propertyId: propertyId,
     );
+    favoritesController.fetchSavedProperties();
   }
 }

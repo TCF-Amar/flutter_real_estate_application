@@ -86,6 +86,7 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
       onFieldSubmitted: widget.onFieldSubmitted,
+      
       enabled: widget.enabled,
       maxLines: widget.isPassword ? 1 : widget.maxLines,
       minLines: widget.minLines,

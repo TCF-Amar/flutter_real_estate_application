@@ -273,7 +273,7 @@ class ProjectFilterSheet extends StatelessWidget {
                       child: DropdownButtonHideUnderline(
                         child: DropdownFlutter(
                           hintText: 'Select Sort',
-                          items: filterData.sortOptions.values.toList(),
+                          items: [...filterData.sortOptions.values],
                           initialItem: controller.selectedSort.value,
                           onChanged: (value) {
                             controller.selectedSort.value = value;

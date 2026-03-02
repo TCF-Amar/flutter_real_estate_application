@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_app/features/explore/controllers/agent_controller.dart';
+import 'package:real_estate_app/core/routes/app_routes.dart';
+import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
 import 'package:real_estate_app/features/shared/models/contact_model.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
@@ -11,7 +12,7 @@ class AgentInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<AgentController>();
+    final controller = Get.find<PropertyDetailsController>();
     return Container(
       margin: const EdgeInsets.only(top: 20),
       child: Column(
@@ -33,7 +34,13 @@ class AgentInfo extends StatelessWidget {
                 return const Center(child: Text("No agent found"));
               }
               final agent = snapshot.data;
-              return ExploreAgentCard(agent: agent!);
+              return ExploreAgentCard(
+                agent: agent!,
+                onTap: () => Get.toNamed(
+                  AppRoutes.agentDetails,
+                  arguments: {'id': agent.id},
+                ),
+              );
             },
           ),
         ],

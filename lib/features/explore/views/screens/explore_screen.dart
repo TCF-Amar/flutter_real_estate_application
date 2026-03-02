@@ -3,11 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/explore/controllers/explore_controller.dart';
-import 'package:real_estate_app/features/explore/views/widgets/agents_view.dart';
-import 'package:real_estate_app/features/explore/views/widgets/developers_view.dart';
+import 'package:real_estate_app/features/agent/view/screens/agents_screen.dart';
+import 'package:real_estate_app/features/developer/view/screens/developers_view.dart';
 import 'package:real_estate_app/features/property/views/screens/property_screen.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
-
 
 class ExploreScreen extends GetView<ExploreController> {
   const ExploreScreen({super.key});
@@ -102,7 +101,7 @@ class ExploreScreen extends GetView<ExploreController> {
                   case 0:
                     return const PropertyScreen();
                   case 1:
-                    return const AgentsView();
+                    return const AgentsScreen();
                   case 2:
                     return const DevelopersView();
                   default:

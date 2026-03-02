@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
-
 
 class SimilarProperties extends StatefulWidget {
   const SimilarProperties({super.key});
@@ -170,15 +170,18 @@ class SimilarPropertyCard extends StatelessWidget {
                   children: [
                     if (property.listingCategory != null)
                       // Flexible(
-                      _Chip(
-                        label: _formatLabel(property.listingCategory!),
+                      AppTag(
+                        label: property.listingCategory!,
                         color: Colors.redAccent,
+                        backgroundColor: Colors.white,
                       ),
+                    SizedBox(width: 6),
                     // ),
                     if (property.propertyType.isNotEmpty)
-                      _Chip(
-                        label: _formatLabel(property.propertyType),
+                      AppTag(
+                        label: property.propertyType,
                         color: Colors.amber,
+                        backgroundColor: Colors.white,
                       ),
                     const Spacer(),
                     _FavButton(isFav: property.isFavorited),
@@ -251,7 +254,7 @@ class SimilarPropertyCard extends StatelessWidget {
                                   if (property.bhkList != null &&
                                       property.bhkList!.isNotEmpty)
                                     _StatChip(
-                                      icon: Icons.bed_outlined,
+                                      icon: Assets.icons.bed,
                                       label: property.bhkList!,
                                       color: Colors.indigo.shade100,
                                       iconColor: Colors.indigo,
@@ -259,7 +262,7 @@ class SimilarPropertyCard extends StatelessWidget {
                                   if (property.bathroomList != null &&
                                       property.bathroomList!.isNotEmpty)
                                     _StatChip(
-                                      icon: Icons.bathtub_outlined,
+                                      icon: Assets.icons.bath,
                                       label: property.bathroomList!,
                                       color: Colors.teal.shade50,
                                       iconColor: Colors.teal,
@@ -267,7 +270,7 @@ class SimilarPropertyCard extends StatelessWidget {
                                   if (property.areaRange != null &&
                                       property.areaRange!.isNotEmpty)
                                     _StatChip(
-                                      icon: Icons.square_foot_outlined,
+                                      icon: Assets.icons.area,
                                       label: property.areaRange!,
                                       color: Colors.orange.shade50,
                                       iconColor: Colors.orange,
@@ -298,16 +301,6 @@ class SimilarPropertyCard extends StatelessWidget {
     );
   }
 
-  String _formatLabel(String raw) {
-    return raw
-        .split('_')
-        .map((word) {
-          if (word.isEmpty) return word;
-          return word[0].toUpperCase() + word.substring(1).toLowerCase();
-        })
-        .join(' ');
-  }
-
   String _locality(Property p) {
     final parts = [
       p.locality,
@@ -318,38 +311,6 @@ class SimilarPropertyCard extends StatelessWidget {
 }
 
 /// Small tag chip shown in upper-left of the card.
-class _Chip extends StatelessWidget {
-  final String label;
-  final Color color;
-
-  const _Chip({required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: AppText(
-        label,
-        fontSize: 8,
-        color: color,
-        fontWeight: FontWeight.w600,
-      ),
-    );
-  }
-}
-
 class _FavButton extends StatelessWidget {
   final bool isFav;
 
@@ -386,7 +347,7 @@ class _FavButton extends StatelessWidget {
 }
 
 class _StatChip extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String label;
   final Color color;
   final Color iconColor;
@@ -410,7 +371,7 @@ class _StatChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 10, color: iconColor),
+          AppSvg(path: icon, height: 12, width: 12, color: iconColor),
           const SizedBox(width: 4),
           AppText(label, fontSize: 8, color: iconColor),
         ],

@@ -14,33 +14,49 @@ import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
 class AuthController extends GetxController {
   final Logger log = Logger();
   final AuthServices _authServices = Get.find<AuthServices>();
-  // ── General ──────────────────────────────────────────────
+
+  // ── State ─────────────────────────────────────────────────
+
   final RxBool _isLoading = false.obs;
   bool get isLoading => _isLoading.value;
 
   final Rxn<UserModel> user = Rxn<UserModel>();
   final Rxn<ProfileModel> userProfile = Rxn<ProfileModel>();
-
   final Rxn<CurrentUserModel> _currentUser = Rxn<CurrentUserModel>();
   CurrentUserModel? get currentUser => _currentUser.value;
 
+  
+
   @override
-  void onInit() {
-    super.onInit();
-    _init();
-    // logout();
+  void onClose() {
+    // ── Sign-in controllers ────────────────────────────────
+    signInEmailController.dispose();
+    signInPasswordController.dispose();
+
+    // ── Sign-up controllers ────────────────────────────────
+    signUpFullNameController.dispose();
+    signUpEmailController.dispose();
+    signUpPhoneController.dispose();
+    signUpPasswordController.dispose();
+    signUpConfirmPasswordController.dispose();
+
+    for (final c in codeControllers) {
+      c.dispose();
+    }
+    for (final n in codeFocusNodes) {
+      n.dispose();
+    }
+
+    _resendTimer?.cancel();
+
+    super.onClose();
   }
 
-  void _init() async {
-    await getCurrentUser();
-  }
 
   Future<void> getCurrentUser() async {
     final result = await _authServices.getCurrentUser();
     result.fold(
-      (failure) {
-        log.e('Failed to fetch user: ${failure.message}');
-      },
+      (failure) => log.e('Failed to fetch user: ${failure.message}'),
       (userData) {
         log.d(userData.data.user.fullName);
         user.value = userData.data.user;
@@ -50,6 +66,7 @@ class AuthController extends GetxController {
     );
   }
 
+
   final TextEditingController signInEmailController = TextEditingController();
   final TextEditingController signInPasswordController =
       TextEditingController();
@@ -58,7 +75,7 @@ class AuthController extends GetxController {
     FocusScope.of(Get.context!).unfocus();
     _isLoading.value = true;
     final result = await _authServices.login(
-      signInEmailController.text,
+      signInEmailController.text.trim(),
       signInPasswordController.text,
     );
     result.fold(
@@ -66,15 +83,14 @@ class AuthController extends GetxController {
         _clearSignInFields();
         AppSnackbar.error(failure.message);
       },
-      (response) async {
+      (response) {
         if (response.data?.token != null) {
           AppSnackbar.success('Login successful');
-          log.d(response.data?.token);
-          await getCurrentUser();
+          log.d('Token: ${response.data?.token}');
           Get.offAllNamed(AppRoutes.main);
         } else {
           _clearSignInFields();
-          AppSnackbar.error('Something went wrong');
+          AppSnackbar.error('Login failed. Please try again.');
         }
       },
     );
@@ -85,6 +101,8 @@ class AuthController extends GetxController {
     signInEmailController.clear();
     signInPasswordController.clear();
   }
+
+  // ── Sign Up ───────────────────────────────────────────────
 
   final TextEditingController signUpFullNameController =
       TextEditingController();
@@ -101,8 +119,8 @@ class AuthController extends GetxController {
     final result = await _authServices.signUp(
       SignUpRequestModel(
         fullName: signUpFullNameController.text,
-        email: signUpEmailController.text,
-        phone: signUpPhoneController.text,
+        email: signUpEmailController.text.trim(),
+        phone: signUpPhoneController.text.trim(),
         password: signUpPasswordController.text,
         passwordConfirmation: signUpConfirmPasswordController.text,
       ),
@@ -113,7 +131,7 @@ class AuthController extends GetxController {
         AppSnackbar.error(failure.message);
       },
       (response) {
-        otpEmail.value = signUpEmailController.text;
+        otpEmail.value = signUpEmailController.text.trim();
         AppSnackbar.success('Verification code sent to ${otpEmail.value}');
         Get.toNamed(AppRoutes.verifyCode, arguments: {'source': 'signup'});
       },
@@ -128,6 +146,8 @@ class AuthController extends GetxController {
     signUpPasswordController.clear();
     signUpConfirmPasswordController.clear();
   }
+
+  // ── Forgot Password ───────────────────────────────────────
 
   void handleForgotPassword() async {
     FocusScope.of(Get.context!).unfocus();
@@ -147,12 +167,14 @@ class AuthController extends GetxController {
     _isLoading.value = false;
   }
 
-  void logout() {
+  void logout() async {
     _isLoading.value = true;
-    _authServices.logout();
+    await _authServices.logout();
     Get.offAllNamed(AppRoutes.signin);
     _isLoading.value = false;
   }
+
+  // ── OTP / Verify Code ─────────────────────────────────────
 
   final RxString otpEmail = ''.obs;
 
@@ -175,7 +197,7 @@ class AuthController extends GetxController {
 
   void disposeVerifyCode() {
     _resendTimer?.cancel();
-    for (var c in codeControllers) {
+    for (final c in codeControllers) {
       c.clear();
     }
   }
@@ -239,7 +261,7 @@ class AuthController extends GetxController {
   }
 
   void _clearOtpFields() {
-    for (var c in codeControllers) {
+    for (final c in codeControllers) {
       c.clear();
     }
     codeFocusNodes[0].requestFocus();
@@ -278,6 +300,7 @@ class AuthController extends GetxController {
   }
 
   // ── Select Country ────────────────────────────────────────
+
   final RxString selectedCountry = ''.obs;
 
   final List<Map<String, String>> countries = [

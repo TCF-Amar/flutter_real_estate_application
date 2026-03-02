@@ -4,6 +4,6 @@ import 'package:real_estate_app/features/property/controllers/property_details_c
 class PropertyDetailsBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => PropertyDetailsController());
+    Get.lazyPut(() => PropertyDetailsController(), fenix: true);
   }
 }

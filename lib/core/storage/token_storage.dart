@@ -1,55 +1,69 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+
 class TokenStorage {
   final FlutterSecureStorage _secureStorage;
 
   TokenStorage(this._secureStorage);
 
-  //! Save tokens + expiry
+  // ── In-memory cache ──────────────────────────────────────
+  String? _cachedToken;
+
+  // ── Write ─────────────────────────────────────────────────
+
+  /// Persists the access token, refresh token and optional expiry timestamp.
+  /// Also updates the in-memory cache so subsequent [getToken] calls are fast.
   Future<void> saveTokens(
     String token,
     String refreshToken, {
     String? expiresAt,
   }) async {
-    await _secureStorage.write(key: 'token', value: token);
-    await _secureStorage.write(key: 'refresh_token', value: refreshToken);
-    if (expiresAt != null) {
-      await _secureStorage.write(key: 'expires_at', value: expiresAt);
-    }
+    _cachedToken = token;
+    await Future.wait([
+      _secureStorage.write(key: 'token', value: token),
+      _secureStorage.write(key: 'refresh_token', value: refreshToken),
+      if (expiresAt != null)
+        _secureStorage.write(key: 'expires_at', value: expiresAt),
+    ]);
   }
 
-  //! Get access token only
+  // ── Read ──────────────────────────────────────────────────
+
+  /// Returns the cached access token; falls back to secure storage on first
+  /// call or after a fresh install / cache invalidation.
   Future<String?> getToken() async {
-    return await _secureStorage.read(key: 'token');
+    _cachedToken ??= await _secureStorage.read(key: 'token');
+    return _cachedToken;
   }
 
-  //! Get refresh token only
+  /// Returns the refresh token from secure storage.
   Future<String?> getRefreshToken() async {
-    return await _secureStorage.read(key: 'refresh_token');
+    return _secureStorage.read(key: 'refresh_token');
   }
 
-  //! Get expiry
   Future<String?> getExpiresAt() async {
-    return await _secureStorage.read(key: 'expires_at');
+    return _secureStorage.read(key: 'expires_at');
   }
 
-  //! Get all tokens (returns null if access token is missing)
   Future<Map<String, String>?> getTokens() async {
-    final token = await _secureStorage.read(key: 'token');
+    final token = await getToken(); // uses cache
     if (token == null) return null;
-    final refreshToken = await _secureStorage.read(key: 'refresh_token');
-    final expiresAt = await _secureStorage.read(key: 'expires_at');
+
+    final results = await Future.wait([
+      _secureStorage.read(key: 'refresh_token'),
+      _secureStorage.read(key: 'expires_at'),
+    ]);
+
     return {
       'token': token,
-      'refresh_token': ?refreshToken,
-      'expires_at': ?expiresAt,
+      'refresh_token': results[0] ?? '',
+      'expires_at': results[1] ?? '',
     };
   }
 
-  //! Check if token is expired (with 30s buffer)
   Future<bool> isTokenExpired() async {
     final expiresAt = await getExpiresAt();
-    if (expiresAt == null) return false;
+    if (expiresAt == null || expiresAt.isEmpty) return false;
     try {
       final expiry = DateTime.parse(expiresAt);
       return DateTime.now().isAfter(
@@ -60,8 +74,9 @@ class TokenStorage {
     }
   }
 
-  //! Delete all tokens
+  
   Future<void> deleteTokens() async {
+    _cachedToken = null;
     await _secureStorage.deleteAll();
   }
 }

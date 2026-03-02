@@ -1,5 +1,5 @@
 import 'package:real_estate_app/core/utils/safe_parser.dart';
-import 'package:real_estate_app/features/explore/models/address_model.dart';
+import 'package:real_estate_app/features/property/models/address_model.dart';
 import 'package:real_estate_app/features/shared/models/contact_model.dart';
 import 'package:real_estate_app/features/property/models/project_overview_model.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';

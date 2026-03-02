@@ -1,7 +1,8 @@
+import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
+import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ContactMessage extends StatelessWidget {
@@ -9,10 +10,11 @@ class ContactMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<AuthController>();
+    final controller = Get.find<PropertyDetailsController>();
+    final contact = controller.propertyDetail?.contact;
     return Container(
       margin: const EdgeInsets.only(top: 25, bottom: 25, left: 16, right: 16),
-      height: 300,
+      // height: 300,
       width: .infinity,
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -36,7 +38,7 @@ class ContactMessage extends StatelessWidget {
                     radius: 25,
                     backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                     child: AppImage(
-                      path: controller.currentUser?.data.profile.profileImage,
+                      path: contact?.profileImage,
                       radius: BorderRadius.circular(50),
                       errorIcon: Icons.person,
                       height: 50,
@@ -48,12 +50,12 @@ class ContactMessage extends StatelessWidget {
                     crossAxisAlignment: .start,
                     children: [
                       AppText(
-                        controller.currentUser?.data.user.fullName ?? "",
+                        contact?.name ?? "No Name",
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                       AppText(
-                        controller.currentUser?.data.user.email ?? "",
+                        contact?.company ?? "No Company",
                         fontSize: 12,
                         color: AppColors.grey,
                       ),
@@ -61,6 +63,83 @@ class ContactMessage extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 16),
+              AppTextFormField(
+                controller: TextEditingController(),
+                hintText: "Name",
+                border: true,
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                customFillColor: AppColors.white,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a name";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              AppTextFormField(
+                controller: TextEditingController(),
+                hintText: "Phone",
+                keyboardType: TextInputType.phone,
+                border: true,
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                customFillColor: AppColors.white,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a name";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              AppTextFormField(
+                controller: TextEditingController(),
+                hintText: "Email",
+                keyboardType: TextInputType.emailAddress,
+                border: true,
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                customFillColor: AppColors.white,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a name";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              AppTextFormField(
+                controller: TextEditingController(),
+                hintText: "Message",
+                keyboardType: TextInputType.text,
+                maxLines: 5,
+                border: true,
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                customFillColor: AppColors.white,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a name";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey[300]!),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownFlutter(
+                    items: ["1", "2", "3", "4", "5"],
+                    onChanged: (value) {},
+                    hintText: "Select",
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              AppButton(text: "Send Message", onPressed: () {}),
             ],
           ),
         ),

@@ -11,7 +11,6 @@ class PropertyScreen extends GetView<PropertyController> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Obx(() {
       final isLoading = controller.isLoading;
       final isMoreLoading = controller.isMoreLoading;
@@ -45,7 +44,9 @@ class PropertyScreen extends GetView<PropertyController> {
           // selectedIndex captured above — no Obx needed, we're already in one
           SizedBox(
             height: 34,
-            child: ListView.builder(
+            child: ListView.separated(
+              clipBehavior: .none,
+
               scrollDirection: Axis.horizontal,
               itemCount: filters.length,
               itemBuilder: (context, i) {
@@ -82,6 +83,9 @@ class PropertyScreen extends GetView<PropertyController> {
                     ),
                   ),
                 );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(width: 8);
               },
             ),
           ),

@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
+import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/explore/views/screens/explore_screen.dart';
 import 'package:real_estate_app/features/home/views/screens/home_screen.dart';
 import 'package:real_estate_app/features/main/views/widgets/bottom_nav.dart';
 import 'package:real_estate_app/features/favorite/views/screens/saved_screen.dart';
+import 'package:real_estate_app/features/my_booking/views/screens/my_booking_screen.dart';
+import 'package:real_estate_app/features/profile/views/screens/profile_screen.dart';
 
 class MainController extends GetxController {
   final RxInt currentIndex = 0.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    Get.find<AuthController>().getCurrentUser();
+  }
 
   final List<Widget> screens = [
     const HomeScreen(),
     const ExploreScreen(),
     const FavoriteScreen(),
-    const Center(child: Text("My Bookings")),
-    const Center(child: Text("Profile")),
+    const MyBookingScreen(),
+    const ProfileScreen(),
   ];
 
   final List<NavItem> navItems = [

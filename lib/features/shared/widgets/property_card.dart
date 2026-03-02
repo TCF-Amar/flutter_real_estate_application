@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class PropertyCard extends StatelessWidget {
   final Property item;
@@ -68,33 +68,27 @@ class PropertyCard extends StatelessWidget {
                   child: Row(
                     children: [
                       featured
-                          ? _TagBadge(label: 'Featured', color: Colors.white)
-                          : _TagBadge(
-                              label: item.listingCategory
-                                  .toString()
-                                  .split("_")
-                                  .map((e) => e.capitalizeFirst!)
-                                  .join(" "),
-                              color: Colors.white,
+                          ? AppTag(
+                              label: 'Featured',
+                              color: Colors.blueAccent,
+                              backgroundColor: Colors.white,
+                            )
+                          : AppTag(
+                              label: item.listingCategory ?? '',
+                              color: Colors.blueAccent,
+                              backgroundColor: Colors.white,
                             ),
                       const SizedBox(width: 6),
-                      _TagBadge(
-                        label: item.propertyMode
-                            .toString()
-                            .split("_")
-                            .map((e) => e.capitalizeFirst!)
-                            .join(" "),
-                        color: Colors.white.withValues(alpha: 0.9),
-                        textColor: AppColors.primary,
+                      AppTag(
+                        label: item.propertyMode ,
+                        color: AppColors.grey,
+                        backgroundColor: Colors.white,
                       ),
                       const SizedBox(width: 6),
-                      _TagBadge(
-                        label: item.propertyType
-                            .split("_")
-                            .map((e) => e.capitalizeFirst!)
-                            .join(" "),
-                        color: Colors.white.withValues(alpha: 0.9),
-                        textColor: Colors.green,
+                      AppTag(
+                        label: item.propertyType,
+                        color: Colors.green,
+                        backgroundColor: Colors.white,
                       ),
                     ],
                   ),
@@ -174,17 +168,17 @@ class PropertyCard extends StatelessWidget {
                       Row(
                         children: [
                           _SpecIcon(
-                            icon: Icons.bed_rounded,
+                            icon: Assets.icons.bed,
                             value: item.bhkList ?? '0',
                           ),
                           const SizedBox(width: 12),
                           _SpecIcon(
-                            icon: Icons.bathtub_outlined,
+                            icon: Assets.icons.bath,
                             value: item.bathroomList ?? '0',
                           ),
                           const SizedBox(width: 12),
                           _SpecIcon(
-                            icon: Icons.square_foot_outlined,
+                            icon: Assets.icons.area,
                             value: (item.areaRange ?? '0').split(" - ").first,
                             isArea: true,
                           ),
@@ -202,40 +196,8 @@ class PropertyCard extends StatelessWidget {
   }
 }
 
-class _TagBadge extends StatelessWidget {
-  final String label;
-  final Color color;
-  final Color? textColor;
-  const _TagBadge({required this.label, required this.color, this.textColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(6),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.background.withValues(alpha: 0.2),
-            blurRadius: 4,
-            spreadRadius: 1,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: AppText(
-        label,
-        fontSize: 8,
-        fontWeight: FontWeight.w600,
-        color: textColor ?? Colors.amber,
-      ),
-    );
-  }
-}
-
 class _SpecIcon extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String value;
   final bool isArea;
   const _SpecIcon({
@@ -248,7 +210,7 @@ class _SpecIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: AppColors.primary),
+        AppSvg(path: icon, height: 12, width: 12, color: AppColors.primary),
         const SizedBox(width: 4),
         AppText(
           isArea ? "$value sq.ft" : value,

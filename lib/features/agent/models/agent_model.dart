@@ -1,6 +1,6 @@
 import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/core/utils/safe_parser.dart';
-import 'package:real_estate_app/features/explore/models/agent_details_response_model.dart';
+import 'package:real_estate_app/features/agent/models/agent_details_response_model.dart';
 
 class AgentModel {
   final int id;

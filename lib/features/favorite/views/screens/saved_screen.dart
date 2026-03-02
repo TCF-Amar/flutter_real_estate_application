@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-// import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
-// import 'package:real_estate_app/features/favorite/models/favorite_property.dart';
 import 'package:real_estate_app/features/favorite/views/widgets/favorite_card.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
@@ -12,87 +10,129 @@ class FavoriteScreen extends GetView<FavoriteController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchSavedProperties();
-    // fnail List<FavoriteProperty> savedProperties =
-    //     controller.savedData.data.property;
-    final savedProperties = controller.savedProperties;
     return Scaffold(
-      body: Obx(() {
-        if (controller.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColors.primary),
-          );
-        }
-
-        if (savedProperties.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.favorite_border_rounded,
-                  size: 72,
-                  color: AppColors.grey.withValues(alpha: 0.5),
-                ),
-                const SizedBox(height: 16),
-                const AppText(
-                  "No saved properties yet",
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textSecondary,
-                ),
-                const SizedBox(height: 8),
-                const AppText(
-                  "Properties you favorite will appear here",
-                  fontSize: 13,
-                  color: AppColors.grey,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 20,
-                  ),
-                  child: AppButton(
-                    // onPressed: () => Get.toNamed(AppRoutes.home),
-                    text: "Refresh",
-                    onPressed: controller.fetchSavedProperties,
-
-                    // color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return SafeArea(
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Header ─────────────────────────────────────────
+            Center(
+              child: const Padding(
+                padding: EdgeInsets.fromLTRB(16, 20, 16, 12),
                 child: HeaderText(text: "Favorites"),
               ),
-              Expanded(
-                child: RefreshIndicator(
+            ),
+
+            // ── Body ───────────────────────────────────────────
+            Expanded(
+              child: Obx(() {
+                if (controller.isLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: AppColors.primary),
+                  );
+                }
+
+                if (controller.savedProperties.isEmpty) {
+                  return _EmptyState(
+                    onRefresh: controller.fetchSavedProperties,
+                  );
+                }
+
+                return RefreshIndicator(
                   color: AppColors.primary,
                   onRefresh: controller.refreshSavedProperties,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                    itemCount: savedProperties.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 14),
-                    itemBuilder: (context, index) {
-                      return FavoriteCard(property: savedProperties[index]);
-                    },
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
+                    children: [
+                      AppText(
+                        "Saved Properties(${controller.savedProperties.length})",
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(height: 10),
+                      ...controller.savedProperties.map(
+                        (property) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: FavoriteCard(property: property),
+                        ),
+                      ),
+                      const AppText(
+                        "Saved Agents",
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(height: 10),
+
+                      // ...controller.savedAgents.map(
+                      //   (agent) => Padding(
+                      //     padding: const EdgeInsets.only(bottom: 12),
+                      //     child: FavoriteCard(property: agent),
+                      //   ),
+                      // ),
+                      const AppText(
+                        "Saved Developers",
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(height: 10),
+
+                      // ...controller.savedDevelopers.map(
+                      //   (developer) => Padding(
+                      //     padding: const EdgeInsets.only(bottom: 12),
+                      //     child: FavoriteCard(property: developer),
+                      //   ),
+                      // ),
+                    ],
                   ),
-                ),
-              ),
-            ],
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  final VoidCallback onRefresh;
+
+  const _EmptyState({required this.onRefresh});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.favorite_border_rounded,
+            size: 72,
+            color: AppColors.grey.withValues(alpha: 0.4),
           ),
-        );
-      }),
+          const SizedBox(height: 16),
+          const AppText(
+            "No saved properties yet",
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textSecondary,
+          ),
+          const SizedBox(height: 8),
+          const AppText(
+            "Properties you favorite will appear here",
+            fontSize: 13,
+            color: AppColors.grey,
+          ),
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: AppButton(text: "Refresh", onPressed: onRefresh),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -12,4 +12,5 @@ class AppRoutes {
   static const String search = "/search";
   static const String searchResult = "/search-result";
   static const String propertyDetails = "/property-details";
+  static const String agentDetails = "/agent-details";
 }

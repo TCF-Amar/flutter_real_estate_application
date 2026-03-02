@@ -1,3 +1,5 @@
+import 'package:real_estate_app/features/property/models/property_model.dart';
+
 class FavoriteProperty {
   final int? id;
   final String? title;
@@ -87,36 +89,7 @@ class FavoriteProperty {
     };
   }
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is FavoriteProperty && id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
 }
 
-class PriceRange {
-  final String? min;
-  final String? max;
 
-  PriceRange({this.min, this.max});
 
-  factory PriceRange.fromJson(Map<String, dynamic> json) {
-    return PriceRange(min: json['min'] as String?, max: json['max'] as String?);
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'min': min, 'max': max};
-  }
-
-  @override
-  String toString() => 'PriceRange(min: $min, max: $max)';
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PriceRange && min == other.min && max == other.max;
-
-  @override
-  int get hashCode => min.hashCode ^ max.hashCode;
-}

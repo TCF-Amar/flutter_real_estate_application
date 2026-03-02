@@ -7,8 +7,8 @@ import 'package:real_estate_app/features/property/controllers/property_details_c
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
-  final int id;
-  const PropertyDetailsScreen({super.key, required this.id});
+  // final int id;
+  const PropertyDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -34,6 +34,13 @@ class _Icons {
   final iconsDate = "assets/icons/icons_date.svg";
   final bed = "assets/icons/bed.svg";
   final bath = "assets/icons/bath.svg";
+  final fb = "assets/icons/fb.svg";
+  final insta = "assets/icons/insta.svg";
+  final message = "assets/icons/message.svg";
+  final twitter = "assets/icons/twitter.svg";
+  final telegram = "assets/icons/telegram.svg";
+  final whatsapp = "assets/icons/whatsapp.svg";
+  final linkedin = "assets/icons/linkedin.svg";
 }
 
 class _Images {

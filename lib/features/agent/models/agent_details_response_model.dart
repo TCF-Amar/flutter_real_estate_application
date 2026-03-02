@@ -1,26 +1,9 @@
 import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/core/utils/safe_parser.dart';
+import 'package:real_estate_app/features/agent/models/graph_data_model.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 
-class AgentDetailsResponse {
-  final bool status;
-  final AgentDetailModel data;
 
-  AgentDetailsResponse({required this.status, required this.data});
-
-  factory AgentDetailsResponse.fromJson(Map<String, dynamic> json) {
-    return AgentDetailsResponse(
-      status: json['status'] is bool ? json['status'] as bool : false,
-      data: AgentDetailModel.fromJson(
-        json['data'] as Map<String, dynamic>? ?? {},
-      ),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {'status': status, 'data': data.toJson()};
-  }
-}
 
 class AgentDetailModel {
   final int id;
@@ -40,6 +23,8 @@ class AgentDetailModel {
   final int reviewCount;
   final int propertiesCount;
   final List<Property> properties;
+  final GraphDataModel? graphData;
+
 
   AgentDetailModel({
     required this.id,
@@ -59,6 +44,7 @@ class AgentDetailModel {
     required this.reviewCount,
     required this.propertiesCount,
     required this.properties,
+    this.graphData,
   });
 
   factory AgentDetailModel.fromJson(Map<String, dynamic> json) {
@@ -92,6 +78,9 @@ class AgentDetailModel {
                   )
                   .toList()
             : [],
+        graphData: json['graph_data'] != null
+            ? GraphDataModel.fromJson(json['graph_data'])
+            : null,
       );
     } catch (e) {
       // Return empty/default model on parsing error
@@ -113,6 +102,7 @@ class AgentDetailModel {
         reviewCount: 0,
         propertiesCount: 0,
         properties: [],
+        graphData: null,
       );
     }
   }
@@ -136,6 +126,7 @@ class AgentDetailModel {
       'review_count': reviewCount,
       'properties_count': propertiesCount,
       'properties': properties.map((e) => e.toJson()).toList(),
+      'graph_data': graphData?.toJson(),
     };
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:real_estate_app/core/services/explore_services.dart';
+import 'package:real_estate_app/core/services/property_services.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/property/models/property_filter.model.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
@@ -10,7 +10,7 @@ import 'package:real_estate_app/features/favorite/controllers/favorite_controlle
 class PropertyController extends GetxController {
   final Logger log = Logger();
 
-  final ExploreServices propertyServices = Get.find<ExploreServices>();
+  final PropertyServices propertyServices = Get.find<PropertyServices>();
   final FavoriteController favoritesController = Get.find<FavoriteController>();
   final HomeController homeController = Get.find<HomeController>();
 
@@ -87,6 +87,33 @@ class PropertyController extends GetxController {
     });
   }
 
+  void applySort(String? label) {
+    selectedSort.value = label;
+    propertyServices.page.value = 1;
+    _fetchProperties();
+  }
+
+  void _applySortToList() {
+    final label = selectedSort.value;
+    if (label == null) return;
+    switch (label) {
+      case 'Newest First':
+        _filteredProperties.sort((a, b) => b.id.compareTo(a.id));
+        _properties.sort((a, b) => b.id.compareTo(a.id));
+        break;
+      case 'Price: Low to High':
+        final sorted = [..._filteredProperties]
+          ..sort((a, b) => (a.basePrice ?? 0).compareTo(b.basePrice ?? 0));
+        _filteredProperties.assignAll(sorted);
+        break;
+      case 'Price: High to Low':
+        final sorted = [..._filteredProperties]
+          ..sort((a, b) => (b.basePrice ?? 0).compareTo(a.basePrice ?? 0));
+        _filteredProperties.assignAll(sorted);
+        break;
+    }
+  }
+
   void handleSearch() {
     propertyServices.keywords.value = searchQuery.value;
     propertyServices.page.value = 1;
@@ -135,7 +162,7 @@ class PropertyController extends GetxController {
     _fetchProperties();
   }
 
-  void applyFilters() {
+  void applyFilters({bool shouldFetch = true}) {
     final data = filterData.value?.data;
 
     propertyServices.minPrice.value = minPrice.value.toInt();
@@ -153,7 +180,10 @@ class PropertyController extends GetxController {
     }
 
     propertyServices.page.value = 1;
-    _fetchProperties();
+    if (shouldFetch) {
+      _fetchProperties();
+    }
+
     Get.back();
   }
 
@@ -231,6 +261,8 @@ class PropertyController extends GetxController {
       perPage.value = r.pagination?.perPage ?? 5;
     });
 
+    _applySortToList();
+
     _isLoading.value = false;
     _isMoreLoading.value = false;
   }
@@ -275,5 +307,6 @@ class PropertyController extends GetxController {
       propertyId: propertyId,
       type: 'property',
     );
+    favoritesController.fetchSavedProperties();
   }
 }

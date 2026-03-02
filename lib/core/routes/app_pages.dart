@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
+import 'package:real_estate_app/features/agent/bindings/agent_binding.dart';
+import 'package:real_estate_app/features/agent/view/screens/agent_detail_screen.dart';
 import 'package:real_estate_app/features/auth/views/screens/forgot_password_screen.dart';
 import 'package:real_estate_app/features/auth/views/screens/sign_in_screen.dart';
 import 'package:real_estate_app/features/auth/views/screens/sign_up_screen.dart';
@@ -38,8 +40,13 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.propertyDetails,
-      page: () => PropertyDetailsScreen(id: Get.arguments['id']),
+      page: () => PropertyDetailsScreen(),
       binding: PropertyDetailsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.agentDetails,
+      page: () => AgentDetailScreen(),
+      binding: AgentDetailsBinding(),
     ),
   ];
 }

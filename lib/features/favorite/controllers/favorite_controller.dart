@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:real_estate_app/core/services/explore_services.dart';
+import 'package:real_estate_app/core/services/property_services.dart';
 import 'package:real_estate_app/features/favorite/models/favorite_property.dart';
 import 'package:real_estate_app/features/favorite/models/favorite_response_model.dart';
 
 class FavoriteController extends GetxController {
   final Logger log = Logger();
-  final ExploreServices propertyServices = Get.find<ExploreServices>();
+  final PropertyServices propertyServices = Get.find<PropertyServices>();
 
   final Rxn<FavoriteResponseModel> _savedData = Rxn<FavoriteResponseModel>();
   FavoriteResponseModel get savedData => _savedData.value!;
