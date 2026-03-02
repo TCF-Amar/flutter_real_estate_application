@@ -32,6 +32,33 @@ class GraphDataModel {
       'property_city_stats': propertyCityStats.map((e) => e.toJson()).toList(),
     };
   }
+
+  // list to map for pie chart
+  Map<String, double> get propertyTypeStatsMap {
+    return {
+      for (var stat in propertyTypeStats)
+        if (stat.percentage > 0)
+          "${stat.percentage}% ${stat.label}": stat.percentage.toDouble(),
+    };
+  }
+
+  Map<String, double> get propertyStatusStatsMap {
+    return {
+      for (var stat in propertyStatusStats)
+        if (stat.percentage > 0)
+          "${stat.percentage}% ${stat.label.isEmpty ? 'Unknown' : stat.label}":
+              stat.percentage.toDouble(),
+    };
+  }
+
+  Map<String, double> get propertyCityStatsMap {
+    return {
+      for (var stat in propertyCityStats)
+        if (stat.percentage > 0)
+          "${stat.percentage}% ${stat.label.isEmpty ? 'Unknown' : stat.label}":
+              stat.percentage.toDouble(),
+    };
+  }
 }
 
 class GraphStat {

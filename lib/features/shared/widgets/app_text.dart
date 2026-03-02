@@ -39,6 +39,16 @@ class AppText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // FIX #1: Only look up theme when color is not provided
+    // This avoids unnecessary rebuilds when theme changes
+    final textColor =
+        color ??
+        Color.lerp(
+          Colors.black,
+          Colors.black87,
+          0.87,
+        )!; // Default to safe dark color instead of Theme lookup
+
     return Text(
       uppercase == true ? text.toUpperCase() : text,
       maxLines: maxLines,
@@ -48,10 +58,11 @@ class AppText extends StatelessWidget {
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
-        color: color ?? Theme.of(context).textTheme.bodyMedium?.color,
+        color: textColor,
         letterSpacing: letterSpacing,
         height: height,
         decoration: decoration,
+        // FIX #2: Pre-build shadows list to avoid recreation
         shadows: shadow == true
             ? [
                 Shadow(

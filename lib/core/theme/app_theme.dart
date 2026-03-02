@@ -6,6 +6,11 @@ class AppTheme {
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
     fontFamily: 'Poppins',
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      surfaceTintColor: Colors.transparent,
+    ),
   );
 
   static ThemeData get darkTheme => ThemeData(
@@ -13,5 +18,10 @@ class AppTheme {
     brightness: Brightness.dark,
     scaffoldBackgroundColor: Colors.black,
     fontFamily: 'Poppins',
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.black,
+      foregroundColor: Colors.white,
+      surfaceTintColor: Colors.transparent,
+    ),
   );
 }

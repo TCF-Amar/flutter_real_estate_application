@@ -3,10 +3,8 @@ import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_details_controller.dart';
-import 'package:real_estate_app/features/agent/view/widgets/agent_details_widgets/agent_contacts.dart';
-import 'package:real_estate_app/features/agent/view/widgets/agent_details_widgets/agent_info.dart';
-
-import '../../../shared/widgets/index.dart';
+import 'package:real_estate_app/features/agent/view/widgets/agent_details_widgets/index.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class AgentDetailScreen extends GetView<AgentDetailsController> {
   const AgentDetailScreen({super.key});
@@ -31,7 +29,7 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
                     borderRadius: BorderRadius.circular(100),
                   ),
                 ),
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back_ios_new),
                 onPressed: () => Get.back(),
               ),
               expandedHeight: 370,
@@ -47,81 +45,7 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
               backgroundColor: Colors.white,
               foregroundColor: Colors.white,
               surfaceTintColor: Colors.transparent,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Stack(
-                  clipBehavior: Clip.antiAlias,
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    // Cover Image
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 0,
-                      bottom: 170,
-                      child: AppImage(path: agent.image, fit: BoxFit.cover),
-                    ),
-
-                    // Dark overlay for readability
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 170,
-                      child: Container(color: Colors.black.withValues(alpha: 0.18)),
-                    ),
-
-                    // Circular avatar overlapping content
-                    Positioned(
-                      bottom: 100,
-                      child: CircleAvatar(
-                        radius: 80,
-                        backgroundColor: Colors.white,
-                        child: CircleAvatar(
-                          radius: 72,
-                          backgroundImage:
-                              agent.image != null && agent.image!.isNotEmpty
-                              ? NetworkImage(agent.image!)
-                              : null,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              agent.name,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              agent.roleType,
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                            if ((agent.agencyName).isNotEmpty) ...[
-                              const SizedBox(height: 8),
-                              Text(
-                                'At ${agent.agencyName}',
-                                style: const TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              flexibleSpace: HeaderSection(agent: agent),
             ),
 
             // Name + role + agency
@@ -145,15 +69,15 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
                     Expanded(
                       child: _statColumn(
                         icon: Assets.icons.bag,
-                        value: '${agent.experience ?? 0}',
-                        label: 'Years',
+                        value: '${agent.experience ?? 0} Years',
+                        label: 'Experience',
                       ),
                     ),
                     Expanded(
                       child: _statColumn(
                         icon: Assets.icons.home_2,
-                        value: '${agent.propertiesCount }',
-                        label: 'Properties',
+                        value: '${agent.propertiesCount} Properties',
+                        label: 'Listing',
                       ),
                     ),
                   ],
@@ -163,24 +87,15 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
 
             const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
-            // Description
-            if ((agent.description ?? '').isNotEmpty)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    agent.description ?? '',
-                    style: const TextStyle(height: 1.5),
-                  ),
-                ),
-              ),
-
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
-
             AgentInfo(),
 
             AgentContacts(),
 
+            Graph(graphData: agent.graphData),
+
+            ListedProperty(),
+
+            AgentAbout(),
             const SliverToBoxAdapter(child: SizedBox(height: 300)),
           ],
         );

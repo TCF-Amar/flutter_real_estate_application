@@ -41,6 +41,8 @@ class _Icons {
   final telegram = "assets/icons/telegram.svg";
   final whatsapp = "assets/icons/whatsapp.svg";
   final linkedin = "assets/icons/linkedin.svg";
+  final mail = "assets/icons/mail.svg";
+  final phone = "assets/icons/phone.svg";
 }
 
 class _Images {
