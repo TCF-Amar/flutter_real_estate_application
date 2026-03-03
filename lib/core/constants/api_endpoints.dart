@@ -35,6 +35,7 @@ class ApiEndpoints {
   // ── Agents ───────────────────────────────────────────────────────────────
   static const String agents = "$_buyer/agents";
   static String getAgentDetails(int id) => "$_buyer/agents/$id";
+  static String agentReviews(int id) => "$_buyer/agents/$id/reviews";
 
   // ── Settings ─────────────────────────────────────────────────────────────
   static const String getSettings = "$_buyer/settings";

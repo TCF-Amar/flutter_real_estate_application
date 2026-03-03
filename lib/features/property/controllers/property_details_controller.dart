@@ -121,7 +121,7 @@ class PropertyDetailsController extends GetxController {
     } finally {
       _isLoadingAgent.value = false;
     }
-    return agent;
+    return agent; 
   }
   // ─── Reviews ─────────────────────────────────────────────────────────────
 

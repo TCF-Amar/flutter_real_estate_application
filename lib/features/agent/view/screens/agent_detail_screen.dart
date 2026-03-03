@@ -93,9 +93,12 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
 
             Graph(graphData: agent.graphData),
 
+            AgentAbout(agent: agent),
+
             ListedProperty(),
 
-            AgentAbout(),
+            AgentReviews(),
+
             const SliverToBoxAdapter(child: SizedBox(height: 300)),
           ],
         );

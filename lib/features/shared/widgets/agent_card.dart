@@ -153,7 +153,9 @@ class ExploreAgentCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AppText(
-                          agent.experience,
+                          agent.experience.contains("Year")
+                              ? agent.experience
+                              : "${agent.experience} Years",
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                           color: AppColors.textSecondary,

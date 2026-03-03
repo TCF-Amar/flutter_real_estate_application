@@ -55,7 +55,7 @@ class AgentsScreen extends StatelessWidget {
                 itemCount:
                     controller.agents.length +
                     (controller.isLoadingMore.value ? 1 : 0),
-                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                separatorBuilder: (_, _) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   if (index == controller.agents.length) {
                     return const Padding(

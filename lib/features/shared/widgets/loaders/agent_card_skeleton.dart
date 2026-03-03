@@ -39,7 +39,7 @@ class _AgentCardSkeletonState extends State<AgentCardSkeleton>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _animation,
-      builder: (_, __) =>
+      builder: (_, _) =>
           Opacity(opacity: _animation.value, child: _buildCard()),
     );
   }
@@ -61,7 +61,6 @@ class _AgentCardSkeletonState extends State<AgentCardSkeleton>
       ),
       child: Column(
         children: [
-          // ── Top row: avatar + name lines + favourite button ──
           Row(
             children: [
               // Circle avatar
@@ -81,14 +80,12 @@ class _AgentCardSkeletonState extends State<AgentCardSkeleton>
                 ),
               ),
               const SizedBox(width: 12),
-              // Favourite circle button
               _box(width: 36, height: 36, radius: 18),
             ],
           ),
 
           const SizedBox(height: 12),
 
-          // ── Bottom row: 3 stat blocks ──────────────────────
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(3, (_) => _statBlock()),
@@ -153,8 +150,8 @@ class AgentListSkeleton extends StatelessWidget {
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
       itemCount: count,
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
-      itemBuilder: (_, __) => const AgentCardSkeleton(),
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
+      itemBuilder: (_, _) => const AgentCardSkeleton(),
     );
   }
 }

@@ -4,3 +4,4 @@ export 'header_section.dart';
 export 'graph.dart';
 export 'listed_property.dart';
 export 'agent_about.dart';
+export 'agent_reviews.dart';

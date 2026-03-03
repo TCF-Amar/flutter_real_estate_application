@@ -4,14 +4,12 @@ import 'package:real_estate_app/core/constants/api_endpoints.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/core/storage/token_storage.dart';
 
-
 class DioInterceptors extends Interceptor {
   final Dio dio;
   final TokenStorage tokenStorage;
 
   bool _isRefreshing = false;
 
-  
   final List<({RequestOptions options, ErrorInterceptorHandler handler})>
   _queue = [];
 
@@ -32,11 +30,9 @@ class DioInterceptors extends Interceptor {
       if (token != null && token.isNotEmpty) {
         options.headers['Authorization'] = 'Bearer $token';
       }
-      
     }
     handler.next(options);
   }
-
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
@@ -88,7 +84,6 @@ class DioInterceptors extends Interceptor {
     }
   }
 
-  
   Future<bool> _refreshToken() async {
     try {
       final refreshToken = await tokenStorage.getRefreshToken();
@@ -96,8 +91,10 @@ class DioInterceptors extends Interceptor {
 
       final res = await dio.post(
         ApiEndpoints.refreshToken,
-        data: {'refresh_token': refreshToken},
-        options: Options(extra: {'skipAuth': true}),
+        options: Options(
+          headers: {'Authorization': 'Bearer $refreshToken'},
+          extra: {'skipAuth': true},
+        ),
       );
 
       final data = res.data?['data'];
@@ -108,6 +105,7 @@ class DioInterceptors extends Interceptor {
 
       final newRefreshToken =
           (data['refresh_token'] as String?) ?? refreshToken;
+
       final expiresAt = data['expires_at'] as String?;
 
       await tokenStorage.saveTokens(
@@ -115,13 +113,13 @@ class DioInterceptors extends Interceptor {
         newRefreshToken,
         expiresAt: expiresAt,
       );
+
       return true;
-    } catch (_) {
+    } catch (e) {
       return false;
     }
   }
 
-  
   Future<Response> _retry(RequestOptions options) async {
     final token = await tokenStorage.getToken();
     if (token == null || token.isEmpty) {
@@ -135,7 +133,6 @@ class DioInterceptors extends Interceptor {
     return dio.fetch(options);
   }
 
-  
   Future<void> _forceLogout() async {
     await tokenStorage.deleteTokens();
     Get.offAllNamed(AppRoutes.signin);

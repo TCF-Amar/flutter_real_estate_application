@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:real_estate_app/core/constants/app_assets.dart';
+import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/features/agent/models/agent_details_response_model.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class AgentAbout extends StatelessWidget {
-  const AgentAbout({super.key});
+  final AgentDetailModel agent;
+  const AgentAbout({super.key, required this.agent});
 
   @override
   Widget build(BuildContext context) {
@@ -11,14 +17,114 @@ class AgentAbout extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'About',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              'About ${agent.name}',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel sapien eget nunc efficitur varius. Sed at felis ac nisl efficitur tincidunt.',
-              style: TextStyle(fontSize: 14, color: Colors.black87),
+            Divider(),
+            // const SizedBox(height: 8),
+            AppText(
+              '${agent.description}',
+              overflow: TextOverflow.clip,
+              color: AppColors.textSecondary,
+            ),
+
+            const SizedBox(height: 16),
+            AppText(
+              "Social Media Links",
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: AppColors.textSecondary,
+            ),
+            SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SvgPicture.asset(
+                    Assets.icons.fb,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SvgPicture.asset(
+                    Assets.icons.whatsapp,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SvgPicture.asset(
+                    Assets.icons.insta,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SvgPicture.asset(
+                    Assets.icons.message,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SvgPicture.asset(
+                    Assets.icons.twitter,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SvgPicture.asset(
+                    Assets.icons.telegram,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SvgPicture.asset(
+                    Assets.icons.linkedin,
+                    width: 20,
+                    height: 20,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

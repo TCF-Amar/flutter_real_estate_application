@@ -147,11 +147,14 @@ class _HeaderRow extends StatelessWidget {
           // FIX #1: Granular observation - only user avatar rebuilds
           Obx(() {
             final user = auth.user.value;
-            // FIX #8: Extract BorderRadius as const
-            return AppImage(
-              radius: _profileImageRadius,
-              path: user?.profileImage,
-              errorIcon: Icons.person,
+            return CircleAvatar(
+              radius: 20,
+              child: AppImage(
+                radius: _profileImageRadius,
+                path: user?.profileImage,
+                errorIcon: Icons.person,
+                isProfileImage: true,
+              ),
             );
           }),
           const SizedBox(width: 12),

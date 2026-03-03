@@ -9,6 +9,8 @@ import 'package:real_estate_app/core/networks/exceptions/exceptions.dart';
 import 'package:real_estate_app/core/utils/typedef.dart';
 import 'package:real_estate_app/features/agent/models/agent_details_response_model.dart';
 import 'package:real_estate_app/features/agent/models/agent_response_model.dart';
+import 'package:real_estate_app/features/property/models/review_request_model.dart';
+import 'package:real_estate_app/features/shared/models/review_response_model.dart';
 
 class AgentServices extends GetxService {
   final Logger log = Logger();
@@ -74,6 +76,52 @@ class AgentServices extends GetxService {
       );
       log.d("Agent details response status: ${response.data['status']}");
       return Right(AgentDetailModel.fromJson(response.data['data']));
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+  FutureResult<ReviewResponse> getReviews(
+    int id, {
+    int page = 1,
+    int perPage = 3,
+  }) async {
+    try {
+      final queryParameters = <String, dynamic>{
+        "per_page": perPage,
+        "page": page,
+      };
+      final response = await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.agentReviews(id),
+          method: ApiMethod.get,
+          queryParameters: queryParameters,
+        ),
+      );
+      return Right(ReviewResponse.fromJson(response.data));
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+  
+  FutureResult<bool> addReview(
+    int id,
+    ReviewRequestModel reviewRequestModel,
+  ) async {
+    try {
+      await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.agentReviews(id),
+          method: ApiMethod.post,
+          body: reviewRequestModel.toJson(),
+        ),
+      );
+      return Right(true);
     } on AppException catch (e) {
       return Left(ApiException.map(e));
     } catch (e) {

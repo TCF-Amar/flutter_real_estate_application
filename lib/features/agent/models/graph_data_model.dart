@@ -33,32 +33,31 @@ class GraphDataModel {
     };
   }
 
+  Map<String, double> _safeMap(List<GraphStat> stats) {
+    final map = <String, double>{};
+
+    for (final stat in stats) {
+      if (stat.percentage > 0) {
+        map["${stat.percentage}% ${stat.label.isEmpty ? 'Unknown' : stat.label}"] =
+            stat.percentage.toDouble();
+      }
+    }
+
+    // prevent empty map crash
+    if (map.isEmpty) {
+      map["No Data"] = 0.0;
+    }
+
+    return map;
+  }
+
   // list to map for pie chart
-  Map<String, double> get propertyTypeStatsMap {
-    return {
-      for (var stat in propertyTypeStats)
-        if (stat.percentage > 0)
-          "${stat.percentage}% ${stat.label}": stat.percentage.toDouble(),
-    };
-  }
+  Map<String, double> get propertyTypeStatsMap => _safeMap(propertyTypeStats);
 
-  Map<String, double> get propertyStatusStatsMap {
-    return {
-      for (var stat in propertyStatusStats)
-        if (stat.percentage > 0)
-          "${stat.percentage}% ${stat.label.isEmpty ? 'Unknown' : stat.label}":
-              stat.percentage.toDouble(),
-    };
-  }
+  Map<String, double> get propertyStatusStatsMap =>
+      _safeMap(propertyStatusStats);
 
-  Map<String, double> get propertyCityStatsMap {
-    return {
-      for (var stat in propertyCityStats)
-        if (stat.percentage > 0)
-          "${stat.percentage}% ${stat.label.isEmpty ? 'Unknown' : stat.label}":
-              stat.percentage.toDouble(),
-    };
-  }
+  Map<String, double> get propertyCityStatsMap => _safeMap(propertyCityStats);
 }
 
 class GraphStat {

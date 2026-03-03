@@ -16,4 +16,5 @@ export 'header_text.dart';
 export 'property_card.dart';
 export 'loaders/property_skeleton.dart';
 export 'app_tag.dart';
+export 'review_card.dart';
 
