@@ -9,6 +9,22 @@ class PropertyCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool featured;
   final VoidCallback? onFavoriteTap;
+
+  // BoxDecoration is const-cacheable since shadow/radius/color never change.
+  // The withValues alpha on black is computed at const-eval time via the
+  // literal RGBA: black @ 4% opacity = rgba(0,0,0,0.04).
+  static const _cardDecoration = BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.all(Radius.circular(24)),
+    boxShadow: [
+      BoxShadow(
+        color: Color.fromRGBO(0, 0, 0, 0.04),
+        blurRadius: 15,
+        offset: Offset(0, 8),
+      ),
+    ],
+  );
+
   const PropertyCard({
     super.key,
     required this.item,
@@ -27,17 +43,7 @@ class PropertyCard extends StatelessWidget {
       splashColor: Colors.transparent,
       onTap: () => onTap?.call(),
       child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
+        decoration: _cardDecoration,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -56,6 +62,10 @@ class PropertyCard extends StatelessWidget {
                       ? Image.network(
                           item.image!,
                           fit: BoxFit.cover,
+                          // Decode at display size — 170px height, full width
+                          cacheHeight:
+                              (170 * MediaQuery.of(context).devicePixelRatio)
+                                  .toInt(),
                           errorBuilder: (context, error, stackTrace) =>
                               _PlaceholderImage(url: item.shareData.image),
                         )
@@ -80,7 +90,7 @@ class PropertyCard extends StatelessWidget {
                             ),
                       const SizedBox(width: 6),
                       AppTag(
-                        label: item.propertyMode ,
+                        label: item.propertyMode,
                         color: AppColors.grey,
                         backgroundColor: Colors.white,
                       ),
@@ -128,7 +138,7 @@ class PropertyCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText(
-                    "${item.title} ${item.id}",
+                    item.title,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.black,

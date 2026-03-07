@@ -62,8 +62,6 @@ class FavoriteController extends GetxController {
     required String type,
     required int propertyId,
   }) async {
-    // homeController.toggleFavorite(propertyId: propertyId);
-    // exploreController.toggleFavorite(propertyId: propertyId);
     final result = await propertyServices.toggleFavorite(
       type: type,
       propertyId: propertyId,
@@ -80,9 +78,7 @@ class FavoriteController extends GetxController {
         }
       },
     );
-  }
 
-  // void saveProperty(FavoriteProperty property) {
-  //   _savedProperties.value?.data.property.add(property);
-  // }
+    _fetchSavedProperties();
+  }
 }

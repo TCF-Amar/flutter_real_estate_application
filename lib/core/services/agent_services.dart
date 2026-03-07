@@ -7,6 +7,7 @@ import 'package:real_estate_app/core/networks/dio_helper.dart';
 import 'package:real_estate_app/core/networks/exceptions/api_exceptions.dart';
 import 'package:real_estate_app/core/networks/exceptions/exceptions.dart';
 import 'package:real_estate_app/core/utils/typedef.dart';
+import 'package:real_estate_app/features/agent/controllers/agent_details_controller.dart';
 import 'package:real_estate_app/features/agent/models/agent_details_response_model.dart';
 import 'package:real_estate_app/features/agent/models/agent_response_model.dart';
 import 'package:real_estate_app/features/property/models/review_request_model.dart';
@@ -108,7 +109,6 @@ class AgentServices extends GetxService {
     }
   }
 
-  
   FutureResult<bool> addReview(
     int id,
     ReviewRequestModel reviewRequestModel,
@@ -126,6 +126,24 @@ class AgentServices extends GetxService {
       return Left(ApiException.map(e));
     } catch (e) {
       return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+  Future<bool?> sendAgentEnquiry(
+    int id,
+    EnquiryRequestModel enquiryRequestModel,
+  ) async {
+    try {
+      await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.sendAgentEnquiry(id),
+          method: ApiMethod.post,
+          body: enquiryRequestModel.toMap(),
+        ),
+      );
+      return true;
+    } on AppException {
+      return false;
     }
   }
 }

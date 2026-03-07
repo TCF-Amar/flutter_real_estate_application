@@ -12,6 +12,7 @@ import 'package:real_estate_app/features/property/models/review_request_model.da
 import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 import 'package:real_estate_app/features/shared/models/pagination_model.dart';
 import 'package:real_estate_app/features/shared/models/review_model.dart';
+import 'package:real_estate_app/features/shared/models/reviews_summary_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
 
 class PropertyDetailsController extends GetxController {
@@ -121,12 +122,15 @@ class PropertyDetailsController extends GetxController {
     } finally {
       _isLoadingAgent.value = false;
     }
-    return agent; 
+    return agent;
   }
   // ─── Reviews ─────────────────────────────────────────────────────────────
 
   final RxList<ReviewModel> _reviews = RxList<ReviewModel>();
   List<ReviewModel> get reviews => _reviews;
+
+  final Rxn<ReviewSummaryModel> _reviewsSummary = Rxn<ReviewSummaryModel>();
+  ReviewSummaryModel? get reviewsSummary => _reviewsSummary.value;
 
   final RxBool _isLoadingReviews = false.obs;
   bool get isLoadingReviews => _isLoadingReviews.value;
@@ -164,6 +168,7 @@ class PropertyDetailsController extends GetxController {
       (r) {
         _reviews.addAll(r.data.reviews);
         _pagination.value = r.data.pagination;
+        _reviewsSummary.value = r.data.reviewsSummary;
         log.d(
           "Loaded more reviews — page $_currentPage, total ${_reviews.length}",
         );
@@ -179,6 +184,7 @@ class PropertyDetailsController extends GetxController {
       log.d("Fetched reviews: ${r.data.reviews.length}");
       _reviews.value = r.data.reviews;
       _pagination.value = r.data.pagination;
+      _reviewsSummary.value = r.data.reviewsSummary;
     });
     _isLoadingReviews.value = false;
   }

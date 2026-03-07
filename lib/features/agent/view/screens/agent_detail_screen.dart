@@ -99,6 +99,8 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
 
             AgentReviews(),
 
+            ADContactForm(),
+
             const SliverToBoxAdapter(child: SizedBox(height: 300)),
           ],
         );

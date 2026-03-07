@@ -49,7 +49,7 @@ class PropertyDetail {
   final String? bhkList;
   final String? bathroomList;
   final String? areaRange;
-  final ReviewsSummaryModel? reviewsSummary;
+  final ReviewSummaryModel? reviewsSummary;
   final ContactModel? contact;
   final bool? isFavorited;
   final String? deepLink;
@@ -162,7 +162,7 @@ class PropertyDetail {
       bathroomList: toStr(json['bathroom_list']),
       areaRange: toStr(json['area_range']),
       reviewsSummary: json['reviews_summary'] != null
-          ? ReviewsSummaryModel.fromJson(json['reviews_summary'])
+          ? ReviewSummaryModel.fromJson(json['reviews_summary'])
           : null,
       contact: json['contact'] != null
           ? ContactModel.fromJson(json['contact'])
@@ -272,7 +272,7 @@ class PropertyDetail {
     String? bhkList,
     String? bathroomList,
     String? areaRange,
-    ReviewsSummaryModel? reviewsSummary,
+    ReviewSummaryModel? reviewsSummary,
     ContactModel? contact,
     bool? isFavorited,
     String? deepLink,

@@ -6,16 +6,24 @@ class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
+
+  final double? width;
+  final bool fullWidth;
+
   final Color? backgroundColor;
   final Color? textColor;
   final Color? disabledBackgroundColor;
+
   final double? fontSize;
   final FontWeight? fontWeight;
+
   final EdgeInsetsGeometry? padding;
-  final double? borderRadius;
+  final double borderRadius;
+
   final Widget? icon;
-  final bool fullWidth;
+
   final bool showShadow;
+
   final bool isBorder;
   final Color? borderColor;
 
@@ -24,15 +32,16 @@ class AppButton extends StatelessWidget {
     required this.text,
     this.onPressed,
     this.isLoading = false,
+    this.width,
+    this.fullWidth = true,
     this.backgroundColor,
     this.textColor,
     this.disabledBackgroundColor,
     this.fontSize,
     this.fontWeight,
     this.padding,
-    this.borderRadius,
+    this.borderRadius = 12,
     this.icon,
-    this.fullWidth = true,
     this.showShadow = true,
     this.isBorder = false,
     this.borderColor,
@@ -40,63 +49,75 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonChild = isLoading
-        ? SizedBox(
-            height: 20,
-            width: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                textColor ?? AppColors.white,
-              ),
-            ),
-          )
-        : icon != null
-        ? Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 20, width: 20, child: icon!),
-              const SizedBox(width: 12),
-              AppText(
-                text,
-                color: textColor ?? AppColors.white,
-                fontSize: fontSize ?? 16,
-                fontWeight: fontWeight ?? FontWeight.w600,
-              ),
-            ],
-          )
-        : AppText(
-            text,
-            color: textColor ?? AppColors.white,
-            fontSize: fontSize ?? 16,
-            fontWeight: fontWeight ?? FontWeight.w600,
-          );
+    final Color bgColor = backgroundColor ?? AppColors.primary;
+    final Color txtColor = textColor ?? AppColors.white;
 
-    final button = ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
-        backgroundColor: backgroundColor ?? AppColors.primary,
-        disabledBackgroundColor:
-            disabledBackgroundColor ??
-            (backgroundColor ?? AppColors.primary).withValues(alpha: 0.5),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius ?? 12),
+    Widget child;
+
+    if (isLoading) {
+      child = SizedBox(
+        height: 20,
+        width: 20,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: AlwaysStoppedAnimation(txtColor),
         ),
-        minimumSize: fullWidth ? const Size(double.infinity, 0) : null,
-        shadowColor: showShadow
-            ? AppColors.black.withValues(alpha: 0.5)
-            : Colors.transparent,
-        elevation: showShadow ? 4 : 0,
-        side: isBorder
-            ? BorderSide(color: borderColor ?? AppColors.primary, width: 1)
-            : BorderSide.none,
-      ),
-      onPressed: isLoading ? null : onPressed,
-      child: buttonChild,
-    );
+      );
+    } else if (icon != null) {
+      child = Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon!,
+          const SizedBox(width: 10),
+          AppText(
+            text,
+            color: txtColor,
+            fontSize: fontSize ?? 16,
+            fontWeight: fontWeight ?? FontWeight.w500,
+          ),
+        ],
+      );
+    } else {
+      child = AppText(
+        text,
+        color: txtColor,
+        fontSize: fontSize ?? 16,
+        fontWeight: fontWeight ?? FontWeight.w600,
+      );
+    }
 
-    return button;
+    return SizedBox(
+      width: fullWidth ? double.infinity : width,
+      child: ElevatedButton(
+        onPressed: isLoading ? null : onPressed,
+        style: ButtonStyle(
+          padding: WidgetStateProperty.all(
+            padding ?? const EdgeInsets.symmetric(vertical: 16),
+          ),
+          backgroundColor: WidgetStateProperty.resolveWith((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return disabledBackgroundColor ?? bgColor;
+            }
+            return bgColor;
+          }),
+          elevation: WidgetStateProperty.all(showShadow ? 4 : 0),
+          shadowColor: WidgetStateProperty.all(
+            showShadow
+                ? Colors.black.withValues(alpha: .3)
+                : Colors.transparent,
+          ),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+              side: isBorder
+                  ? BorderSide(color: borderColor ?? bgColor)
+                  : BorderSide.none,
+            ),
+          ),
+        ),
+        child: child,
+      ),
+    );
   }
 }

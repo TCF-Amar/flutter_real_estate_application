@@ -1,19 +1,19 @@
 import 'package:real_estate_app/core/utils/safe_parser.dart';
 
-class ReviewsSummaryModel {
+class ReviewSummaryModel {
   final int? totalReviews;
   final num? averageRating;
   final RatingBreakdown? ratingBreakdown;
 
-  const ReviewsSummaryModel({
+  const ReviewSummaryModel({
     this.totalReviews,
     this.averageRating,
     this.ratingBreakdown,
   });
 
-  factory ReviewsSummaryModel.fromJson(Map<String, dynamic> json) {
+  factory ReviewSummaryModel.fromJson(Map<String, dynamic> json) {
     try {
-      return ReviewsSummaryModel(
+      return ReviewSummaryModel(
         totalReviews: toInt(json['total_reviews']),
         averageRating: toDouble(json['average_rating']),
         ratingBreakdown: json['rating_breakdown'] != null
@@ -25,7 +25,7 @@ class ReviewsSummaryModel {
             : null,
       );
     } catch (_) {
-      return const ReviewsSummaryModel(
+      return const ReviewSummaryModel(
         totalReviews: null,
         averageRating: null,
         ratingBreakdown: null,

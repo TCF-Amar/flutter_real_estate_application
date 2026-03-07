@@ -108,13 +108,7 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                         : AgentInfo(contact: property.contact!),
 
                     //! Reviews & Ratings
-                    ReviewsAndRatings(
-                      reviewsSummary: property.reviewsSummary!,
-                      reviews: controller.reviews,
-                      hasMore: controller.hasMore,
-                      isLoadingMore: controller.isLoadingMoreReviews,
-                      onLoadMore: controller.loadMoreReviews,
-                    ),
+                    ReviewsAndRatings(),
 
                     //! Similar Properties
                     SimilarProperties(),

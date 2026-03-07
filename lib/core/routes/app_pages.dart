@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/agent/bindings/agent_binding.dart';
@@ -8,6 +9,8 @@ import 'package:real_estate_app/features/auth/views/screens/sign_up_screen.dart'
 import 'package:real_estate_app/features/auth/views/screens/reset_password_screen.dart';
 import 'package:real_estate_app/features/auth/views/screens/select_country_screen.dart';
 import 'package:real_estate_app/features/auth/views/screens/verity_code.dart';
+import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
+import 'package:real_estate_app/features/profile/views/screens/profile_edit.dart';
 import 'package:real_estate_app/features/property/bindings/property_details_binding.dart';
 import 'package:real_estate_app/features/property/views/screens/property_details_screen.dart';
 import 'package:real_estate_app/features/home/bindings/home_binding.dart';
@@ -17,6 +20,7 @@ import 'package:real_estate_app/features/main/bindings/main_binding.dart';
 import 'package:real_estate_app/features/main/views/screens/main_screen.dart';
 import 'package:real_estate_app/features/search/views/screens/search_result.dart';
 import 'package:real_estate_app/features/search/views/screens/search_screen.dart';
+import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 
 class AppPages {
   static final pages = <GetPage>[
@@ -47,6 +51,21 @@ class AppPages {
       name: AppRoutes.agentDetails,
       page: () => AgentDetailScreen(),
       binding: AgentDetailsBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.editProfile,
+      page: () {
+        final authController = Get.find<AuthController>();
+        final user = authController.user.value;
+        if (user == null) {
+          Get.back();
+          return const SizedBox.shrink();
+        }
+        // Pre-fill text controllers with the latest user data
+        Get.find<ProfileController>().initForEdit(user);
+        return ProfileEdit(user: user);
+      },
     ),
   ];
 }

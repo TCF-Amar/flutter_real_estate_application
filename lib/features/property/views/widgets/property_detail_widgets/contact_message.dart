@@ -13,7 +13,7 @@ class ContactMessage extends StatelessWidget {
     final controller = Get.find<PropertyDetailsController>();
     final contact = controller.propertyDetail?.contact;
     return Container(
-      margin: const EdgeInsets.only(top: 25, bottom: 25, left: 16, right: 16),
+      margin: const EdgeInsets.only(top: 25, bottom: 25),
       // height: 300,
       width: .infinity,
       decoration: BoxDecoration(
@@ -69,7 +69,6 @@ class ContactMessage extends StatelessWidget {
                 hintText: "Name",
                 border: true,
                 borderColor: AppColors.grey.withValues(alpha: 0.2),
-                customFillColor: AppColors.white,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";
@@ -84,7 +83,6 @@ class ContactMessage extends StatelessWidget {
                 keyboardType: TextInputType.phone,
                 border: true,
                 borderColor: AppColors.grey.withValues(alpha: 0.2),
-                customFillColor: AppColors.white,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";
@@ -99,7 +97,6 @@ class ContactMessage extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
                 border: true,
                 borderColor: AppColors.grey.withValues(alpha: 0.2),
-                customFillColor: AppColors.white,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";
@@ -115,7 +112,6 @@ class ContactMessage extends StatelessWidget {
                 maxLines: 5,
                 border: true,
                 borderColor: AppColors.grey.withValues(alpha: 0.2),
-                customFillColor: AppColors.white,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";

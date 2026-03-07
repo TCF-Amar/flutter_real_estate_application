@@ -66,7 +66,7 @@ class _SimilarPropertiesState extends State<SimilarProperties> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 14),
-                    child: SimilarPropertyCard(
+                    child: ModernPropertyCard(
                       property: controller.similarProperties[index],
                     ),
                   );

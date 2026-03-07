@@ -4,25 +4,10 @@ import 'package:real_estate_app/features/shared/widgets/index.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
-import 'package:real_estate_app/features/shared/models/reviews_summary_model.dart';
-import 'package:real_estate_app/features/shared/models/review_model.dart';
 import 'package:real_estate_app/features/shared/widgets/load_more_button.dart';
 
 class ReviewsAndRatings extends StatelessWidget {
-  final ReviewsSummaryModel reviewsSummary;
-  final List<ReviewModel> reviews;
-  final bool hasMore;
-  final bool isLoadingMore;
-  final VoidCallback? onLoadMore;
-
-  const ReviewsAndRatings({
-    super.key,
-    required this.reviewsSummary,
-    required this.reviews,
-    this.hasMore = false,
-    this.isLoadingMore = false,
-    this.onLoadMore,
-  });
+  const ReviewsAndRatings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,59 +21,63 @@ class ReviewsAndRatings extends StatelessWidget {
 
           Container(
             margin: const EdgeInsets.only(top: 8),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    AppText(
-                      "${reviewsSummary.totalReviews} Reviews",
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textSecondary,
-                    ),
-                    SizedBox(width: 10),
-                    Row(
-                      children: [
-                        AppSvg(path: Assets.icons.star),
-                        AppText(
-                          " ${reviewsSummary.averageRating ?? 0}  (out of 5)",
-                          color: AppColors.textSecondary,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                if (reviews.isEmpty)
-                  Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    child: Center(
-                      child: AppText(
-                        "No reviews yet",
+            child: Obx(
+              () => Column(
+                children: [
+                  Row(
+                    children: [
+                      AppText(
+                        "${controller.reviewsSummary?.totalReviews ?? 0} Reviews",
                         fontSize: 14,
+                        fontWeight: FontWeight.bold,
                         color: AppColors.textSecondary,
                       ),
-                    ),
+                      SizedBox(width: 10),
+                      Row(
+                        children: [
+                          AppSvg(path: Assets.icons.star),
+                          AppText(
+                            " ${controller.reviewsSummary?.averageRating ?? 0}  (out of 5)",
+                            color: AppColors.textSecondary,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: reviews.length,
-                  itemBuilder: (context, index) {
-                    final review = reviews[index];
-                    return ReviewCard(
-                      review: review,
-                      index: index,
-                      length: reviews.length,
-                    );
-                  },
-                ),
-              ],
+                  if (controller.reviews.isEmpty)
+                    Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      child: Center(
+                        child: AppText(
+                          "No reviews yet",
+                          fontSize: 14,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: controller.reviews.length,
+                    itemBuilder: (context, index) {
+                      final review = controller.reviews[index];
+                      return ReviewCard(
+                        review: review,
+                        index: index,
+                        length: controller.reviews.length,
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
 
-          // ── Load More button — visible only when more pages exist ──────
-          if (hasMore)
-            LoadMoreButton(isLoading: isLoadingMore, onPressed: onLoadMore),
+          if (controller.hasMore)
+            LoadMoreButton(
+              isLoading: controller.isLoadingMoreReviews,
+              onPressed: controller.loadMoreReviews,
+            ),
 
           Container(
             margin: const EdgeInsets.only(top: 16),

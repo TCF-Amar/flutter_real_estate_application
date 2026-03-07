@@ -98,8 +98,8 @@ class AgentDetailsController extends GetxController {
 
   final RxList<ReviewModel> _reviews = RxList<ReviewModel>();
   List<ReviewModel> get reviews => _reviews;
-  final Rxn<ReviewsSummaryModel> _reviewsSummary = Rxn<ReviewsSummaryModel>();
-  ReviewsSummaryModel? get reviewsSummary => _reviewsSummary.value;
+  final Rxn<ReviewSummaryModel> _reviewsSummary = Rxn<ReviewSummaryModel>();
+  ReviewSummaryModel? get reviewsSummary => _reviewsSummary.value;
 
   final RxBool _isLoadingReviews = false.obs;
   bool get isLoadingReviews => _isLoadingReviews.value;
@@ -188,5 +188,39 @@ class AgentDetailsController extends GetxController {
     commentController.clear();
     _rating.value = 0;
     _isLoadingReviews.value = false;
+  }
+
+  final RxBool _isSendingEnquiry = false.obs;
+  bool get isSendingEnquiry => _isSendingEnquiry.value;
+
+  Future<bool> sendEnquiry({
+    required String name,
+    required String phone,
+    required String email,
+    required String message,
+  }) async {
+    return true;
+  }
+}
+
+class EnquiryRequestModel {
+  final String name;
+  final String phone;
+  final String email;
+  final String message;
+  EnquiryRequestModel({
+    required this.name,
+    required this.phone,
+    required this.email,
+    required this.message,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'name': name,
+      'phone': phone,
+      'email': email,
+      'message': message,
+    };
   }
 }

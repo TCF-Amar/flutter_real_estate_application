@@ -27,7 +27,7 @@ class ReviewResponse {
 }
 
 class ReviewData {
-  final ReviewsSummaryModel reviewsSummary;
+  final ReviewSummaryModel reviewsSummary;
   final List<ReviewModel> reviews;
   final PaginationModel pagination;
 
@@ -39,7 +39,7 @@ class ReviewData {
 
   factory ReviewData.fromJson(Map<String, dynamic> json) {
     return ReviewData(
-      reviewsSummary: ReviewsSummaryModel.fromJson(
+      reviewsSummary: ReviewSummaryModel.fromJson(
         json['reviews_summary'] as Map<String, dynamic>,
       ),
       reviews: (json['reviews'] as List<dynamic>)

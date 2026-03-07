@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+// import 'package:real_estate_app/features/agent/controllers/agent_controller.dart';
 import 'package:real_estate_app/features/explore/controllers/explore_controller.dart';
 import 'package:real_estate_app/features/agent/view/screens/agents_screen.dart';
 import 'package:real_estate_app/features/developer/view/screens/developers_view.dart';
+// import 'package:real_estate_app/features/property/controllers/property_controller.dart';
 import 'package:real_estate_app/features/property/views/screens/property_screen.dart';
+// import 'package:real_estate_app/features/property/views/widgets/empty_explore.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ExploreScreen extends GetView<ExploreController> {
@@ -13,6 +16,8 @@ class ExploreScreen extends GetView<ExploreController> {
 
   @override
   Widget build(BuildContext context) {
+    // final propertyController = Get.find<PropertyController>();
+    // final agentController = Get.find<AgentController>();
     final tabs = ["Projects", "Agents", "Developers"];
 
     return Scaffold(

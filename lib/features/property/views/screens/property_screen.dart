@@ -22,7 +22,6 @@ class PropertyScreen extends GetView<PropertyController> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Search bar + filter button ─────────────────────────────
           ExploreSearchFilter(
             controller: controller.searchController,
             hintText: 'Search by project, area, or keyword',
@@ -32,7 +31,6 @@ class PropertyScreen extends GetView<PropertyController> {
           ),
           const SizedBox(height: 16),
 
-          // ── Section heading ────────────────────────────────────────
           const AppText(
             'Explore property',
             fontSize: 16,
@@ -40,8 +38,6 @@ class PropertyScreen extends GetView<PropertyController> {
           ),
           const SizedBox(height: 10),
 
-          // ── Filter chips ───────────────────────────────────────────
-          // selectedIndex captured above — no Obx needed, we're already in one
           SizedBox(
             height: 34,
             child: ListView.separated(
@@ -150,15 +146,19 @@ class PropertyScreen extends GetView<PropertyController> {
 
   Widget _emptyState() {
     return ListView(
-      // Wrap in ListView so RefreshIndicator's pull-to-refresh still works
       physics: const AlwaysScrollableScrollPhysics(),
       children: const [
         SizedBox(height: 80),
         Center(
-          child: AppText(
-            'No properties found',
-            color: AppColors.textSecondary,
-            fontSize: 14,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AppText(
+                'No properties found',
+                color: AppColors.textSecondary,
+                fontSize: 14,
+              ),
+            ],
           ),
         ),
       ],

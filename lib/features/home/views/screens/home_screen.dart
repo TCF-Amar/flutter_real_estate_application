@@ -43,7 +43,6 @@ class HomeScreen extends StatelessWidget {
         ),
 
         SliverToBoxAdapter(
-          
           child: Transform.translate(
             offset: const Offset(0, (_searchBarHeight / 2)),
             child: Column(

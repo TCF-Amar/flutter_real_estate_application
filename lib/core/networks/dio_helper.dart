@@ -12,13 +12,14 @@ class ApiRequest {
   final Map<String, dynamic>? headers;
   final Map<String, dynamic>? queryParameters;
   final dynamic body;
-
+  final String? contentType;
   ApiRequest({
     required this.url,
     required this.method,
     this.headers,
     this.queryParameters,
     this.body,
+this.contentType
   });
 }
 
@@ -33,7 +34,10 @@ class DioHelper {
         headers: request.headers,
         method: request.method.name.toUpperCase(),
         responseType: ResponseType.json,
-        contentType: 'application/json',
+        contentType: request.body is FormData
+            ? 'multipart/form-data'
+            : 'application/json',
+
       );
       
 

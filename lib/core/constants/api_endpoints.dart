@@ -5,6 +5,7 @@ class ApiEndpoints {
   static const String _buyer = "$_base/buyer";
   static const String _onboarding = "$_base/onboarding";
   static const String _favorites = "$_base/favorites";
+  static const String _profile = "$_base/profile";
 
   // ── Auth ─────────────────────────────────────────────────────────────────
   static const String login = "$_auth/login";
@@ -44,4 +45,10 @@ class ApiEndpoints {
   // ── Favorites ────────────────────────────────────────────────────────────
   static const String getSavedProperties = _favorites;
   static const String toggleFavorite = "$_favorites/toggle";
+
+  static String sendAgentEnquiry(int id) => "$_buyer/agents/$id/enquiry";
+
+  // ── Profile ──────────────────────────────────────────────────────────────
+  static const String uploadAvatar = "$_buyer/upload-avatar";
+  static const String updateBasicInfo = "$_profile/basic";
 }

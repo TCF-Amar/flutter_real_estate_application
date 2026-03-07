@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
+import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 import 'package:real_estate_app/features/favorite/models/favorite_property.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
@@ -12,6 +13,8 @@ class FavoriteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<FavoriteController>();
+
     return GestureDetector(
       onTap: () => Get.toNamed(
         AppRoutes.propertyDetails,
@@ -70,12 +73,20 @@ class FavoriteCard extends StatelessWidget {
                             color: AppColors.primary,
                           ),
                         const Spacer(),
-                        Icon(
-                          (property.isFavorited ?? true)
-                              ? Icons.favorite_rounded
-                              : Icons.favorite_border_rounded,
-                          color: AppColors.primary,
-                          size: 22,
+                        InkWell(
+                          onTap: () {
+                            controller.toggleFavorite(
+                              type: "property",
+                              propertyId: property.id!,
+                            );
+                          },
+                          child: Icon(
+                            (property.isFavorited ?? true)
+                                ? Icons.favorite_rounded
+                                : Icons.favorite_border_rounded,
+                            color: AppColors.primary,
+                            size: 22,
+                          ),
                         ),
                       ],
                     ),

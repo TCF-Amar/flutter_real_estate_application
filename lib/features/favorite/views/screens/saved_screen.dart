@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 import 'package:real_estate_app/features/favorite/views/widgets/favorite_card.dart';
+import 'package:real_estate_app/features/main/controllers/main_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class FavoriteScreen extends GetView<FavoriteController> {
@@ -15,7 +17,6 @@ class FavoriteScreen extends GetView<FavoriteController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header ─────────────────────────────────────────
             Center(
               child: const Padding(
                 padding: EdgeInsets.fromLTRB(16, 20, 16, 12),
@@ -23,7 +24,6 @@ class FavoriteScreen extends GetView<FavoriteController> {
               ),
             ),
 
-            // ── Body ───────────────────────────────────────────
             Expanded(
               child: Obx(() {
                 if (controller.isLoading) {
@@ -104,32 +104,40 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mainController = Get.find<MainController>();
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.favorite_border_rounded,
-            size: 72,
-            color: AppColors.grey.withValues(alpha: 0.4),
+          AppSvg(
+            path: Assets.icons.heartSelected,
+            height: 70,
+            // width: 100,
+            color: AppColors.primary,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 40),
           const AppText(
-            "No saved properties yet",
+            "No Favorites Yet...",
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: AppColors.textSecondary,
           ),
           const SizedBox(height: 8),
           const AppText(
-            "Properties you favorite will appear here",
+            "Start exploring properties and tap the heart\n icon to add your favorites here.",
+            textAlign: TextAlign.center,
             fontSize: 13,
             color: AppColors.grey,
           ),
           const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: AppButton(text: "Refresh", onPressed: onRefresh),
+            child: AppButton(
+              text: "Explore Properties",
+              onPressed: () {
+                mainController.currentIndex(1);
+              },
+            ),
           ),
         ],
       ),

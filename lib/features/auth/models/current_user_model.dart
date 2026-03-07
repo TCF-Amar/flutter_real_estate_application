@@ -43,4 +43,22 @@ class ResponseData {
       accessLevel: json['access_level'],
     );
   }
+  // copy with
+  ResponseData copyWith({
+    UserModel? user,
+    ProfileModel? profile,
+    OnboardingModel? onboarding,
+    bool? onboardCompleted,
+    String? approvalStatus,
+    String? accessLevel,
+  }) {
+    return ResponseData(
+      user: user ?? this.user,
+      profile: profile ?? this.profile,
+      onboarding: onboarding ?? this.onboarding,
+      onboardCompleted: onboardCompleted ?? this.onboardCompleted,
+      approvalStatus: approvalStatus ?? this.approvalStatus,
+      accessLevel: accessLevel ?? this.accessLevel,
+    );
+  }
 }

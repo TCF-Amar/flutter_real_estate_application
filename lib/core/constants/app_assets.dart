@@ -40,9 +40,22 @@ class _Icons {
   final twitter = "assets/icons/twitter.svg";
   final telegram = "assets/icons/telegram.svg";
   final whatsapp = "assets/icons/whatsapp.svg";
+  final whatsappOutline = "assets/icons/whatsapp_outline.svg";
   final linkedin = "assets/icons/linkedin.svg";
   final mail = "assets/icons/mail.svg";
   final phone = "assets/icons/phone.svg";
+  final gallery = "assets/icons/gallery.svg";
+  final icon1 = "assets/icons/icon1.svg";
+  final icon2 = "assets/icons/icon2.svg";
+  final icon3 = "assets/icons/icon3.svg";
+  final icon4 = "assets/icons/icon4.svg";
+  final icon5 = "assets/icons/icon5.svg";
+  final icon6 = "assets/icons/icon6.svg";
+  final icon7 = "assets/icons/icon7.svg";
+  final icon8 = "assets/icons/icon8.svg";
+  final icon9 = "assets/icons/icon9.svg";
+  final logout = "assets/icons/logout.svg";
+  final exit = "assets/icons/exit.svg";
 }
 
 class _Images {

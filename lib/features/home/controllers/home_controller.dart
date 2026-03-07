@@ -33,7 +33,10 @@ class HomeController extends GetxController {
       (response) {
         featuredProperties.assignAll(response.data.featuredProperties);
         allProperties.assignAll(response.data.featuredProperties);
-        recommendedProperties.assignAll(response.data.featuredProperties);
+        // Use a distinct copy for recommended so filtering doesn't corrupt the source list
+        recommendedProperties.assignAll(
+          List<Property>.from(response.data.featuredProperties),
+        );
       },
     );
     isLoading.value = false;
@@ -59,20 +62,32 @@ class HomeController extends GetxController {
   }
 
   void updateFavorite(int propertyId) {
-    final index = allProperties.indexWhere(
+    final allIndex = allProperties.indexWhere(
       (property) => property.id == propertyId,
     );
-    if (index == -1) return;
-    final property = allProperties[index];
-    final updatedProperty = property.copyWith(
-      isFavorited: !(property.isFavorited),
+    if (allIndex == -1) return;
+
+    final updatedProperty = allProperties[allIndex].copyWith(
+      isFavorited: !(allProperties[allIndex].isFavorited),
     );
-    allProperties[index] = updatedProperty;
-    featuredProperties[index] = updatedProperty;
-    recommendedProperties[index] = updatedProperty;
+    allProperties[allIndex] = updatedProperty;
     allProperties.refresh();
-    featuredProperties.refresh();
-    recommendedProperties.refresh();
+
+    final featuredIndex = featuredProperties.indexWhere(
+      (property) => property.id == propertyId,
+    );
+    if (featuredIndex != -1) {
+      featuredProperties[featuredIndex] = updatedProperty;
+      featuredProperties.refresh();
+    }
+
+    final recommendedIndex = recommendedProperties.indexWhere(
+      (property) => property.id == propertyId,
+    );
+    if (recommendedIndex != -1) {
+      recommendedProperties[recommendedIndex] = updatedProperty;
+      recommendedProperties.refresh();
+    }
   }
 
   void toggleFavorite({required int propertyId}) {
@@ -82,6 +97,8 @@ class HomeController extends GetxController {
       type: "property",
       propertyId: propertyId,
     );
-    favoritesController.fetchSavedProperties();
+    // Removed: favoritesController.fetchSavedProperties() — this was making
+    // an extra API call on every heart tap. The favorites screen fetches
+    // fresh data when it becomes active.
   }
 }

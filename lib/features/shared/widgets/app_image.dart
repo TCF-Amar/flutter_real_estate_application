@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
@@ -50,27 +51,18 @@ class AppImage extends StatelessWidget {
           )
         : ClipRRect(
             borderRadius: radius ?? BorderRadius.zero,
-            child: Image.network(
-              url,
+            child: CachedNetworkImage(
+              imageUrl: url,
               height: height,
               width: width,
               fit: fit,
-              errorBuilder: (_, __, ___) => _errorPlaceholder(),
-              loadingBuilder: (context, child, progress) {
-                if (progress == null) return child;
-
-                return SizedBox(
-                  height: height,
-                  width: width,
-                  child: const Center(
-                    child: SizedBox(
-                      width: 22,
-                      height: 22,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+              errorWidget: (_, __, ___) => _errorPlaceholder(),
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Center(
+                    child: CircularProgressIndicator(
+                      value: downloadProgress.progress,
                     ),
                   ),
-                );
-              },
             ),
           );
   }

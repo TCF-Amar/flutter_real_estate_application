@@ -48,4 +48,29 @@ class UserModel {
       'roles': roles,
     };
   }
+
+  /// copyWith
+  UserModel copyWith({
+    int? id,
+    String? email,
+    String? phone,
+    String? countryCode,
+    String? fullName,
+    String? profileImage,
+    bool? emailVerified,
+    bool? phoneVerified,
+    List<String>? roles,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      countryCode: countryCode ?? this.countryCode,
+      fullName: fullName ?? this.fullName,
+      profileImage: profileImage ?? this.profileImage,
+      emailVerified: emailVerified ?? this.emailVerified,
+      phoneVerified: phoneVerified ?? this.phoneVerified,
+      roles: roles ?? this.roles,
+    );
+  }
 }

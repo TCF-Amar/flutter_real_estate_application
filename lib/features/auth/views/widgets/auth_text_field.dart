@@ -40,14 +40,12 @@ class AuthTextField extends StatelessWidget {
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           onFieldSubmitted: onFieldSubmitted,
-          
-          
+
           isPassword: isPassword,
           prefixIcon: Icon(prefixIcon, size: 20),
           textColor: AppColors.white,
           hintColor: AppColors.white.withValues(alpha: 0.6),
           iconColor: AppColors.white,
-          customFillColor: Colors.transparent,
           borderColor: AppColors.white.withValues(alpha: 0.3),
           focusedBorderColor: AppColors.primary,
           border: false,

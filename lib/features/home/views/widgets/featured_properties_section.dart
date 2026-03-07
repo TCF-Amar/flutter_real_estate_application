@@ -5,37 +5,37 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
+import 'package:real_estate_app/features/shared/widgets/app_image.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
+// Cached const gradient — avoids re-allocating on every _FeaturedCard build
+const _cardGradient = LinearGradient(
+  colors: [Colors.transparent, AppColors.background],
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+);
+
 /// Featured Properties horizontal scrolling carousel using carousel_slider.
-class FeaturedPropertiesSection extends StatefulWidget {
+class FeaturedPropertiesSection extends StatelessWidget {
   const FeaturedPropertiesSection({super.key});
 
   @override
-  State<FeaturedPropertiesSection> createState() =>
-      _FeaturedPropertiesSectionState();
-}
-
-class _FeaturedPropertiesSectionState extends State<FeaturedPropertiesSection> {
-  int _currentPage = 0;
-  final HomeController _controller = Get.find<HomeController>();
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<HomeController>();
+
     return Obx(() {
-      if (_controller.isLoading.value &&
-          _controller.featuredProperties.isEmpty) {
+      if (controller.isLoading.value && controller.featuredProperties.isEmpty) {
         return const SizedBox(
           height: 200,
           child: Center(child: CircularProgressIndicator()),
         );
       }
 
-      if (_controller.featuredProperties.isEmpty) {
+      if (controller.featuredProperties.isEmpty) {
         return const SizedBox.shrink();
       }
 
-      final items = _controller.featuredProperties;
+      final items = controller.featuredProperties;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,51 +51,73 @@ class _FeaturedPropertiesSectionState extends State<FeaturedPropertiesSection> {
             ),
           ),
 
-          // Carousel Slider
-          CarouselSlider.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index, realIndex) =>
-                _FeaturedCard(item: items[index]),
-            options: CarouselOptions(
-              height: 160,
-              viewportFraction: 0.88,
-              enlargeCenterPage: false,
-              enableInfiniteScroll: items.length > 1,
-              autoPlay: true,
-              autoPlayInterval: const Duration(seconds: 3),
-              autoPlayAnimationDuration: const Duration(milliseconds: 800),
-              autoPlayCurve: Curves.easeInOut,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _currentPage = index;
-                });
-              },
-            ),
-          ),
-
-          // Dot indicators
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              items.length,
-              (i) => AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: _currentPage == i ? 20 : 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: _currentPage == i
-                      ? AppColors.primary
-                      : AppColors.black.withValues(alpha: 0.30),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-              ),
-            ),
-          ),
+          // Carousel Slider + Dots — wrapped in _CarouselWithDots so that
+          // page changes only rebuild the dots row, not the entire Obx section.
+          _CarouselWithDots(items: items),
         ],
       );
     });
+  }
+}
+
+/// Owns the carousel page state so `setState` only redraws the dots row,
+/// not the parent Obx block.
+class _CarouselWithDots extends StatefulWidget {
+  final List<Property> items;
+  const _CarouselWithDots({required this.items});
+
+  @override
+  State<_CarouselWithDots> createState() => _CarouselWithDotsState();
+}
+
+class _CarouselWithDotsState extends State<_CarouselWithDots> {
+  int _currentPage = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        CarouselSlider.builder(
+          itemCount: widget.items.length,
+          itemBuilder: (context, index, realIndex) =>
+              _FeaturedCard(item: widget.items[index]),
+          options: CarouselOptions(
+            height: 160,
+            viewportFraction: 0.88,
+            enlargeCenterPage: false,
+            enableInfiniteScroll: widget.items.length > 1,
+            autoPlay: true,
+            autoPlayInterval: const Duration(seconds: 3),
+            autoPlayAnimationDuration: const Duration(milliseconds: 800),
+            autoPlayCurve: Curves.easeInOut,
+            onPageChanged: (index, reason) {
+              setState(() => _currentPage = index);
+            },
+          ),
+        ),
+
+        // Dot indicators — only this widget rebuilds on page change
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            widget.items.length,
+            (i) => AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              width: _currentPage == i ? 20 : 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: _currentPage == i
+                    ? AppColors.primary
+                    : AppColors.black.withValues(alpha: 0.30),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -105,6 +127,7 @@ class _FeaturedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: () =>
           Get.toNamed(AppRoutes.propertyDetails, arguments: {'id': item.id}),
@@ -115,38 +138,15 @@ class _FeaturedCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // Background image
+            // Background image — cacheWidth/cacheHeight limit decode size
             if (item.image != null)
-              Image.network(
-                item.image!,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: Colors.grey.shade300,
-                  child: Image.network(
-                    item.shareData.image,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Icon(
-                        Icons.image_not_supported_rounded,
-                        color: AppColors.grey.withValues(alpha: 0.5),
-                        size: 50,
-                      );
-                    },
-                  ),
-                ),
-              )
+              AppImage(path: item.image)
             else
               Container(color: Colors.grey.shade300),
 
-            // Gradient overlay
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.transparent, AppColors.background],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
+            // Gradient overlay — uses the cached const
+            const DecoratedBox(
+              decoration: BoxDecoration(gradient: _cardGradient),
             ),
 
             // Info overlay
