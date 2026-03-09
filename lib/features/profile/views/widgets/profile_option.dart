@@ -31,112 +31,105 @@ class ProfileOption extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<ProfileController>();
     final user = controller.user.value!;
-    final List<Map<String, dynamic>> listItem = [
-      {
-        "icon": Assets.icons.icon1,
-        "label": "Edit Profile",
 
-        "color": AppColors.primary,
-        'textColor': AppColors.textPrimary,
-        'action': () {
+    final List<ProfileOptionItem> items = [
+      ProfileOptionItem(
+        icon: Assets.icons.icon1,
+        label: "Edit Profile",
+        color: AppColors.primary,
+        textColor: AppColors.textPrimary,
+        action: () {
           Get.toNamed(AppRoutes.editProfile, arguments: user);
         },
-      },
-      {
-        "icon": Assets.icons.icon2,
-        "label": "Support",
-
-        "color": AppColors.primary,
-        'textColor': AppColors.textPrimary,
-        'action': () {},
-      },
-      {
-        "icon": Assets.icons.icon3,
-        "label": "Property Maintenance",
-
-        "color": AppColors.primary,
-        'textColor': AppColors.textPrimary,
-        'action': () {},
-      },
-      {
-        "icon": Assets.icons.icon4,
-        "label": "Transactions",
-
-        "color": AppColors.primary,
-        'textColor': AppColors.textPrimary,
-        'action': () {},
-      },
-      {
-        "icon": Assets.icons.icon5,
-        "label": "Setting",
-
-        "color": AppColors.primary,
-        'textColor': AppColors.textPrimary,
-        'action': () {},
-      },
-      {
-        "icon": Assets.icons.icon6,
-        "label": "Term and conditions",
-
-        "color": AppColors.primary,
-        'textColor': AppColors.textPrimary,
-        'action': () {},
-      },
-      {
-        "icon": Assets.icons.icon7,
-        "label": "Privacy Policy",
-
-        "color": AppColors.primary,
-        'textColor': AppColors.textPrimary,
-        'action': () {},
-      },
-      {
-        "icon": Assets.icons.icon8,
-        "label": "Change password",
-
-        "color": AppColors.primary,
-        'textColor': AppColors.textPrimary,
-        'action': () {},
-      },
-      {
-        "icon": Assets.icons.icon9,
-        "label": "Delete account",
-
-        "color": AppColors.primary,
-        'textColor': AppColors.textPrimary,
-        'action': () {},
-      },
-      {
-        "icon": Assets.icons.exit,
-        "label": "Log out",
-
-        "color": AppColors.error,
-        'textColor': AppColors.error,
-        'action': () async {
+      ),
+      ProfileOptionItem(
+        icon: Assets.icons.icon2,
+        label: "Support",
+        color: AppColors.primary,
+        textColor: AppColors.textPrimary,
+        action: () {
+          Get.toNamed(AppRoutes.support);
+        },
+      ),
+      ProfileOptionItem(
+        icon: Assets.icons.icon3,
+        label: "Property Maintenance",
+        color: AppColors.primary,
+        textColor: AppColors.textPrimary,
+        action: () {},
+      ),
+      ProfileOptionItem(
+        icon: Assets.icons.icon4,
+        label: "Transactions",
+        color: AppColors.primary,
+        textColor: AppColors.textPrimary,
+        action: () {},
+      ),
+      ProfileOptionItem(
+        icon: Assets.icons.icon5,
+        label: "Setting",
+        color: AppColors.primary,
+        textColor: AppColors.textPrimary,
+        action: () {},
+      ),
+      ProfileOptionItem(
+        icon: Assets.icons.icon6,
+        label: "Term and conditions",
+        color: AppColors.primary,
+        textColor: AppColors.textPrimary,
+        action: () {},
+      ),
+      ProfileOptionItem(
+        icon: Assets.icons.icon7,
+        label: "Privacy Policy",
+        color: AppColors.primary,
+        textColor: AppColors.textPrimary,
+        action: () {},
+      ),
+      ProfileOptionItem(
+        icon: Assets.icons.icon8,
+        label: "Change password",
+        color: AppColors.primary,
+        textColor: AppColors.textPrimary,
+        action: () {},
+      ),
+      ProfileOptionItem(
+        icon: Assets.icons.icon9,
+        label: "Delete account",
+        color: AppColors.primary,
+        textColor: AppColors.textPrimary,
+        action: () {},
+      ),
+      ProfileOptionItem(
+        icon: Assets.icons.exit,
+        label: "Log out",
+        color: AppColors.error,
+        textColor: AppColors.error,
+        action: () async {
           final confirm = await showLogoutDialog(context);
           if (confirm == true) {
             // Get.offAllNamed(AppRoutes.signin);
             AppSnackbar.success("");
           }
         },
-      },
+      ),
     ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: listItem.length,
+        itemCount: items.length,
         itemBuilder: (_, i) {
-          final item = listItem[i];
+          final item = items[i];
           return Padding(
             padding: const EdgeInsets.only(bottom: 12.0),
             child: ProfileTile(
-              icon: item["icon"],
-              label: item['label'],
-              color: item['color'],
-              textColor: item['textColor'],
-              action: item['action'],
+              icon: item.icon,
+              label: item.label,
+              color: item.color,
+              textColor: item.textColor,
+              action: item.action,
             ),
           );
         },

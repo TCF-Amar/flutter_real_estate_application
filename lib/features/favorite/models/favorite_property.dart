@@ -8,17 +8,9 @@ class FavoriteProperty {
   final String? listingCategory;
   final String? city;
   final String? state;
-  final num? basePrice;
   final String? formattedPrice;
-  final PriceRange? priceRange;
-  final String? bhkRange;
-  final String? areaRange;
   final String? image;
-  final int? imagesCount;
-  final String? projectName;
-  final List<dynamic> amenities;
   final bool? isFavorited;
-  final String? ownerImage;
 
   FavoriteProperty({
     this.id,
@@ -28,17 +20,9 @@ class FavoriteProperty {
     this.listingCategory,
     this.city,
     this.state,
-    this.basePrice,
     this.formattedPrice,
-    this.priceRange,
-    this.bhkRange,
-    this.areaRange,
     this.image,
-    this.imagesCount,
-    this.projectName,
-    this.amenities = const [],
     this.isFavorited,
-    this.ownerImage,
   });
 
   factory FavoriteProperty.fromJson(Map<String, dynamic> json) {
@@ -50,19 +34,24 @@ class FavoriteProperty {
       listingCategory: json['listing_category'] as String?,
       city: json['city'] as String?,
       state: json['state'] as String?,
-      basePrice: json['base_price'] as num?,
       formattedPrice: json['formatted_price'] as String?,
-      priceRange: json['price_range'] != null
-          ? PriceRange.fromJson(json['price_range'] as Map<String, dynamic>)
-          : null,
-      bhkRange: json['bhk_range'] as String?,
-      areaRange: json['area_range'] as String?,
       image: json['image'] as String?,
-      imagesCount: json['images_count'] as int?,
-      projectName: json['project_name'] as String?,
-      amenities: json['amenities'] as List<dynamic>? ?? [],
       isFavorited: json['is_favorited'] as bool?,
-      ownerImage: json['owner_image'] as String?,
+    );
+  }
+
+  factory FavoriteProperty.fromProperty(Property property) {
+    return FavoriteProperty(
+      id: property.id,
+      title: property.title,
+      propertyCategory: property.propertyCategory,
+      propertyType: property.propertyType,
+      listingCategory: property.listingCategory,
+      city: property.city,
+      state: property.state,
+      formattedPrice: property.formattedPrice,
+      image: property.image,
+      isFavorited: property.isFavorited,
     );
   }
 
@@ -75,21 +64,9 @@ class FavoriteProperty {
       'listing_category': listingCategory,
       'city': city,
       'state': state,
-      'base_price': basePrice,
       'formatted_price': formattedPrice,
-      'price_range': priceRange?.toJson(),
-      'bhk_range': bhkRange,
-      'area_range': areaRange,
       'image': image,
-      'images_count': imagesCount,
-      'project_name': projectName,
-      'amenities': amenities,
       'is_favorited': isFavorited,
-      'owner_image': ownerImage,
     };
   }
-
 }
-
-
-

@@ -15,7 +15,6 @@ class FavoriteResponseModel {
     );
   }
 
-  Map<String, dynamic> toJson() => {'status': status, 'data': data.toJson()};
 }
 
 class FavoriteResponseData {
@@ -35,8 +34,4 @@ class FavoriteResponseData {
             ),
     );
   }
-
-  Map<String, dynamic> toJson() => {
-    'property': property.map((x) => x.toJson()).toList(),
-  };
 }

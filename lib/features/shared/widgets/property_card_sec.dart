@@ -3,21 +3,33 @@ import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
+import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ModernPropertyCard extends StatelessWidget {
   final Property property;
-
-  const ModernPropertyCard({super.key, required this.property});
+  final bool? isSimilar;
+  final VoidCallback? onToggleFavorite;
+  const ModernPropertyCard({
+    super.key,
+    required this.property,
+    this.isSimilar = false,
+    this.onToggleFavorite,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed(
-        AppRoutes.propertyDetails,
-        arguments: {"id": property.id},
-      ),
+      onTap: () {
+        isSimilar == true
+            ? Get.find<PropertyDetailsController>().propertyId.value =
+                  property.id
+            : Get.toNamed(
+                AppRoutes.propertyDetails,
+                arguments: {'id': property.id},
+              );
+      },
       // margin: const EdgeInsets.all(0),
       child: SizedBox(
         height: 240,
@@ -78,12 +90,13 @@ class ModernPropertyCard extends StatelessWidget {
                     ],
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () => onToggleFavorite?.call(),
                     child: CircleAvatar(
                       radius: 18,
-                      child: AppSvg(
-                        path: Assets.icons.heart,
-                        width: 18,
+                      child: Icon(
+                        property.isFavorited == true
+                            ? Icons.favorite
+                            : Icons.favorite_border,
                         color: AppColors.primary,
                       ),
                     ),
@@ -105,39 +118,38 @@ class ModernPropertyCard extends StatelessWidget {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     /// TEXTS
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          property.title,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          AppText(property.title),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              AppSvg(path: Assets.icons.location),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: AppText(
+                                  "${property.locality?.capitalize}, ${property.state?.capitalize}",
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            const Icon(Icons.location_on, size: 14),
-                            const SizedBox(width: 4),
-                            Text(
-                              "${property.locality}, ${property.state}",
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
 
-                    /// PRICE
-                    Text(
-                      "${property.formattedPrice}",
-                      style: const TextStyle(
+                    Flexible(
+                      child: AppText(
+                        "${property.formattedPrice}",
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.purple,
+                        color: AppColors.primary,
                       ),
                     ),
                   ],

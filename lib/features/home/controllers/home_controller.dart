@@ -97,8 +97,5 @@ class HomeController extends GetxController {
       type: "property",
       propertyId: propertyId,
     );
-    // Removed: favoritesController.fetchSavedProperties() — this was making
-    // an extra API call on every heart tap. The favorites screen fetches
-    // fresh data when it becomes active.
   }
 }

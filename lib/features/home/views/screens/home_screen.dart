@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
-    final expandedHeight = topPadding + 200.0;
+    final expandedHeight = 200.0;
 
     return CustomScrollView(
       slivers: [
@@ -24,10 +24,11 @@ class HomeScreen extends StatelessWidget {
           backgroundColor: AppColors.background,
           surfaceTintColor: AppColors.background,
           elevation: 0,
-
+          toolbarHeight: 0,
           scrolledUnderElevation: 0,
           automaticallyImplyLeading: false,
-          toolbarHeight: 0,
+          collapsedHeight: 0,
+
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(_searchBarHeight),
             child: Transform.translate(

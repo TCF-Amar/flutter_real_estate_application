@@ -12,21 +12,21 @@ class ContactMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<PropertyDetailsController>();
     final contact = controller.propertyDetail?.contact;
-    return Container(
+    return AppContainer(
       margin: const EdgeInsets.only(top: 25, bottom: 25),
       // height: 300,
-      width: .infinity,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.09),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      // decoration: BoxDecoration(
+      //   color: AppColors.white,
+      //   borderRadius: BorderRadius.circular(12),
+      //   boxShadow: [
+      //     BoxShadow(
+      //       color: Colors.black.withValues(alpha: 0.09),
+      //       blurRadius: 5,
+      //       offset: const Offset(0, 2),
+      //     ),
+      //   ],
+      // ),
+      showShadow: true,
       child: Form(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -121,11 +121,7 @@ class ContactMessage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey[300]!),
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              AppContainer(
                 child: DropdownButtonHideUnderline(
                   child: DropdownFlutter(
                     items: ["1", "2", "3", "4", "5"],

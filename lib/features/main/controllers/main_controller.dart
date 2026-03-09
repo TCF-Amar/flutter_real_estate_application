@@ -23,6 +23,7 @@ class MainController extends GetxController {
 
   final List<Widget> screens = [
     const HomeScreen(),
+    // const Center(child: Text("Home"),),
     const ExploreScreen(),
     const FavoriteScreen(),
     const MyBookingScreen(),

@@ -4,6 +4,7 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 import 'package:real_estate_app/features/favorite/models/favorite_property.dart';
+import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class FavoriteCard extends StatelessWidget {
@@ -79,6 +80,7 @@ class FavoriteCard extends StatelessWidget {
                               type: "property",
                               propertyId: property.id!,
                             );
+                            // controller.saveFavorite( );
                           },
                           child: Icon(
                             (property.isFavorited ?? true)
@@ -137,10 +139,7 @@ class FavoriteCard extends StatelessWidget {
                     Row(
                       children: [
                         AppText(
-                          property.formattedPrice ??
-                              (property.priceRange != null
-                                  ? "${property.priceRange!.min} – ${property.priceRange!.max}"
-                                  : "Price N/A"),
+                          property.formattedPrice ?? "N/A",
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
                           color: AppColors.primary,
@@ -152,17 +151,7 @@ class FavoriteCard extends StatelessWidget {
               ),
             ),
 
-            // ── Fav icon ────────────────────────────────
-            // Padding(
-            //   padding: const EdgeInsets.only(right: 10),
-            //   child: Icon(
-            //     (property.isFavorited ?? true)
-            //         ? Icons.favorite_rounded
-            //         : Icons.favorite_border_rounded,
-            //     color: AppColors.error,
-            //     size: 22,
-            //   ),
-            // ),
+           
           ],
         ),
       ),

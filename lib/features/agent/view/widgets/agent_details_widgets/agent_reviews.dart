@@ -178,8 +178,8 @@ class AgentReviews extends StatelessWidget {
                         const SizedBox(height: 16),
                         AppButton(
                           text: "Send",
-                          isLoading: controller.isLoadingReviews,
 
+                          // isLoading: controller.isLoadingReviews,
                           onPressed: () {
                             controller.addReview(controller.agentDetails!.id);
                           },

@@ -8,9 +8,9 @@ class AppBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 40, maxHeight: 40),
+      constraints: const BoxConstraints(maxWidth: 30, maxHeight: 20),
       decoration: BoxDecoration(
-        color: AppColors.black.withValues(alpha: 0.3),
+        color: AppColors.black.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(50),
       ),
       child: IconButton(

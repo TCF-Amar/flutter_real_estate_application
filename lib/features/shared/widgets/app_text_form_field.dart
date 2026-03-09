@@ -124,8 +124,8 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       return widget.borderRadius;
     }
 
-    if (widget.borderSideType == BorderSideType.all) {
-      return BorderRadius.circular(12);
+    if (widget.borderSideType == BorderSideType.all || widget.border) {
+      return BorderRadius.circular(8);
     }
 
     return null;

@@ -2,152 +2,150 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/services/property_services.dart';
+import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/property/models/property_filter.model.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
-import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 
 class PropertyController extends GetxController {
-  final Logger log = Logger();
+  // ─── Dependencies ────────────────────────────────────────────────────────────
 
-  final PropertyServices propertyServices = Get.find<PropertyServices>();
-  final FavoriteController favoritesController = Get.find<FavoriteController>();
-  final HomeController homeController = Get.find<HomeController>();
+  final log = Logger();
+  final _propertyServices = Get.find<PropertyServices>();
+  final _favoritesController = Get.find<FavoriteController>();
+  final _homeController = Get.find<HomeController>();
 
-  //* Navigation & Search State
-  final RxInt selectedTabIndex = 0.obs;
-  final RxInt selectedIndex = 0.obs;
-  final TextEditingController searchController = TextEditingController();
-  final RxString searchQuery = ''.obs;
+  // Keep public getter for views that reference propertyServices directly
+  PropertyServices get propertyServices => _propertyServices;
 
-  //* Loading State
-  final RxBool _isLoading = false.obs;
+  // ─── Loading State ───────────────────────────────────────────────────────────
+
+  final _isLoading = false.obs;
+  final _isFilterLoading = false.obs;
+  final _isMoreLoading = false.obs;
+
   bool get isLoading => _isLoading.value;
-
-  final RxBool _isFilterLoading = false.obs;
   bool get isFilterLoading => _isFilterLoading.value;
+  bool get isMoreLoading => _isMoreLoading.value;
 
-  //* Property Data State
-  final RxList<Property> _properties = RxList<Property>([]);
-  final RxList<Property> _filteredProperties = RxList<Property>([]);
-  final RxBool _isEmpty = false.obs;
+  // ─── Property Data ───────────────────────────────────────────────────────────
+
+  final _properties = RxList<Property>([]);
+  final _filteredProperties = RxList<Property>([]);
+  final _isEmpty = false.obs;
+  final filterData = Rx<PropertyFilterModel?>(null);
+
   List<Property> get properties => _properties;
   List<Property> get filteredProperties => _filteredProperties;
   bool get isEmpty => _isEmpty.value;
 
-  final Rx<PropertyFilterModel?> filterData = Rx<PropertyFilterModel?>(null);
+  // ─── Pagination ──────────────────────────────────────────────────────────────
 
-  //* Pagination State
-  final RxInt currentPage = 1.obs;
-  final RxInt totalItems = 0.obs;
-  final RxInt lastPage = 1.obs;
-  final RxInt perPage = 5.obs;
-  final ScrollController scrollController = ScrollController();
-  final RxBool _isMoreLoading = false.obs;
-  bool get isMoreLoading => _isMoreLoading.value;
+  final currentPage = 1.obs;
+  final totalItems = 0.obs;
+  final lastPage = 1.obs;
+  final perPage = 5.obs;
+  final scrollController = ScrollController();
 
-  //* Filter Sheet Logic (Advanced Filters)
-  final RxInt selectedPropertyFilterIndex = 0.obs;
-  final RxDouble minPrice = 0.0.obs;
-  final RxDouble maxPrice = 100000000.0.obs;
-  final RxInt minArea = 0.obs;
-  final RxInt maxArea = 10000.obs;
-  final RxList<int> selectedBhk = <int>[].obs;
-  final RxString selectedAmenities = RxString('');
-  final RxString selectedListingCategories = RxString('');
-  final RxnString selectedStatus = RxnString();
-  final RxnString selectedSort = RxnString();
-  final RxnString selectedPropertyType = RxnString();
+  // ─── Search & Navigation ─────────────────────────────────────────────────────
+
+  final selectedTabIndex = 0.obs;
+  final selectedIndex = 0.obs;
+  final searchController = TextEditingController();
+  final searchQuery = ''.obs;
+
+  // ─── Filters ─────────────────────────────────────────────────────────────────
+
+  final selectedPropertyFilterIndex = 0.obs;
+  final minPrice = 0.0.obs;
+  final maxPrice = 100000000.0.obs;
+  final minArea = 0.obs;
+  final maxArea = 10000.obs;
+  final selectedBhk = <int>[].obs;
+  final selectedAmenities = RxString('');
+  final selectedListingCategories = RxString('');
+  final selectedStatus = RxnString();
+  final selectedSort = RxnString();
+  final selectedPropertyType = RxnString();
 
   final List<String> propertyFilters = [
-    "All",
-    "Ready to move",
-    "Under Construction",
+    'All',
+    'Ready to move',
+    'Under Construction',
   ];
 
-  //* Lifecycle
+  // ─── Lifecycle ───────────────────────────────────────────────────────────────
+
   @override
   void onInit() {
     super.onInit();
     fetchFilterData();
     _fetchProperties();
 
-    debounce(searchQuery, (_) {
-      handleSearch();
-    }, time: const Duration(milliseconds: 500));
+    debounce(
+      searchQuery,
+      (_) => handleSearch(),
+      time: const Duration(milliseconds: 500),
+    );
 
-    scrollController.addListener(() {
-      if (scrollController.position.pixels >=
-              scrollController.position.maxScrollExtent - 200 &&
-          !isLoading &&
-          !isMoreLoading &&
-          currentPage.value < lastPage.value) {
-        _loadMoreProperties();
-      }
-    });
-  }
-
-  void applySort(String? label) {
-    selectedSort.value = label;
-    propertyServices.page.value = 1;
-    _fetchProperties();
-  }
-
-  void _applySortToList() {
-    final label = selectedSort.value;
-    if (label == null) return;
-    switch (label) {
-      case 'Newest First':
-        _filteredProperties.sort((a, b) => b.id.compareTo(a.id));
-        _properties.sort((a, b) => b.id.compareTo(a.id));
-        break;
-      case 'Price: Low to High':
-        final sorted = [..._filteredProperties]
-          ..sort((a, b) => (a.basePrice ?? 0).compareTo(b.basePrice ?? 0));
-        _filteredProperties.assignAll(sorted);
-        break;
-      case 'Price: High to Low':
-        final sorted = [..._filteredProperties]
-          ..sort((a, b) => (b.basePrice ?? 0).compareTo(a.basePrice ?? 0));
-        _filteredProperties.assignAll(sorted);
-        break;
-    }
-  }
-
-  void handleSearch() {
-    propertyServices.keywords.value = searchQuery.value;
-    propertyServices.page.value = 1;
-    _fetchProperties();
+    scrollController.addListener(_onScroll);
   }
 
   @override
   void onClose() {
-    scrollController.dispose();
+    scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
     searchController.dispose();
     super.onClose();
   }
 
-  void initializeFilters() {
-    minPrice.value = propertyServices.minPrice.value.toDouble();
-    maxPrice.value = propertyServices.maxPrice.value.toDouble();
-    minArea.value = (propertyServices.minArea.value ?? 0).toInt();
-    maxArea.value = (propertyServices.maxArea.value ?? 10000).toInt();
-    selectedBhk.assignAll(propertyServices.bhk);
-    selectedAmenities.value = propertyServices.amenities.value;
+  void _onScroll() {
+    if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 200 &&
+        !isLoading &&
+        !isMoreLoading &&
+        currentPage.value < lastPage.value) {
+      _loadMoreProperties();
+    }
+  }
 
-    final currentSlug = propertyServices.listingCategory.value;
+  // ─── Search ──────────────────────────────────────────────────────────────────
+
+  void handleSearch() {
+    _propertyServices.keywords.value = searchQuery.value;
+    _propertyServices.page.value = 1;
+    _fetchProperties();
+  }
+
+  // ─── Filters ─────────────────────────────────────────────────────────────────
+
+  void initializeFilters() {
+    minPrice.value = _propertyServices.minPrice.value.toDouble();
+    maxPrice.value = _propertyServices.maxPrice.value.toDouble();
+    minArea.value = (_propertyServices.minArea.value ?? 0).toInt();
+    maxArea.value = (_propertyServices.maxArea.value ?? 10000).toInt();
+    selectedBhk.assignAll(_propertyServices.bhk);
+    selectedAmenities.value = _propertyServices.amenities.value;
+
+    final currentSlug = _propertyServices.listingCategory.value;
     final categories = filterData.value?.data.listingCategories;
     if (categories != null && currentSlug.isNotEmpty) {
-      final label = categories.entries
+      selectedListingCategories.value = categories.entries
           .firstWhere(
             (e) => e.value == currentSlug,
             orElse: () => categories.entries.first,
           )
           .key;
-      selectedListingCategories.value = label;
     } else {
       selectedListingCategories.value = '';
     }
+  }
+
+  void applySort(String? label) {
+    selectedSort.value = label;
+    _propertyServices.page.value = 1;
+    _fetchProperties();
   }
 
   Future<void> changePropertyFilter(int index) async {
@@ -158,38 +156,36 @@ class PropertyController extends GetxController {
     if (index == 1) type = 'ready_to_move';
     if (index == 2) type = 'under_construction';
 
-    propertyServices.propertyType.value = type;
+    _propertyServices.propertyType.value = type;
     _fetchProperties();
   }
 
   void applyFilters({bool shouldFetch = true}) {
     final data = filterData.value?.data;
 
-    propertyServices.minPrice.value = minPrice.value.toInt();
-    propertyServices.maxPrice.value = maxPrice.value.toInt();
-    propertyServices.minArea.value = minArea.value.toInt();
-    propertyServices.maxArea.value = maxArea.value.toInt();
-    propertyServices.bhk.assignAll(selectedBhk);
-    propertyServices.amenities.value = selectedAmenities.value;
+    _propertyServices.minPrice.value = minPrice.value.toInt();
+    _propertyServices.maxPrice.value = maxPrice.value.toInt();
+    _propertyServices.minArea.value = minArea.value.toInt();
+    _propertyServices.maxArea.value = maxArea.value.toInt();
+    _propertyServices.bhk.assignAll(selectedBhk);
+    _propertyServices.amenities.value = selectedAmenities.value;
 
     if (data != null && selectedListingCategories.value.isNotEmpty) {
-      propertyServices.listingCategory.value =
+      _propertyServices.listingCategory.value =
           data.listingCategories?[selectedListingCategories.value] ?? '';
     } else {
-      propertyServices.listingCategory.value = '';
+      _propertyServices.listingCategory.value = '';
     }
 
-    propertyServices.page.value = 1;
-    if (shouldFetch) {
-      _fetchProperties();
-    }
+    _propertyServices.page.value = 1;
+    if (shouldFetch) _fetchProperties();
 
     Get.back();
   }
 
-  //
   Future<void> resetFilters({bool shouldFetch = true}) async {
-    log.d("Resetting all filters");
+    log.d('Resetting all filters');
+
     minPrice.value = 0;
     maxPrice.value = 100000000;
     minArea.value = 0;
@@ -201,53 +197,50 @@ class PropertyController extends GetxController {
     selectedSort.value = null;
     selectedPropertyType.value = null;
 
-    propertyServices.keywords.value = '';
-    propertyServices.propertyStatus.value = '';
-    propertyServices.propertyType.value = '';
-    propertyServices.listingCategory.value = '';
-    propertyServices.amenities.value = '';
-    propertyServices.minPrice.value = 0;
-    propertyServices.maxPrice.value = 100000000;
-    propertyServices.minArea.value = null;
-    propertyServices.maxArea.value = null;
-    propertyServices.bhk.clear();
-    propertyServices.city.value = '';
+    _propertyServices
+      ..keywords.value = ''
+      ..propertyStatus.value = ''
+      ..propertyType.value = ''
+      ..listingCategory.value = ''
+      ..amenities.value = ''
+      ..minPrice.value = 0
+      ..maxPrice.value = 100000000
+      ..minArea.value = null
+      ..maxArea.value = null
+      ..bhk.clear()
+      ..city.value = ''
+      ..page.value = 1;
 
     searchQuery.value = '';
     searchController.clear();
-    propertyServices.page.value = 1;
 
-    if (shouldFetch) {
-      _fetchProperties();
-    }
+    if (shouldFetch) _fetchProperties();
   }
 
-  void fetchFilterData() async {
-    await _fetchFilterData();
-  }
+  // ─── Fetching ────────────────────────────────────────────────────────────────
+
+  void fetchFilterData() async => await _fetchFilterData();
 
   Future<void> _fetchFilterData() async {
     _isFilterLoading.value = true;
-    final result = await propertyServices.getFilterData();
-    result.fold((l) => null, (r) {
-      filterData.value = r;
-    });
+    final result = await _propertyServices.getFilterData();
+    result.fold((l) => null, (r) => filterData.value = r);
     _isFilterLoading.value = false;
   }
 
   Future<void> _fetchProperties() async {
-    if (propertyServices.page.value == 1) {
+    if (_propertyServices.page.value == 1) {
       _isLoading.value = true;
     } else {
       _isMoreLoading.value = true;
     }
 
-    final result = await propertyServices.searchProperties();
-    result.fold((l) => log.e("Error fetching properties: ${l.message}"), (r) {
+    final result = await _propertyServices.searchProperties();
+    result.fold((l) => log.e('Error fetching properties: ${l.message}'), (r) {
       log.d(
-        "Fetched ${r.data.length} properties for page ${propertyServices.page.value}",
+        'Fetched ${r.data.length} properties — page ${_propertyServices.page.value}',
       );
-      if (propertyServices.page.value == 1) {
+      if (_propertyServices.page.value == 1) {
         _properties.assignAll(r.data);
         _filteredProperties.assignAll(r.data);
       } else {
@@ -262,22 +255,46 @@ class PropertyController extends GetxController {
     });
 
     _applySortToList();
-
     _isLoading.value = false;
     _isMoreLoading.value = false;
   }
 
-  //* Pagination & Refresh
+  void _applySortToList() {
+    final label = selectedSort.value;
+    if (label == null) return;
+
+    switch (label) {
+      case 'Newest First':
+        _properties.sort((a, b) => b.id.compareTo(a.id));
+        _filteredProperties.sort((a, b) => b.id.compareTo(a.id));
+        break;
+      case 'Price: Low to High':
+        _filteredProperties.assignAll(
+          [..._filteredProperties]
+            ..sort((a, b) => (a.basePrice ?? 0).compareTo(b.basePrice ?? 0)),
+        );
+        break;
+      case 'Price: High to Low':
+        _filteredProperties.assignAll(
+          [..._filteredProperties]
+            ..sort((a, b) => (b.basePrice ?? 0).compareTo(a.basePrice ?? 0)),
+        );
+        break;
+    }
+  }
+
+  // ─── Pagination & Refresh ────────────────────────────────────────────────────
+
   void _loadMoreProperties() {
     if (currentPage.value < lastPage.value && !isMoreLoading) {
-      propertyServices.page.value = currentPage.value + 1;
+      _propertyServices.page.value = currentPage.value + 1;
       _fetchProperties();
     }
   }
 
   Future<void> fetchMoreProperties() async {
     if (currentPage.value < lastPage.value && !isMoreLoading) {
-      propertyServices.page.value = currentPage.value + 1;
+      _propertyServices.page.value = currentPage.value + 1;
       await _fetchProperties();
     }
   }
@@ -287,26 +304,32 @@ class PropertyController extends GetxController {
     await resetFilters();
   }
 
-  //* Favorites
-  void updateFavoriteData(int propertyId) {
-    final index = _properties.indexWhere((p) => p.id == propertyId);
-    if (index == -1) return;
-    final property = _properties[index];
-    final update = property.copyWith(isFavorited: !property.isFavorited);
+  // ─── Favorites ───────────────────────────────────────────────────────────────
 
-    _properties[index] = update;
-    _filteredProperties[index] = update;
-    _filteredProperties.refresh();
-    _properties.refresh();
+  void updateFavoriteData(int propertyId) {
+    final pIdx = _properties.indexWhere((p) => p.id == propertyId);
+    if (pIdx != -1) {
+      _properties[pIdx] = _properties[pIdx].copyWith(
+        isFavorited: !_properties[pIdx].isFavorited,
+      );
+      _properties.refresh();
+    }
+
+    final fIdx = _filteredProperties.indexWhere((p) => p.id == propertyId);
+    if (fIdx != -1) {
+      _filteredProperties[fIdx] = _filteredProperties[fIdx].copyWith(
+        isFavorited: !_filteredProperties[fIdx].isFavorited,
+      );
+
+      _filteredProperties.refresh();
+    }
   }
 
   void toggleFavorite({required int propertyId}) {
     updateFavoriteData(propertyId);
-    homeController.updateFavorite(propertyId);
-    favoritesController.toggleFavorite(
-      propertyId: propertyId,
-      type: 'property',
-    );
-    favoritesController.fetchSavedProperties();
+    final property = _filteredProperties.where((p) => p.id == propertyId).first;
+    _favoritesController.saveFavorite(property);
+    _homeController.updateFavorite(propertyId);
+    
   }
 }

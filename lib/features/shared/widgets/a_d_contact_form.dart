@@ -76,71 +76,54 @@ class _ADContactFormState extends State<ADContactForm> {
               ),
               SizedBox(height: 10),
               AppTextFormField(
-                controller: nameController,
-                border: true,
+                controller: TextEditingController(),
                 hintText: "Name",
-                labelText: "Name*",
-                keyboardType: TextInputType.name,
-                borderColor: AppColors.grey.withValues(alpha: 0.3),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Name is required";
-                  }
-                  if (value.length < 2) {
-                    return "Name must be at least 2 characters";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 10),
-              AppTextFormField(
-                controller: phoneController,
                 border: true,
-                hintText: "Phone",
-                labelText: "Phone*",
-                keyboardType: TextInputType.phone,
-                maxLength: 10,
-                borderColor: AppColors.grey.withValues(alpha: 0.3),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Phone is required";
-                  }
-                  if (value.length != 10) {
-                    return "Enter valid phone number";
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 10),
-              AppTextFormField(
-                controller: emailController,
-                border: true,
-                hintText: "Email",
-                labelText: "Email*",
-                keyboardType: TextInputType.emailAddress,
-                borderColor: AppColors.grey.withValues(alpha: 0.3),
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Email is required";
-                  }
-                  if (!GetUtils.isEmail(value)) {
-                    return "Enter valid email";
+                    return "Please enter a name";
                   }
                   return null;
                 },
               ),
               SizedBox(height: 10),
               AppTextFormField(
-                controller: messageController,
+                controller: TextEditingController(),
+                hintText: "Phone",
                 border: true,
-                hintText: "Message",
-                labelText: "Message*",
-                maxLines: 5,
-                keyboardType: TextInputType.text,
-                borderColor: AppColors.grey.withValues(alpha: 0.3),
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
-                  if (value!.isEmpty) {
-                    return "Message is required";
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a phone number";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 10),
+              AppTextFormField(
+                controller: TextEditingController(),
+                hintText: "email",
+                border: true,
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a emailAddress";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 10),
+              AppTextFormField(
+                controller: TextEditingController(),
+                hintText: "Message",
+                keyboardType: TextInputType.text,
+                maxLines: 5,
+                border: true,
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter a name";
                   }
                   return null;
                 },

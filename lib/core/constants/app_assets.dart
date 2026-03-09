@@ -56,6 +56,8 @@ class _Icons {
   final icon9 = "assets/icons/icon9.svg";
   final logout = "assets/icons/logout.svg";
   final exit = "assets/icons/exit.svg";
+  final property = "assets/icons/property.svg";
+  final wallet = "assets/icons/wallet.svg";
 }
 
 class _Images {

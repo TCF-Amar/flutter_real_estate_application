@@ -38,9 +38,9 @@ class ProfileEdit extends StatelessWidget {
 
   AppBar _buildAppBar() {
     return AppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded),
-        onPressed: Get.back,
+      leading: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: AppBackButton(),
       ),
       title: HeaderText(text: 'Edit Profile'),
       centerTitle: true,

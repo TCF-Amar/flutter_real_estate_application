@@ -40,7 +40,7 @@ class AppButton extends StatelessWidget {
     this.fontSize,
     this.fontWeight,
     this.padding,
-    this.borderRadius = 12,
+    this.borderRadius = 8,
     this.icon,
     this.showShadow = true,
     this.isBorder = false,

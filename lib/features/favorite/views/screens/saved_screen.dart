@@ -34,13 +34,17 @@ class FavoriteScreen extends GetView<FavoriteController> {
 
                 if (controller.savedProperties.isEmpty) {
                   return _EmptyState(
-                    onRefresh: controller.fetchSavedProperties,
+                    onRefresh: () async {
+                      await controller.refreshSavedProperties();
+                    },
                   );
                 }
 
                 return RefreshIndicator(
                   color: AppColors.primary,
-                  onRefresh: controller.refreshSavedProperties,
+                  onRefresh: () async {
+                    await controller.refreshSavedProperties();
+                  },
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
                     children: [

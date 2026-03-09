@@ -16,4 +16,5 @@ class AppRoutes {
 
   ///profile navigation
   static const String editProfile = "/edit-profile";
+  static const String support = "/support";
 }

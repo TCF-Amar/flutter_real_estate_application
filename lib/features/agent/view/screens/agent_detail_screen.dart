@@ -20,19 +20,16 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
         }
 
         return CustomScrollView(
+          
           slivers: [
             SliverAppBar(
-              leading: IconButton(
-                style: IconButton.styleFrom(
-                  backgroundColor: AppColors.grey.withValues(alpha: 0.8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                ),
-                icon: const Icon(Icons.arrow_back_ios_new),
-                onPressed: () => Get.back(),
+              
+              leading: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: AppBackButton(),
               ),
               expandedHeight: 370,
+
               title: const HeaderText(
                 text: "Agent Details",
                 color: Colors.white,

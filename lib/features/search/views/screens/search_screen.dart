@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -16,21 +15,8 @@ class SearchScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  // padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: AppColors.grey.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back_ios_new),
-                    color: AppColors.white.withValues(alpha: 0.8),
-                    iconSize: 20,
-                    onPressed: () {
-                      Get.back();
-                    },
-                  ),
-                ),
+                 AppBackButton(),
+                
                 AppText(
                   "Search",
                   fontSize: 18,

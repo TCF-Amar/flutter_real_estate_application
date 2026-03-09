@@ -11,6 +11,7 @@ import 'package:real_estate_app/features/auth/views/screens/select_country_scree
 import 'package:real_estate_app/features/auth/views/screens/verity_code.dart';
 import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
 import 'package:real_estate_app/features/profile/views/screens/profile_edit.dart';
+import 'package:real_estate_app/features/profile/views/screens/support/support_screen.dart';
 import 'package:real_estate_app/features/property/bindings/property_details_binding.dart';
 import 'package:real_estate_app/features/property/views/screens/property_details_screen.dart';
 import 'package:real_estate_app/features/home/bindings/home_binding.dart';
@@ -67,5 +68,6 @@ class AppPages {
         return ProfileEdit(user: user);
       },
     ),
+    GetPage(name: AppRoutes.support, page: () => SupportScreen()),
   ];
 }

@@ -52,6 +52,7 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                   icon: const Icon(Icons.share, color: Colors.white),
                   onPressed: () {},
                 ),
+                SizedBox(width: 8),
               ],
               flexibleSpace: HeaderSection(),
             ),
