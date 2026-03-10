@@ -228,6 +228,7 @@ class PropertyDetail {
     'share_data': shareData?.toJson(),
   };
 
+
   // copyWith
   PropertyDetail copyWith({
     int? id,

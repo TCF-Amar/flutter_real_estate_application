@@ -6,6 +6,7 @@ class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final bool isLoading;
+  final bool isEnabled;
 
   final double? width;
   final bool fullWidth;
@@ -32,6 +33,7 @@ class AppButton extends StatelessWidget {
     required this.text,
     this.onPressed,
     this.isLoading = false,
+    this.isEnabled = true,
     this.width,
     this.fullWidth = true,
     this.backgroundColor,
@@ -90,14 +92,14 @@ class AppButton extends StatelessWidget {
     return SizedBox(
       width: fullWidth ? double.infinity : width,
       child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed,
+        onPressed: (isLoading || !isEnabled) ? null : onPressed,
         style: ButtonStyle(
           padding: WidgetStateProperty.all(
             padding ?? const EdgeInsets.symmetric(vertical: 16),
           ),
           backgroundColor: WidgetStateProperty.resolveWith((states) {
             if (states.contains(WidgetState.disabled)) {
-              return disabledBackgroundColor ?? bgColor;
+              return disabledBackgroundColor ?? Colors.grey.shade400;
             }
             return bgColor;
           }),

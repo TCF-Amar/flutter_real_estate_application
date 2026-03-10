@@ -1,3 +1,4 @@
+import 'package:real_estate_app/features/property/models/property_detail_model.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 
 class FavoriteProperty {
@@ -51,6 +52,21 @@ class FavoriteProperty {
       state: property.state,
       formattedPrice: property.formattedPrice,
       image: property.image,
+      isFavorited: property.isFavorited,
+    );
+  }
+
+  factory FavoriteProperty.fromPropertyDetails(PropertyDetail property) {
+    return FavoriteProperty(
+      id: property.id,
+      title: property.title,
+      propertyCategory: property.propertyCategory,
+      propertyType: property.propertyType,
+      listingCategory: property.listingCategory,
+      city: property.address!.city,
+      state: property.address!.state,
+      formattedPrice: property.formattedPrice,
+      image: property.media!.images.first.url,
       isFavorited: property.isFavorited,
     );
   }

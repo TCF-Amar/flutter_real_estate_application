@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/services/property_services.dart';
 import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
+import 'package:real_estate_app/features/favorite/models/favorite_property.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/property/models/property_filter.model.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
@@ -325,11 +326,11 @@ class PropertyController extends GetxController {
     }
   }
 
-  void toggleFavorite({required int propertyId}) {
+  void toggleFavoriteProperty({required int propertyId}) {
     updateFavoriteData(propertyId);
-    final property = _filteredProperties.where((p) => p.id == propertyId).first;
-    _favoritesController.saveFavorite(property);
+    final property = _filteredProperties.firstWhere((p) => p.id == propertyId);
+    final p = FavoriteProperty.fromProperty(property);
+    _favoritesController.toggleFavoriteProperty(p);
     _homeController.updateFavorite(propertyId);
-    
   }
 }

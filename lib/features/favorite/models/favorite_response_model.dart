@@ -1,3 +1,4 @@
+import 'package:real_estate_app/features/agent/models/agent_model.dart';
 import 'package:real_estate_app/features/favorite/models/favorite_property.dart';
 
 class FavoriteResponseModel {
@@ -14,24 +15,34 @@ class FavoriteResponseModel {
       ),
     );
   }
-
 }
 
 class FavoriteResponseData {
-  final List<FavoriteProperty> property;
+  final List<FavoriteProperty> properties;
+  final List<AgentModel> agents;
+  final List<dynamic> developers;
 
-  FavoriteResponseData({required this.property});
+  FavoriteResponseData({
+    required this.properties,
+    required this.agents,
+    required this.developers,
+  });
 
   factory FavoriteResponseData.fromJson(Map<String, dynamic> json) {
-    final rawList = json['saved_properties'];
     return FavoriteResponseData(
-      property: rawList == null
-          ? []
-          : List<FavoriteProperty>.from(
-              (rawList as List<dynamic>).map(
-                (x) => FavoriteProperty.fromJson(x as Map<String, dynamic>),
-              ),
-            ),
+      properties:
+          (json['saved_properties'] as List?)
+              ?.map((e) => FavoriteProperty.fromJson(e))
+              .toList() ??
+          [],
+
+      agents:
+          (json['saved_agents'] as List?)
+              ?.map((e) => AgentModel.fromJson(e))
+              .toList() ??
+          [],
+
+      developers: [],
     );
   }
 }

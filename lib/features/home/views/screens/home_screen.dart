@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/home/views/widgets/featured_properties_section.dart';
 import 'package:real_estate_app/features/home/views/widgets/home_hero_section.dart';
 import 'package:real_estate_app/features/home/views/widgets/home_search_bar.dart';
@@ -12,50 +14,55 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<HomeController>();
+
     final topPadding = MediaQuery.of(context).padding.top;
     final expandedHeight = 200.0;
 
-    return CustomScrollView(
-      slivers: [
-        // ── AppBar with Sticky Top Search Bar ──────────────────────────
-        SliverAppBar(
-          pinned: true,
-          expandedHeight: expandedHeight,
-          backgroundColor: AppColors.background,
-          surfaceTintColor: AppColors.background,
-          elevation: 0,
-          toolbarHeight: 0,
-          scrolledUnderElevation: 0,
-          automaticallyImplyLeading: false,
-          collapsedHeight: 0,
+    return RefreshIndicator(
+      onRefresh: () async => controller.refreshData(),
+      child: CustomScrollView(
+        slivers: [
+          // ── AppBar with Sticky Top Search Bar ──────────────────────────
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: expandedHeight,
+            backgroundColor: AppColors.background,
+            surfaceTintColor: AppColors.background,
+            elevation: 0,
+            toolbarHeight: 0,
+            scrolledUnderElevation: 0,
+            automaticallyImplyLeading: false,
+            collapsedHeight: 0,
 
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(_searchBarHeight),
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(_searchBarHeight),
+              child: Transform.translate(
+                offset: const Offset(0, _searchBarHeight / 2),
+                child: const HomeSearchBar(barHeight: _searchBarHeight),
+              ),
+            ),
+
+            flexibleSpace: HomeHeroSection(
+              topPadding: topPadding,
+              searchBarHeight: _searchBarHeight,
+            ),
+          ),
+
+          SliverToBoxAdapter(
             child: Transform.translate(
-              offset: const Offset(0, _searchBarHeight / 2),
-              child: const HomeSearchBar(barHeight: _searchBarHeight),
+              offset: const Offset(0, (_searchBarHeight / 2)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  FeaturedPropertiesSection(),
+                  RecommendedSection(),
+                ],
+              ),
             ),
           ),
-
-          flexibleSpace: HomeHeroSection(
-            topPadding: topPadding,
-            searchBarHeight: _searchBarHeight,
-          ),
-        ),
-
-        SliverToBoxAdapter(
-          child: Transform.translate(
-            offset: const Offset(0, (_searchBarHeight / 2)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                FeaturedPropertiesSection(),
-                RecommendedSection(),
-              ],
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

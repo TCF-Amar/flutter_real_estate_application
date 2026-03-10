@@ -19,7 +19,7 @@ class AgentAbout extends StatelessWidget {
           children: [
             Text(
               'About ${agent.name}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             Divider(),
             // const SizedBox(height: 8),
@@ -27,13 +27,14 @@ class AgentAbout extends StatelessWidget {
               '${agent.description}',
               overflow: TextOverflow.clip,
               color: AppColors.textSecondary,
+              fontSize: 12,
             ),
 
             const SizedBox(height: 16),
             AppText(
               "Social Media Links",
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+              // fontWeight: FontWeight.bold,
+              fontSize: 14,
               color: AppColors.textSecondary,
             ),
             SizedBox(height: 8),
@@ -41,87 +42,87 @@ class AgentAbout extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: SvgPicture.asset(
                     Assets.icons.fb,
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: SvgPicture.asset(
                     Assets.icons.whatsapp,
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: SvgPicture.asset(
                     Assets.icons.insta,
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: SvgPicture.asset(
                     Assets.icons.message,
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: SvgPicture.asset(
                     Assets.icons.twitter,
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: SvgPicture.asset(
                     Assets.icons.telegram,
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppColors.grey.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: SvgPicture.asset(
                     Assets.icons.linkedin,
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                   ),
                 ),
               ],

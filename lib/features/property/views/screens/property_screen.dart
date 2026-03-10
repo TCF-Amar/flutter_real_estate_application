@@ -126,13 +126,15 @@ class PropertyScreen extends GetView<PropertyController> {
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 16),
                                 child: PropertyCard(
-                                  item: property,
+                                  property: property,
                                   onTap: () => Get.toNamed(
                                     AppRoutes.propertyDetails,
                                     arguments: {'id': property.id},
                                   ),
-                                  onFavoriteTap: () => controller
-                                      .toggleFavorite(propertyId: property.id),
+                                  onFavoriteTap: () =>
+                                      controller.toggleFavoriteProperty(
+                                        propertyId: property.id,
+                                      ),
                                 ),
                               );
                             },

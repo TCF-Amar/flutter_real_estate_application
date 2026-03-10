@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:real_estate_app/core/services/profile_services.dart';
 import 'package:real_estate_app/core/utils/image_picker_util.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
@@ -32,6 +33,7 @@ class ProfileController extends GetxController {
   final _isUploading = false.obs;
   final _isUpdating = false.obs;
   final _refreshing = false.obs;
+  Failure? get error => _authController.error;
 
   File? get image => _image.value;
   bool get isUploading => _isUploading.value;
@@ -116,14 +118,13 @@ class ProfileController extends GetxController {
   }
 
   // ─── Refresh ─────────────────────────────────────────────────────────────────
-
   Future<void> refreshProfile() async {
     _refreshing.value = true;
     await _authController.getCurrentUser();
     _refreshing.value = false;
   }
-  // ─── Lifecycle ───────────────────────────────────────────────────────────────
 
+  // ─── Lifecycle ───────────────────────────────────────────────────────────────
   @override
   void onClose() {
     nameController.dispose();

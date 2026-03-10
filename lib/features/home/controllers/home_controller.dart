@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:real_estate_app/core/errors/failure.dart';
+import 'package:real_estate_app/features/favorite/models/favorite_property.dart';
 import 'package:real_estate_app/features/property/controllers/property_controller.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/core/services/home_services.dart';
@@ -12,6 +14,8 @@ class HomeController extends GetxController {
   RxList<Property> allProperties = <Property>[].obs;
   RxList<Property> recommendedProperties = <Property>[].obs;
   final FavoriteController favoritesController = Get.find<FavoriteController>();
+  final Rxn<Failure> _error = Rxn<Failure>();
+  Failure? get error => _error.value;
 
   @override
   void onInit() {
@@ -29,6 +33,27 @@ class HomeController extends GetxController {
     result.fold(
       (failure) {
         // Handle failure (e.g., show snackbar)
+        _error.value = failure;
+      },
+      (response) {
+        featuredProperties.assignAll(response.data.featuredProperties);
+        allProperties.assignAll(response.data.featuredProperties);
+        // Use a distinct copy for recommended so filtering doesn't corrupt the source list
+        recommendedProperties.assignAll(
+          List<Property>.from(response.data.featuredProperties),
+        );
+      },
+    );
+    isLoading.value = false;
+  }
+
+  void refreshData() async {
+    isLoading.value = true;
+    final result = await _homeServices.getHomepageData();
+    result.fold(
+      (failure) {
+        // Handle failure (e.g., show snackbar)
+        _error.value = failure;
       },
       (response) {
         featuredProperties.assignAll(response.data.featuredProperties);
@@ -90,12 +115,12 @@ class HomeController extends GetxController {
     }
   }
 
-  void toggleFavorite({required int propertyId}) {
+  void toggleFavoriteProperty({required int propertyId}) {
     updateFavorite(propertyId);
     Get.find<PropertyController>().updateFavoriteData(propertyId);
-    favoritesController.toggleFavorite(
-      type: "property",
-      propertyId: propertyId,
+    final p = FavoriteProperty.fromProperty(
+      allProperties.firstWhere((p) => p.id == propertyId),
     );
+    favoritesController.toggleFavoriteProperty(p);
   }
 }

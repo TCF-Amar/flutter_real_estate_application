@@ -102,7 +102,12 @@ class _ListedPropertyState extends State<ListedProperty> {
                       separatorBuilder: (_, __) => const SizedBox(height: 12),
                       itemBuilder: (context, index) {
                         final property = controller.filterPropertiesList[index];
-                        return ModernPropertyCard(property: property);
+                        return ModernPropertyCard(
+                          property: property,
+                          onToggleFavorite: () {
+                            controller.updatePropertyFavorite(property.id);
+                          },
+                        );
                       },
                     );
                   }),
@@ -120,4 +125,3 @@ class _ListedPropertyState extends State<ListedProperty> {
     );
   }
 }
-

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/shared/widgets/app_container.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
@@ -34,52 +36,49 @@ class TicketCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppContainer(
-      padding: const EdgeInsets.all(16),
-      showBorder: true,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              AppText(
-                t.title!,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textSecondary,
-              ),
-              SizedBox(height: 4),
-              AppText(
-                "Ticket ID: ${t.id?.toUpperCase()}",
-                fontSize: 10,
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
-              ),
-            ],
-          ),
-          Spacer(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              AppText(
-                "${t.status!.name.capitalize} ",
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: color,
-              ),
-              SizedBox(height: 4),
-              AppText(
-                "Date: ${t.date}",
-                fontSize: 12,
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w400,
-              ),
-            ],
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(AppRoutes.supportDetails, arguments: t);
+      },
+      child: AppContainer(
+        padding: const EdgeInsets.all(16),
+        showBorder: true,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                AppText(t.title!, fontSize: 14, color: AppColors.textSecondary),
+                SizedBox(height: 4),
+                AppText(
+                  "Ticket ID: ${t.id?.toUpperCase()}",
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                ),
+              ],
+            ),
+            Spacer(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                AppText(
+                  "${t.status!.name.capitalize} ",
+                  fontSize: 12,
+                  color: color,
+                ),
+                SizedBox(height: 4),
+                AppText(
+                  "Date: ${t.date}",
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

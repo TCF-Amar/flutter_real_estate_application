@@ -71,7 +71,7 @@ class _SimilarPropertiesState extends State<SimilarProperties> {
                         isSimilar: true,
                         property: controller.similarProperties[index],
                         onToggleFavorite: () {
-                          controller.updateFavoriteData(
+                          controller.updateSimilarFavorite(
                             controller.similarProperties[index].id,
                           );
                         },

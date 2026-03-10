@@ -164,4 +164,21 @@ class AuthServices extends GetxService {
       expiresAt: data.expiresAt.toIso8601String(),
     );
   }
+
+  FutureResult<void> deleteAccount(String password, String confirmation) async {
+    try {
+      await _dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.deleteAccount,
+          method: ApiMethod.delete,
+          body: {'password': password, 'confirmation': confirmation},
+        ),
+      );
+      return const Right(null);
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
 }

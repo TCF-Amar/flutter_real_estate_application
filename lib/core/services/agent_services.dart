@@ -10,6 +10,7 @@ import 'package:real_estate_app/core/utils/typedef.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_details_controller.dart';
 import 'package:real_estate_app/features/agent/models/agent_details_response_model.dart';
 import 'package:real_estate_app/features/agent/models/agent_response_model.dart';
+import 'package:real_estate_app/features/favorite/models/favorite_response_model.dart';
 import 'package:real_estate_app/features/property/models/review_request_model.dart';
 import 'package:real_estate_app/features/shared/models/review_response_model.dart';
 
@@ -144,6 +145,20 @@ class AgentServices extends GetxService {
       return true;
     } on AppException {
       return false;
+    }
+  }
+
+  FutureResult<FavoriteResponseModel> getSavedAgents() async {
+    try {
+      final response = await dioHelper.request(
+        ApiRequest(url: ApiEndpoints.getSavedAgents, method: ApiMethod.get),
+      );
+
+      return Right(FavoriteResponseModel.fromJson(response.data));
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.network));
     }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_app/core/constants/app_assets.dart';
+import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
@@ -11,10 +13,15 @@ Future<bool?> showLogoutDialog(BuildContext context) {
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
-          children: const [
-            Icon(Icons.logout, color: Colors.red),
+          children: [
+            AppSvg(path: Assets.icons.exit, color: Colors.red, height: 18),
             SizedBox(width: 8),
-            Text("Logout"),
+            AppText(
+              "Logout",
+              color: AppColors.error,
+              fontSize: 16,
+              fontWeight: .bold,
+            ),
           ],
         ),
         content: const Text(
@@ -22,11 +29,13 @@ Future<bool?> showLogoutDialog(BuildContext context) {
         ),
         actions: [
           TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
-          AppButton(
-            text: "Logout",
+
+          TextButton(
             onPressed: () {
               authController.logout();
+              Get.back();
             },
+            child: const AppText("Logout", color: Colors.red),
           ),
         ],
       );

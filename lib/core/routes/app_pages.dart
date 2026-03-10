@@ -10,7 +10,10 @@ import 'package:real_estate_app/features/auth/views/screens/reset_password_scree
 import 'package:real_estate_app/features/auth/views/screens/select_country_screen.dart';
 import 'package:real_estate_app/features/auth/views/screens/verity_code.dart';
 import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
+import 'package:real_estate_app/features/profile/views/screens/delete_account.dart';
 import 'package:real_estate_app/features/profile/views/screens/profile_edit.dart';
+import 'package:real_estate_app/features/profile/views/screens/support/new_request.dart';
+import 'package:real_estate_app/features/profile/views/screens/support/support_details.dart';
 import 'package:real_estate_app/features/profile/views/screens/support/support_screen.dart';
 import 'package:real_estate_app/features/property/bindings/property_details_binding.dart';
 import 'package:real_estate_app/features/property/views/screens/property_details_screen.dart';
@@ -69,5 +72,10 @@ class AppPages {
       },
     ),
     GetPage(name: AppRoutes.support, page: () => SupportScreen()),
+
+    GetPage(name: AppRoutes.newRequest, page: () => NewRequest()),
+    GetPage(name: AppRoutes.supportDetails, page: () => SupportDetails()),
+
+    GetPage(name: AppRoutes.accountDelete, page: () => DeleteAccount()),
   ];
 }

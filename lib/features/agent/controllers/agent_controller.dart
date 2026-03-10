@@ -147,4 +147,6 @@ class AgentController extends GetxController {
     services.experience.value = '';
     _fetchAgents(resetPage: true);
   }
+
+  void toggleAgentFav() {}
 }

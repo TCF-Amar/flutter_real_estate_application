@@ -1,20 +1,30 @@
+// import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/app_image.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ProfileHeaderSection extends StatelessWidget {
   const ProfileHeaderSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final log = Logger();
     final auth = Get.find<ProfileController>();
+    log.d(auth.user.toJson());
+
     return FlexibleSpaceBar(
-      background: Obx(
-        () => Stack(
+      background: Obx(() {
+        if (auth.user.value == null) {
+          return AppContainer(child: Center(child: AppText("Server Error")));
+        }
+        return Stack(
           children: [
             // SizedBox(width: double.infinity, height: 250),
             Positioned(
@@ -50,26 +60,6 @@ class ProfileHeaderSection extends StatelessWidget {
               ),
             ),
 
-            // Positioned(
-            //   top: 180,
-            //   bottom: 0,
-            //   left: 0,
-            //   right: 0,
-            //   child: SizedBox(height: 100, width: double.infinity),
-            // ),
-            // // Positioned(
-            // //   top: 30,
-            // //   left: 0,
-            // //   right: 0,
-            // //   child: Center(
-            // //     child: AppText(
-            // //       "Profile",
-            // //       fontSize: 18,
-            // //       fontWeight: FontWeight.w600,
-            // //       color: AppColors.white,
-            // //     ),
-            // //   ),
-            // // ),
             Positioned(
               top: 100,
               left: 0,
@@ -96,15 +86,15 @@ class ProfileHeaderSection extends StatelessWidget {
               right: 0,
               child: Center(
                 child: AppText(
-                  "${auth.user.value!.fullName?.capitalizeFirst}",
+                  auth.user.value!.fullName!.capitalizeFirst ?? "",
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
           ],
-        ),
-      ),
+        );
+      }),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
+import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/profile/views/widgets/support_widgets/support_topic.dart';
 import 'package:real_estate_app/features/profile/views/widgets/support_widgets/ticket_card.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
@@ -73,8 +75,9 @@ class SupportScreen extends StatelessWidget {
               sliver: SliverToBoxAdapter(
                 child: AppText(
                   'What Can we help with?',
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -91,7 +94,7 @@ class SupportScreen extends StatelessWidget {
                   crossAxisCount: 2,
                   crossAxisSpacing: 14,
                   mainAxisSpacing: 14,
-                  childAspectRatio: 1.5,
+                  childAspectRatio: 1.3,
                 ),
               ),
             ),
@@ -102,8 +105,8 @@ class SupportScreen extends StatelessWidget {
               sliver: SliverToBoxAdapter(
                 child: AppText(
                   'My Support Tickets',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -130,7 +133,12 @@ class SupportScreen extends StatelessWidget {
           20,
           20.0,
         ).copyWith(bottom: 50),
-        child: AppButton(text: "New Request", onPressed: () {}),
+        child: AppButton(
+          text: "New Request",
+          onPressed: () {
+            Get.toNamed(AppRoutes.newRequest);
+          },
+        ),
       ),
     );
   }

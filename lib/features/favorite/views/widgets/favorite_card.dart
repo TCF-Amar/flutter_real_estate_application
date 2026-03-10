@@ -4,7 +4,6 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 import 'package:real_estate_app/features/favorite/models/favorite_property.dart';
-import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class FavoriteCard extends StatelessWidget {
@@ -22,19 +21,10 @@ class FavoriteCard extends StatelessWidget {
         arguments: {'id': property.id},
         preventDuplicates: false,
       ),
-      child: Container(
+      child: AppContainer(
+        height: 140,
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+        showShadow: true,
         child: Row(
           children: [
             // ── Thumbnail ───────────────────────────────
@@ -76,11 +66,7 @@ class FavoriteCard extends StatelessWidget {
                         const Spacer(),
                         InkWell(
                           onTap: () {
-                            controller.toggleFavorite(
-                              type: "property",
-                              propertyId: property.id!,
-                            );
-                            // controller.saveFavorite( );
+                            controller.updateFavorite(property);
                           },
                           child: Icon(
                             (property.isFavorited ?? true)
@@ -133,7 +119,8 @@ class FavoriteCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    // const SizedBox(height: 8),
+                    Spacer(),
 
                     // Price
                     Row(
@@ -150,8 +137,6 @@ class FavoriteCard extends StatelessWidget {
                 ),
               ),
             ),
-
-           
           ],
         ),
       ),

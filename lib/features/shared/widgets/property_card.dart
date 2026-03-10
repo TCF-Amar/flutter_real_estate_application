@@ -5,7 +5,7 @@ import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class PropertyCard extends StatelessWidget {
-  final Property item;
+  final Property property;
   final VoidCallback? onTap;
   final bool featured;
   final VoidCallback? onFavoriteTap;
@@ -27,7 +27,7 @@ class PropertyCard extends StatelessWidget {
 
   const PropertyCard({
     super.key,
-    required this.item,
+    required this.property,
     this.onTap,
     this.featured = false,
     this.onFavoriteTap,
@@ -58,18 +58,18 @@ class PropertyCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: item.image != null
+                  child: property.image != null
                       ? Image.network(
-                          item.image!,
+                          property.image!,
                           fit: BoxFit.cover,
                           // Decode at display size — 170px height, full width
                           cacheHeight:
                               (170 * MediaQuery.of(context).devicePixelRatio)
                                   .toInt(),
                           errorBuilder: (context, error, stackTrace) =>
-                              _PlaceholderImage(url: item.shareData.image),
+                              _PlaceholderImage(url: property.shareData.image),
                         )
-                      : _PlaceholderImage(url: item.shareData.image),
+                      : _PlaceholderImage(url: property.shareData.image),
                 ),
                 // Tags
                 Positioned(
@@ -84,19 +84,19 @@ class PropertyCard extends StatelessWidget {
                               backgroundColor: Colors.white,
                             )
                           : AppTag(
-                              label: item.listingCategory ?? '',
+                              label: property.listingCategory ?? '',
                               color: Colors.blueAccent,
                               backgroundColor: Colors.white,
                             ),
                       const SizedBox(width: 6),
                       AppTag(
-                        label: item.propertyMode,
+                        label: property.propertyMode,
                         color: AppColors.grey,
                         backgroundColor: Colors.white,
                       ),
                       const SizedBox(width: 6),
                       AppTag(
-                        label: item.propertyType,
+                        label: property.propertyType,
                         color: Colors.green,
                         backgroundColor: Colors.white,
                       ),
@@ -109,21 +109,14 @@ class PropertyCard extends StatelessWidget {
                   right: 20,
                   child: InkWell(
                     onTap: () => onFavoriteTap?.call(),
-                    child: Container(
-                      width: 36,
-                      height: 36,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Icon(
-                          item.isFavorited
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          size: 20,
-                          color: AppColors.primary,
-                        ),
+                    child: CircleAvatar(
+                      backgroundColor: AppColors.white,
+                      radius: 18,
+                      child: AppSvg(
+                        path: property.isFavorited == true
+                            ? Assets.icons.heartSelected
+                            : Assets.icons.heart,
+                        color: AppColors.primary,
                       ),
                     ),
                   ),
@@ -138,7 +131,7 @@ class PropertyCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppText(
-                    item.title,
+                    property.title,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.black,
@@ -156,7 +149,7 @@ class PropertyCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Expanded(
                         child: AppText(
-                          '${item.locality ?? ''}${item.locality != null && item.city != null ? ', ' : ''}${item.city ?? ''}',
+                          '${property.locality ?? ''}${property.locality != null && property.city != null ? ', ' : ''}${property.city ?? ''}',
                           fontSize: 12,
                           color: AppColors.grey,
                           maxLines: 1,
@@ -170,7 +163,7 @@ class PropertyCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AppText(
-                        "${item.formattedPrice}",
+                        "${property.formattedPrice}",
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                         color: AppColors.primary,
@@ -179,17 +172,19 @@ class PropertyCard extends StatelessWidget {
                         children: [
                           _SpecIcon(
                             icon: Assets.icons.bed,
-                            value: item.bhkList ?? '0',
+                            value: property.bhkList ?? '0',
                           ),
                           const SizedBox(width: 12),
                           _SpecIcon(
                             icon: Assets.icons.bath,
-                            value: item.bathroomList ?? '0',
+                            value: property.bathroomList ?? '0',
                           ),
                           const SizedBox(width: 12),
                           _SpecIcon(
                             icon: Assets.icons.area,
-                            value: (item.areaRange ?? '0').split(" - ").first,
+                            value: (property.areaRange ?? '0')
+                                .split(" - ")
+                                .first,
                             isArea: true,
                           ),
                         ],

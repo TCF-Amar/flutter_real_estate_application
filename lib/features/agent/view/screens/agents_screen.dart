@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_controller.dart';
+import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/loaders/agent_card_skeleton.dart';
 import 'package:real_estate_app/features/agent/view/widgets/agent_filter.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
@@ -64,6 +65,11 @@ class AgentsScreen extends StatelessWidget {
                     );
                   }
                   return ExploreAgentCard(
+                    onFavoriteTap: () {
+                      Get.find<FavoriteController>().toggleFavoriteAgent(
+                        controller.agents[index],
+                      );
+                    },
                     agent: controller.agents[index],
                     onTap: () => Get.toNamed(
                       AppRoutes.agentDetails,

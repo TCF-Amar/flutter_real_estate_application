@@ -21,20 +21,9 @@ class ExploreAgentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AppContainer(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.grey.withValues(alpha: 0.3)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+        showBorder: true,
         child: Column(
           children: [
             Row(
@@ -97,9 +86,12 @@ class ExploreAgentCard extends StatelessWidget {
                   onTap: onFavoriteTap,
 
                   child: CircleAvatar(
-                    child: Icon(
-                      Icons.favorite_border,
-                      size: 20,
+                    child: AppSvg(
+                      path: agent.isFavorited == true
+                          ? Assets.icons.heartSelected
+                          : Assets.icons.heart,
+                      width: 20,
+                      height: 20,
                       color: AppColors.primary,
                     ),
                   ),

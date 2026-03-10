@@ -101,18 +101,19 @@ class PropertyServices extends GetxService {
     }
   }
 
-  FutureResult<SavedResponse> toggleFavorite({
+  FutureResult<SavedResponse> toggleFavoriteProperty({
     required String type,
     required int propertyId,
   }) async {
     try {
       final response = await dioHelper.request(
         ApiRequest(
-          url: ApiEndpoints.toggleFavorite,
+          url: ApiEndpoints.toggleFavoriteProperty,
           method: ApiMethod.post,
           body: {"type": type, "id": propertyId},
         ),
       );
+      log.d(response.data);
       return Right(SavedResponse.fromJson(response.data));
     } on AppException catch (e) {
       return Left(ApiException.map(e));
@@ -126,6 +127,7 @@ class PropertyServices extends GetxService {
       final response = await dioHelper.request(
         ApiRequest(url: ApiEndpoints.getSavedProperties, method: ApiMethod.get),
       );
+
       return Right(FavoriteResponseModel.fromJson(response.data));
     } on AppException catch (e) {
       return Left(ApiException.map(e));

@@ -43,12 +43,16 @@ class ApiEndpoints {
   static const String updateSettings = "$_buyer/settings/update";
 
   // ── Favorites ────────────────────────────────────────────────────────────
+  static const String toggleFavoriteProperty = "$_favorites/toggle";
   static const String getSavedProperties = _favorites;
-  static const String toggleFavorite = "$_favorites/toggle";
+  static const String getSavedAgents = "$_favorites/agents";
 
   static String sendAgentEnquiry(int id) => "$_buyer/agents/$id/enquiry";
 
   // ── Profile ──────────────────────────────────────────────────────────────
   static const String uploadAvatar = "$_buyer/upload-avatar";
   static const String updateBasicInfo = "$_profile/basic";
+
+  // ── Notifications ─────────────────────────────────────────────────────────
+  static const String deleteAccount = "$_profile/delete-account";
 }

@@ -33,13 +33,13 @@ class GraphDataModel {
     };
   }
 
-  Map<String, double> _safeMap(List<GraphStat> stats) {
+  Map<String, double> _safeMapDetails(List<GraphStat> stats) {
     final map = <String, double>{};
 
     for (final stat in stats) {
       if (stat.percentage > 0) {
-        map["${stat.percentage}% ${stat.label.isEmpty ? 'Unknown' : stat.label}"] =
-            stat.percentage.toDouble();
+        map[stat.label.isEmpty ? 'Unknown' : stat.label] = stat.percentage
+            .toDouble();
       }
     }
 
@@ -51,13 +51,64 @@ class GraphDataModel {
     return map;
   }
 
+  Map<String, double> _safeMap(List<GraphStat> stats) {
+    if (stats.isEmpty) {
+      return {"No Data": 0.0};
+    }
+
+    final filtered = stats.where((e) => e.percentage > 0).toList();
+
+    if (filtered.isEmpty) {
+      return {"No Data": 0.0};
+    }
+
+    filtered.sort((a, b) => b.percentage.compareTo(a.percentage));
+
+    final map = <String, double>{};
+
+    if (filtered.length <= 5) {
+      for (final stat in filtered) {
+        map["${stat.percentage}% ${stat.label.isEmpty ? 'Unknown' : stat.label}"] =
+            stat.percentage.toDouble();
+      }
+      return map;
+    }
+
+    final topItems = filtered.take(4).toList();
+
+    for (final stat in topItems) {
+      map["${stat.percentage}% ${stat.label.isEmpty ? 'Unknown' : stat.label}"] =
+          stat.percentage.toDouble();
+    }
+
+    final remaining = filtered.skip(4);
+
+    int remainingCount = 0;
+    double remainingPercentage = 0;
+
+    for (final stat in remaining) {
+      remainingCount++;
+      remainingPercentage += stat.percentage.toDouble();
+    }
+
+    map["+$remainingCount Others"] = remainingPercentage;
+
+    return map;
+  }
+
   // list to map for pie chart
   Map<String, double> get propertyTypeStatsMap => _safeMap(propertyTypeStats);
+  Map<String, double> get propertyTypeStatsDetails =>
+      _safeMapDetails(propertyTypeStats);
 
   Map<String, double> get propertyStatusStatsMap =>
       _safeMap(propertyStatusStats);
+  Map<String, double> get propertyStatusStatsDetails =>
+      _safeMapDetails(propertyStatusStats);
 
   Map<String, double> get propertyCityStatsMap => _safeMap(propertyCityStats);
+  Map<String, double> get propertyCityStatsDetails =>
+      _safeMapDetails(propertyCityStats);
 }
 
 class GraphStat {

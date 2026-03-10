@@ -14,6 +14,7 @@ class AgentModel {
   final int reviewCount;
   final int propertiesCount;
   final String description;
+  final bool isFavorited;
 
   AgentModel({
     required this.id,
@@ -27,6 +28,7 @@ class AgentModel {
     required this.reviewCount,
     required this.propertiesCount,
     required this.description,
+    this.isFavorited = false,
   });
 
   factory AgentModel.fromJson(Map<String, dynamic> json) {
@@ -42,6 +44,7 @@ class AgentModel {
       reviewCount: toInt(json['review_count']) ?? 0,
       propertiesCount: toInt(json['properties_count']) ?? 0,
       description: toStr(json['description']) ?? '',
+      isFavorited: json['is_favorited'] ?? false,
     );
   }
 
@@ -59,6 +62,36 @@ class AgentModel {
       'properties_count': propertiesCount,
       'description': description,
     };
+  }
+
+  AgentModel copyWith({
+    int? id,
+    String? name,
+    String? image,
+    String? agencyName,
+    String? location,
+    String? experience,
+    String? roleType,
+    double? rating,
+    int? reviewCount,
+    int? propertiesCount,
+    String? description,
+    bool? isFavorited,
+  }) {
+    return AgentModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      image: image ?? this.image,
+      agencyName: agencyName ?? this.agencyName,
+      location: location ?? this.location,
+      experience: experience ?? this.experience,
+      roleType: roleType ?? this.roleType,
+      rating: rating ?? this.rating,
+      reviewCount: reviewCount ?? this.reviewCount,
+      propertiesCount: propertiesCount ?? this.propertiesCount,
+      description: description ?? this.description,
+      isFavorited: isFavorited ?? this.isFavorited,
+    );
   }
 
   factory AgentModel.fromAgentDetailModel(AgentDetailModel agent) {

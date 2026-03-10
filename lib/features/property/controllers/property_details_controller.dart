@@ -5,6 +5,7 @@ import 'package:real_estate_app/core/services/property_services.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_controller.dart';
 import 'package:real_estate_app/features/agent/models/agent_model.dart';
 import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
+import 'package:real_estate_app/features/favorite/models/favorite_property.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/property/controllers/property_controller.dart';
 import 'package:real_estate_app/features/property/models/property_detail_model.dart';
@@ -219,22 +220,19 @@ class PropertyDetailsController extends GetxController {
 
   // ─── Favorites ───────────────────────────────────────────────────────────────
 
-  
-  void toggleFavorite() {
+  void updateDetailsFavorite() {
     if (propertyDetail == null) return;
     Get.find<PropertyController>().updateFavoriteData(propertyId.value);
     Get.find<HomeController>().updateFavorite(propertyId.value);
     _propertyDetail.value = propertyDetail!.copyWith(
       isFavorited: !(propertyDetail!.isFavorited ?? false),
     );
-    _favoriteController.toggleFavorite(
-      type: 'property',
-      propertyId: propertyId.value,
-    );
+    final p = FavoriteProperty.fromPropertyDetails(propertyDetail!);
+    _favoriteController.toggleFavoriteProperty(p);
   }
 
   /// Optimistic toggle on a similar property card.
-  void updateFavoriteData(int id) async {
+  void updateSimilarFavorite(int id) async {
     Get.find<PropertyController>().updateFavoriteData(id);
     Get.find<HomeController>().updateFavorite(id);
     final idx = _similarProperties.indexWhere((p) => p.id == id);
@@ -244,10 +242,8 @@ class PropertyDetailsController extends GetxController {
       );
       _similarProperties.refresh();
     }
-    _favoriteController.toggleFavorite(
-      type: 'property',
-      propertyId: propertyId.value,
-    );
+    final p = FavoriteProperty.fromProperty(_similarProperties[idx]);
+    _favoriteController.toggleFavoriteProperty(p);
   }
 
   @override

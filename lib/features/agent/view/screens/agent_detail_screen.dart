@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_app/core/constants/app_assets.dart';
-import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_details_controller.dart';
+import 'package:real_estate_app/features/agent/view/widgets/agent_details_widgets/agent_AEL.dart';
 import 'package:real_estate_app/features/agent/view/widgets/agent_details_widgets/index.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
@@ -20,10 +19,8 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
         }
 
         return CustomScrollView(
-          
           slivers: [
             SliverAppBar(
-              
               leading: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: AppBackButton(),
@@ -46,43 +43,7 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
             ),
 
             // Name + role + agency
-            const SliverToBoxAdapter(child: SizedBox(height: 20)),
-
-            // Stats: rating, experience, properties
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: _statColumn(
-                        icon: Assets.icons.star,
-                        value:
-                            "${agent.rating.toStringAsFixed(1)} (${agent.reviewCount} reviews)",
-                        label: 'Rating',
-                      ),
-                    ),
-                    Expanded(
-                      child: _statColumn(
-                        icon: Assets.icons.bag,
-                        value: '${agent.experience ?? 0} Years',
-                        label: 'Experience',
-                      ),
-                    ),
-                    Expanded(
-                      child: _statColumn(
-                        icon: Assets.icons.home_2,
-                        value: '${agent.propertiesCount} Properties',
-                        label: 'Listing',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+            AgentAEL(),
 
             AgentInfo(),
 
@@ -97,48 +58,9 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
             AgentReviews(),
 
             ADContactForm(),
-
-            const SliverToBoxAdapter(child: SizedBox(height: 300)),
           ],
         );
       }),
-    );
-  }
-
-  Widget _statColumn({
-    required String icon,
-    required String value,
-    required String label,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        AppSvg(path: icon, width: 20),
-        const SizedBox(width: 8),
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                value,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                style: const TextStyle(color: Colors.grey, fontSize: 11),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

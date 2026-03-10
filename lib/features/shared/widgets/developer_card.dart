@@ -3,6 +3,7 @@ import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class DeveloperCard extends StatelessWidget {
   final String logo;
@@ -26,19 +27,9 @@ class DeveloperCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onViewDetails,
-      child: Container(
+      child: AppContainer(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.grey.withValues(alpha: 0.5)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+        showBorder: true,
         child: Stack(
           children: [
             Column(

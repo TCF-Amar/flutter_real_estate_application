@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/core/services/auth_services.dart';
 import 'package:real_estate_app/features/auth/models/current_user_model.dart';
@@ -25,7 +26,10 @@ class AuthController extends GetxController {
   final Rxn<CurrentUserModel> _currentUser = Rxn<CurrentUserModel>();
   CurrentUserModel? get currentUser => _currentUser.value;
 
-  
+  // final error = ''.obs;
+
+  final Rxn<Failure?> _failure = Rxn<Failure?>();
+  Failure? get error => _failure.value;
 
   @override
   void onClose() {
@@ -52,11 +56,14 @@ class AuthController extends GetxController {
     super.onClose();
   }
 
-
   Future<void> getCurrentUser() async {
     final result = await _authServices.getCurrentUser();
     result.fold(
-      (failure) => log.e('Failed to fetch user: ${failure.message}'),
+      (failure) {
+        log.e('Failed to fetch user: ${failure.message}');
+        AppSnackbar.error(failure.message);
+        _failure.value = failure;
+      },
       (userData) {
         log.d(userData.data.user.fullName);
         user.value = userData.data.user;
@@ -65,7 +72,6 @@ class AuthController extends GetxController {
       },
     );
   }
-
 
   final TextEditingController signInEmailController = TextEditingController();
   final TextEditingController signInPasswordController =
@@ -322,6 +328,21 @@ class AuthController extends GetxController {
     result.fold((failure) => AppSnackbar.error(failure.message), (_) {
       AppSnackbar.success('Country selected: ${selectedCountry.value}');
       Get.offAllNamed(AppRoutes.main);
+    });
+    _isLoading.value = false;
+  }
+
+  // delete account
+
+  void handleDeleteAccount({
+    required String password,
+    required String confirmation,
+  }) async {
+    _isLoading.value = true;
+    final result = await _authServices.deleteAccount(password, confirmation);
+    result.fold((failure) => AppSnackbar.error(failure.message), (_) {
+      AppSnackbar.success('Account deleted successfully');
+      logout();
     });
     _isLoading.value = false;
   }

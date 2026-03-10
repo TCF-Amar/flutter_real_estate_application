@@ -61,34 +61,22 @@ class FavoriteScreen extends GetView<FavoriteController> {
                           child: FavoriteCard(property: property),
                         ),
                       ),
-                      const AppText(
-                        "Saved Agents",
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textSecondary,
-                      ),
+                      controller.savedAgents.isEmpty
+                          ? const SizedBox.shrink()
+                          : const AppText(
+                              "Saved Agents",
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textSecondary,
+                            ),
                       const SizedBox(height: 10),
 
-                      // ...controller.savedAgents.map(
-                      //   (agent) => Padding(
-                      //     padding: const EdgeInsets.only(bottom: 12),
-                      //     child: FavoriteCard(property: agent),
-                      //   ),
-                      // ),
-                      const AppText(
-                        "Saved Developers",
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textSecondary,
+                      ...controller.savedAgents.map(
+                        (agent) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: ExploreAgentCard(agent: agent,onFavoriteTap: () => controller.toggleFavoriteAgent(agent),),
+                        ),
                       ),
-                      const SizedBox(height: 10),
-
-                      // ...controller.savedDevelopers.map(
-                      //   (developer) => Padding(
-                      //     padding: const EdgeInsets.only(bottom: 12),
-                      //     child: FavoriteCard(property: developer),
-                      //   ),
-                      // ),
                     ],
                   ),
                 );

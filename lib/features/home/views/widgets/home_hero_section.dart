@@ -7,11 +7,11 @@ import 'package:real_estate_app/features/shared/widgets/app_image.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
 // FIX #3: Cache the gradient as a const static to prevent recreation
-const _heroGradient = LinearGradient(
+final _heroGradient = LinearGradient(
   colors: [
-    Color.fromARGB(128, 22, 22, 22), // AppColors.background @ 0.50
-    Color.fromARGB(184, 22, 22, 22), // AppColors.background @ 0.72
-    Color.fromARGB(247, 22, 22, 22), // AppColors.background @ 0.97
+    AppColors.background.withValues(alpha: 0.5),
+    AppColors.background.withValues(alpha: 0.7),
+    AppColors.background.withValues(alpha: 1.0),
   ],
   stops: [0.0, 0.50, 1.0],
   begin: Alignment.topCenter,
@@ -65,7 +65,7 @@ class _HomeHeroSectionState extends State<HomeHeroSection> {
         ),
 
         // FIX #3: Use const gradient, avoid Container rebuild
-        Container(decoration: const BoxDecoration(gradient: _heroGradient)),
+        Container(decoration: BoxDecoration(gradient: _heroGradient)),
 
         // FIX #2: Remove pointless SingleChildScrollView + LayoutBuilder
         // FIX #5: Extract padding.top once

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/utils/location_permission_util.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 Future<void> showLocationDialog(BuildContext context) {
   return showDialog(
@@ -8,46 +10,69 @@ Future<void> showLocationDialog(BuildContext context) {
     barrierDismissible: false,
     builder: (context) {
       return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        backgroundColor: AppColors.white,
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                "Enable Location Access",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              Row(
+                children: [
+                  HeaderText(text: "Enable ", color: Colors.green),
+                  HeaderText(text: "Location Access"),
+                ],
               ),
 
               const SizedBox(height: 12),
 
-              const Text(
-                "Allow location access to find properties near you and personalize your experience.",
-                textAlign: TextAlign.center,
+              const AppText(
+                "Allow location access to find properties near you and personalize your experience. You can change this anytime in your app settings.",
+                textAlign: TextAlign.start,
+                fontSize: 12,
+                overflow: TextOverflow.clip,
+                color: AppColors.textSecondary,
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
 
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      child: const Text("Maybe later"),
+                    child: AppButton(
+                      text: "Maybe later",
+                      onPressed: () => Get.back(),
+                      isBorder: true,
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      fontSize: 14,
+                      textColor: AppColors.textSecondary,
+                      showShadow: false,
+                      backgroundColor: AppColors.white,
+                      borderColor: AppColors.textSecondary.withValues(
+                        alpha: 0.2,
+                      ),
                     ),
+                    // OutlinedButton(
+                    //   onPressed: () {
+                    //     Get.back();
+                    //   },
+                    //   child: const Text("Maybe later"),
+                    // ),
                   ),
 
                   const SizedBox(width: 12),
 
                   Expanded(
-                    child: ElevatedButton(
+                    child: AppButton(
+                      text: "Allow",
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      fontSize: 14,
+
                       onPressed: () async {
                         await LocationPermissionUtil.requestPermission();
                         Get.back();
                       },
-                      child: const Text("Allow"),
                     ),
                   ),
                 ],

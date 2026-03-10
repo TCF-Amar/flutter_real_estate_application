@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:real_estate_app/core/constants/app_colors.dart';
 
 class AppText extends StatelessWidget {
   final String text;
@@ -23,9 +24,9 @@ class AppText extends StatelessWidget {
   const AppText(
     this.text, {
     super.key,
-    this.fontSize = 14,
+    this.fontSize = 12,
+    this.color = AppColors.textPrimary,
     this.fontWeight = FontWeight.normal,
-    this.color,
     this.textAlign = TextAlign.start,
     this.maxLines,
     this.overflow = TextOverflow.ellipsis,
@@ -39,15 +40,14 @@ class AppText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // FIX #1: Only look up theme when color is not provided
-    // This avoids unnecessary rebuilds when theme changes
+    
     final textColor =
         color ??
         Color.lerp(
           Colors.black,
           Colors.black87,
           0.87,
-        )!; // Default to safe dark color instead of Theme lookup
+        )!; 
 
     return Text(
       uppercase == true ? text.toUpperCase() : text,

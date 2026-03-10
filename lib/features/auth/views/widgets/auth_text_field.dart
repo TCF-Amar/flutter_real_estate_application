@@ -40,6 +40,8 @@ class AuthTextField extends StatelessWidget {
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           onFieldSubmitted: onFieldSubmitted,
+          borderSideType: BorderSideType.bottom,
+          borderRadius: BorderRadius.circular(0),
 
           isPassword: isPassword,
           prefixIcon: Icon(prefixIcon, size: 20),
@@ -48,7 +50,7 @@ class AuthTextField extends StatelessWidget {
           iconColor: AppColors.white,
           borderColor: AppColors.white.withValues(alpha: 0.3),
           focusedBorderColor: AppColors.primary,
-          border: false,
+          // border: false,
         ),
       ],
     );

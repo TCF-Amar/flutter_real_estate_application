@@ -20,46 +20,34 @@ class TopicCard extends StatelessWidget {
       onTap: () {},
       borderRadius: BorderRadius.circular(14),
       child: Container(
-        padding: const EdgeInsets.all(20),
-        height: 100,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.primary.withValues(alpha: 0.15)),
         ),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                height: 40,
-                width: 40,
-
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: AppSvg(
-                  path: topic.path,
-                  color: AppColors.primary,
-                  height: 10,
-                  width: 10,
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 44,
+              width: 44,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  AppText(
-                    topic.title,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.textPrimary,
-                  ),
-                ],
+              child: AppSvg(
+                path: topic.path,
+                color: AppColors.primary,
+                height: 15,
+                width: 15,
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 10),
+            AppText(topic.title, fontSize: 16, textAlign: TextAlign.center),
+          ],
         ),
       ),
     );

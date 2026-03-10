@@ -18,16 +18,12 @@ class AgentInfo extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
-                Expanded(
-                  child: AppText(
-                    "Agent License: ",
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Expanded(child: AppText("Agent License: ", fontSize: 12)),
                 SizedBox(width: 10),
                 Expanded(
                   child: AppText(
                     controller.agentDetails?.licenseNumber ?? "N/A",
+                    fontSize: 12,
                   ),
                 ),
               ],
@@ -38,11 +34,18 @@ class AgentInfo extends StatelessWidget {
 
               children: [
                 Expanded(
-                  child: AppText("Tax Number: ", fontWeight: FontWeight.bold),
+                  child: AppText(
+                    "Tax Number: ",
+                    // fontWeight: FontWeight.w100,
+                    fontSize: 12,
+                  ),
                 ),
                 SizedBox(width: 10),
                 Expanded(
-                  child: AppText(controller.agentDetails?.taxNumber ?? "N/A"),
+                  child: AppText(
+                    controller.agentDetails?.taxNumber ?? "N/A",
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
@@ -51,14 +54,13 @@ class AgentInfo extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: AppText("Specialities: ", fontWeight: FontWeight.bold),
-                ),
+                Expanded(child: AppText("Specialities: ", fontSize: 12)),
                 SizedBox(width: 10),
                 Expanded(
                   child: AppText(
                     controller.agentDetails?.specialities ?? "N/A",
                     // overflow: TextOverflow.clip,
+                    fontSize: 12,
                     maxLines: 4,
                   ),
                 ),

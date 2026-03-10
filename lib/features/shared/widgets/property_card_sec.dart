@@ -89,14 +89,16 @@ class ModernPropertyCard extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   GestureDetector(
                     onTap: () => onToggleFavorite?.call(),
                     child: CircleAvatar(
+                      backgroundColor: AppColors.white,
                       radius: 18,
-                      child: Icon(
-                        property.isFavorited == true
-                            ? Icons.favorite
-                            : Icons.favorite_border,
+                      child: AppSvg(
+                        path: property.isFavorited == true
+                            ? Assets.icons.heartSelected
+                            : Assets.icons.heart,
                         color: AppColors.primary,
                       ),
                     ),

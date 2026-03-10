@@ -67,7 +67,7 @@ class RecommendedSection extends StatelessWidget {
                 for (int i = 0; i < properties.length; i++) ...[
                   if (i > 0) const SizedBox(height: 16),
                   PropertyCard(
-                    item: properties[i],
+                    property: properties[i],
                     featured: true,
                     onTap: () {
                       Get.toNamed(
@@ -76,7 +76,9 @@ class RecommendedSection extends StatelessWidget {
                       );
                     },
                     onFavoriteTap: () {
-                      controller.toggleFavorite(propertyId: properties[i].id);
+                      controller.toggleFavoriteProperty(
+                        propertyId: properties[i].id,
+                      );
                     },
                   ),
                 ],
@@ -91,9 +93,6 @@ class RecommendedSection extends StatelessWidget {
   }
 }
 
-/// Isolated StatefulWidget for the filter chip row.
-/// Only this widget rebuilds when the active filter changes — the parent
-/// section and the card list are unaffected by the setState call.
 class _FilterChipRow extends StatefulWidget {
   final HomeController controller;
   const _FilterChipRow({required this.controller});

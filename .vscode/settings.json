@@ -8,8 +8,6 @@
   "files.watcherExclude": {
     "**/.fvm": true
   },
-  "cSpell.words": [
-    "insta",
-    "pana"
-  ]
+  "cSpell.words": ["insta", "pana"],
+  "cmake.sourceDirectory": "C:/Users/amarj/OneDrive/Desktop/real_estate_app/linux"
 }

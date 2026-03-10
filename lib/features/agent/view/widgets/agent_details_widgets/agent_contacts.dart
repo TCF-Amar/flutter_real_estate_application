@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_details_controller.dart';
+import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
 class AgentContacts extends StatelessWidget {
@@ -33,9 +34,14 @@ class AgentContacts extends StatelessWidget {
               ),
               title: AppText(
                 controller.agentDetails?.phone ?? "N/A",
-                fontWeight: FontWeight.w500,
+                // fontWeight: FontWeight.w500,
+                fontSize: 14,
               ),
-              subtitle: const Text("Phone number"),
+              subtitle: const AppText(
+                "Phone number",
+                fontSize: 10,
+                color: AppColors.textSecondary,
+              ),
             ),
 
             ListTile(
@@ -48,23 +54,31 @@ class AgentContacts extends StatelessWidget {
               ),
               title: AppText(
                 controller.agentDetails?.email ?? "N/A",
-                fontWeight: FontWeight.w500,
+                fontSize: 14,
               ),
-              subtitle: const Text("Email"),
+              subtitle: const AppText(
+                "Email",
+                color: AppColors.textSecondary,
+                fontSize: 10,
+              ),
             ),
 
             ListTile(
-              leading: SvgPicture.asset(
-                Assets.icons.location,
+              leading: AppSvg(
+                path: Assets.icons.location,
+                height: 20,
                 width: 20,
-                // height: 24,
-                colorFilter: ColorFilter.mode(AppColors.grey, BlendMode.srcIn),
+                color: AppColors.grey,
               ),
               title: AppText(
                 controller.agentDetails?.location ?? "N/A",
-                fontWeight: FontWeight.w500,
+                fontSize: 14,
               ),
-              subtitle: const Text("Location"),
+              subtitle: const AppText(
+                "Location",
+                color: AppColors.textSecondary,
+                fontSize: 10,
+              ),
             ),
           ],
         ),

@@ -5,6 +5,7 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
+import 'package:real_estate_app/features/shared/widgets/app_container.dart';
 import 'package:real_estate_app/features/shared/widgets/app_image.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
@@ -32,7 +33,22 @@ class FeaturedPropertiesSection extends StatelessWidget {
       }
 
       if (controller.featuredProperties.isEmpty) {
-        return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: AppContainer(
+            height: 200,
+            // showBorder: true,
+            child: Center(
+              child: AppText(
+                controller.error?.message ?? 'Something went wrong',
+                fontSize: 16,
+                color: AppColors.textSecondary,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.clip,
+              ),
+            ),
+          ),
+        );
       }
 
       final items = controller.featuredProperties;
@@ -127,7 +143,6 @@ class _FeaturedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () =>
           Get.toNamed(AppRoutes.propertyDetails, arguments: {'id': item.id}),

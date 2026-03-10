@@ -38,7 +38,7 @@ class SavedAndChips extends StatelessWidget {
               color: AppColors.primary,
             ),
             onPressed: () {
-              controller.toggleFavorite();
+              controller.updateDetailsFavorite();
             },
           ),
           //? saved

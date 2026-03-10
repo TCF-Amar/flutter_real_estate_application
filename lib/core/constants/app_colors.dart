@@ -7,9 +7,11 @@ class AppColors {
 
   static const Color background = Color(0xFF1B0E40);
 
-  static const Color textPrimary = Color(0xFF212121);
+  static const Color textPrimary = Color.fromRGBO(54, 56, 56, 1);
 
-  static const Color textSecondary = Color(0xFF757575);
+  static const Color textSecondary = Color.fromRGBO(142, 142, 142, 1);
+
+  static const Color textTertiary = Color.fromRGBO(102, 102, 102, 1);
 
   static const Color success = Color(0xFF00C853);
 

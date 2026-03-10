@@ -11,9 +11,9 @@ class SavedResponse {
 
   factory SavedResponse.fromJson(Map<String, dynamic> json) {
     return SavedResponse(
-      status: json['status'] as bool,
-      message: json['message'] as String,
-      isFavorite: json['is_favorite'] as bool,
+      status: json['status'] ?? false,
+      message: json['message'] ?? '',
+      isFavorite: json['is_favorite'] ?? false,
     );
   }
 

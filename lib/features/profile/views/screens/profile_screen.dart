@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
 import 'package:real_estate_app/features/profile/views/widgets/profile_header_section.dart';
 import 'package:real_estate_app/features/profile/views/widgets/profile_option.dart';
@@ -11,6 +12,7 @@ class ProfileScreen extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
+    // final authController = Get.find<AuthController>();
     return RefreshIndicator(
       onRefresh: () async {
         await controller.refreshProfile();
@@ -19,6 +21,28 @@ class ProfileScreen extends GetView<ProfileController> {
         body: Obx(() {
           if (controller.refreshing) {
             return const Center(child: CircularProgressIndicator());
+          }
+          if (controller.user.value == null) {
+            return Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppText(
+                    controller.error?.message ?? 'Something went wrong',
+                    overflow: TextOverflow.clip,
+                    color: AppColors.textTertiary,
+                    fontSize: 16,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  AppButton(
+                    text: "Retry",
+                    onPressed: controller.refreshProfile,
+                  ),
+                ],
+              ),
+            );
           }
           return CustomScrollView(
             slivers: [

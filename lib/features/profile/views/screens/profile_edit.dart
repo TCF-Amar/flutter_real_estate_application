@@ -163,6 +163,7 @@ class _EmailField extends StatelessWidget {
             Expanded(
               child: AppButton(
                 text: user.emailVerified ? 'Verified' : 'Verify',
+                onPressed: () {},
                 fontSize: 14,
                 backgroundColor: user.emailVerified
                     ? AppColors.primary
@@ -223,7 +224,9 @@ class _PhoneField extends StatelessWidget {
                 backgroundColor: user.phoneVerified
                     ? AppColors.primary
                     : Colors.transparent,
+                onPressed: () {},
                 showShadow: user.phoneVerified,
+                isLoading: false,
                 isBorder: !user.phoneVerified,
                 borderColor: AppColors.primary,
                 textColor: user.phoneVerified ? null : AppColors.primary,
@@ -245,10 +248,15 @@ class _SaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => AppButton(
-        text: 'Save',
-        isLoading: controller.isUpdating,
-        onPressed: controller.updateProfile,
+      () => Column(
+        children: [
+          AppButton(
+            text: 'Save',
+
+            isLoading: controller.isUpdating,
+            onPressed: controller.updateProfile,
+          ),
+        ],
       ),
     );
   }
