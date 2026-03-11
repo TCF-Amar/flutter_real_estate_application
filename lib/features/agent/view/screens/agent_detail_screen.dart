@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_details_controller.dart';
-import 'package:real_estate_app/features/agent/view/widgets/agent_details_widgets/agent_AEL.dart';
+import 'package:real_estate_app/features/agent/view/widgets/agent_details_widgets/agent_ael.dart';
 import 'package:real_estate_app/features/agent/view/widgets/agent_details_widgets/index.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
@@ -43,7 +43,7 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
             ),
 
             // Name + role + agency
-            AgentAEL(),
+            AgentAel(),
 
             AgentInfo(),
 

@@ -17,7 +17,6 @@ import 'package:real_estate_app/features/profile/views/screens/support/support_d
 import 'package:real_estate_app/features/profile/views/screens/support/support_screen.dart';
 import 'package:real_estate_app/features/property/bindings/property_details_binding.dart';
 import 'package:real_estate_app/features/property/views/screens/property_details_screen.dart';
-import 'package:real_estate_app/features/home/bindings/home_binding.dart';
 import 'package:real_estate_app/features/initial/views/screens/get_start_screens.dart';
 import 'package:real_estate_app/features/initial/views/screens/splash_screen.dart';
 import 'package:real_estate_app/features/main/bindings/main_binding.dart';
@@ -39,7 +38,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.main,
       page: () => MainScreen(),
-      bindings: [HomeBinding(), MainBinding()],
+      bindings: [MainBinding()],
     ),
     GetPage(name: AppRoutes.search, page: () => SearchScreen()),
     GetPage(

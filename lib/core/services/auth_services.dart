@@ -181,4 +181,48 @@ class AuthServices extends GetxService {
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }
+
+  FutureResult<bool> requestToUpdate(String fieldType, String value) async {
+    try {
+      final res = await _dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.requestToUpdate,
+          method: ApiMethod.post,
+          body: {'type': fieldType, 'value': value},
+        ),
+      );
+
+      log.d('OTP sent successfully ${res.data}');
+
+      return const Right(true);
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
+
+  FutureResult<bool> verifyChangeOtp(
+    String fieldType,
+    String value,
+    String otp,
+  ) async {
+    try {
+      final res = await _dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.verifyChangeOtp,
+          method: ApiMethod.post,
+          body: {'type': fieldType, 'value': value, 'otp': otp},
+        ),
+      );
+
+      log.d('OTP sent successfully ${res.data}');
+
+      return const Right(true);
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
 }

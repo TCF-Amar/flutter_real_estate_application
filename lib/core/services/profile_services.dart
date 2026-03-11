@@ -40,14 +40,8 @@ class ProfileServices {
     }
   }
 
-  FutureResult<BasicInfoUpdateModel> updateBasicInfo(
-    BasicInfoUpdateModel req,
-  ) async {
-    final data = {
-      if (req.fullName.isNotEmpty) 'full_name': req.fullName,
-      if (req.email.isNotEmpty) 'email': req.email,
-      if (req.phone.isNotEmpty) 'phone': req.phone,
-    };
+  FutureResult<BasicInfoUpdateModel> updateBasicInfo(String name) async {
+    final data = {if (name.isNotEmpty) 'full_name': name};
     try {
       final res = await dio.request(
         ApiRequest(

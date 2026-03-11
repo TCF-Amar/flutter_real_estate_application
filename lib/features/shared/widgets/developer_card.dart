@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class DeveloperCard extends StatelessWidget {

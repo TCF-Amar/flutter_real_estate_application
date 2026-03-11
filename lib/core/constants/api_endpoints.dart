@@ -55,4 +55,7 @@ class ApiEndpoints {
 
   // ── Notifications ─────────────────────────────────────────────────────────
   static const String deleteAccount = "$_profile/delete-account";
+
+  static const String requestToUpdate = "$_buyer/request-change-otp";
+  static const String verifyChangeOtp = "$_buyer/verify-change-otp";
 }

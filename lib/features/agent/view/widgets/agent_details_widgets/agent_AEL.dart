@@ -1,11 +1,12 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_details_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 
-class AgentAEL extends StatelessWidget {
-  const AgentAEL({super.key});
+class AgentAel extends StatelessWidget {
+  const AgentAel({super.key});
 
   @override
   Widget build(BuildContext context) {

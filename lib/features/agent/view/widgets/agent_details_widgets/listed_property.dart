@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_details_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
-import 'package:real_estate_app/features/shared/widgets/load_more_button.dart';
 
 class ListedProperty extends StatefulWidget {
   const ListedProperty({super.key});

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
@@ -14,8 +13,6 @@ Future<bool?> showLogoutDialog(BuildContext context) {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Row(
           children: [
-            AppSvg(path: Assets.icons.exit, color: Colors.red, height: 18),
-            SizedBox(width: 8),
             AppText(
               "Logout",
               color: AppColors.error,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
 import 'package:real_estate_app/features/profile/views/widgets/profile_header_section.dart';
 import 'package:real_estate_app/features/profile/views/widgets/profile_option.dart';

@@ -11,7 +11,6 @@ void accountDeleteConfirmation(BuildContext context, Function onDelete) {
       return AlertDialog(
         title: Row(
           children: [
-            const Icon(Icons.delete, color: AppColors.error, size: 18),
             const AppText(
               'Delete ',
               fontSize: 16,

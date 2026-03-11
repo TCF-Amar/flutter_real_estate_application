@@ -115,6 +115,7 @@ class _NameField extends StatelessWidget {
           controller: controller.nameController,
           borderSideType: BorderSideType.bottom,
           fontSize: 14,
+          borderRadius: BorderRadius.zero,
           keyboardType: TextInputType.name,
           borderColor: AppColors.grey.withValues(alpha: 0.2),
           prefixIcon: AppSvg(path: Assets.icons.person, width: 12, height: 12),
@@ -142,36 +143,47 @@ class _EmailField extends StatelessWidget {
           children: [
             Expanded(
               flex: 3,
-              child: AppTextFormField(
-                hintText: 'Enter email',
-                fontSize: 14,
-                controller: controller.emailController,
-                borderSideType: BorderSideType.bottom,
-                borderColor: AppColors.grey.withValues(alpha: 0.2),
-                keyboardType: TextInputType.emailAddress,
-                prefixIcon: AppSvg(
-                  path: Assets.icons.mail,
-                  width: 12,
-                  height: 12,
+              child: Obx(
+                () => AppTextFormField(
+                  hintText: 'Enter email',
+                  fontSize: 14,
+                  controller: controller.emailController,
+                  borderSideType: BorderSideType.bottom,
+                  borderColor: AppColors.grey.withValues(alpha: 0.2),
+                  keyboardType: TextInputType.emailAddress,
+                  borderRadius: BorderRadius.zero,
+
+                  prefixIcon: AppSvg(
+                    path: Assets.icons.mail,
+                    width: 12,
+                    height: 12,
+                  ),
+                  suffixIcon: controller.isEmailVerified
+                      ? Icon(Icons.verified, color: AppColors.primary)
+                      : null,
                 ),
-                suffixIcon: user.emailVerified
-                    ? Icon(Icons.verified, color: AppColors.primary)
-                    : null,
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: AppButton(
-                text: user.emailVerified ? 'Verified' : 'Verify',
-                onPressed: () {},
-                fontSize: 14,
-                backgroundColor: user.emailVerified
-                    ? AppColors.primary
-                    : Colors.transparent,
-                showShadow: user.emailVerified,
-                isBorder: !user.emailVerified,
-                borderColor: AppColors.primary,
-                textColor: user.emailVerified ? null : AppColors.primary,
+              child: Obx(
+                () => AppButton(
+                  text: controller.isEmailVerified ? 'Verified' : 'Verify',
+                  onPressed: controller.isEmailVerified
+                      ? () {}
+                      : () => controller.verifyField('email'),
+                  fontSize: 14,
+                  backgroundColor: controller.isEmailVerified
+                      ? AppColors.primary
+                      : Colors.transparent,
+                  showShadow: controller.isEmailVerified,
+                  isLoading: controller.isVerifyingEmail,
+                  isBorder: !controller.isEmailVerified,
+                  borderColor: AppColors.primary,
+                  textColor: controller.isEmailVerified
+                      ? null
+                      : AppColors.primary,
+                ),
               ),
             ),
           ],
@@ -199,37 +211,49 @@ class _PhoneField extends StatelessWidget {
           children: [
             Expanded(
               flex: 3,
-              child: AppTextFormField(
-                hintText: 'Enter phone number',
-                fontSize: 14,
-                controller: controller.phoneController,
-                borderSideType: BorderSideType.bottom,
-                borderColor: AppColors.grey.withValues(alpha: 0.2),
-                keyboardType: TextInputType.phone,
-                prefixIcon: AppSvg(
-                  path: Assets.icons.phone,
-                  width: 12,
-                  height: 12,
+              child: Obx(
+                () => AppTextFormField(
+                  hintText: 'Enter phone number',
+                  fontSize: 14,
+                  controller: controller.phoneController,
+                  borderSideType: BorderSideType.bottom,
+                  borderColor: AppColors.grey.withValues(alpha: 0.2),
+                  keyboardType: TextInputType.phone,
+                  borderRadius: BorderRadius.zero,
+
+                  prefixIcon: AppSvg(
+                    path: Assets.icons.phone,
+                    width: 12,
+                    height: 12,
+                  ),
+                  suffixIcon: controller.isPhoneVerified
+                      ? Icon(Icons.verified, color: AppColors.primary)
+                      : null,
                 ),
-                suffixIcon: user.phoneVerified
-                    ? Icon(Icons.verified, color: AppColors.primary)
-                    : null,
               ),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: AppButton(
-                text: user.phoneVerified ? 'Verified' : 'Verify',
-                fontSize: 14,
-                backgroundColor: user.phoneVerified
-                    ? AppColors.primary
-                    : Colors.transparent,
-                onPressed: () {},
-                showShadow: user.phoneVerified,
-                isLoading: false,
-                isBorder: !user.phoneVerified,
-                borderColor: AppColors.primary,
-                textColor: user.phoneVerified ? null : AppColors.primary,
+              child: Obx(
+                () => AppButton(
+                  text: controller.isPhoneVerified ? 'Verified' : 'Verify',
+                  fontSize: 14,
+                  backgroundColor: controller.isPhoneVerified
+                      ? AppColors.primary
+                      : Colors.transparent,
+                  onPressed: controller.isPhoneVerified
+                      ? () {}
+                      : () {
+                          controller.verifyField('phone');
+                        },
+                  showShadow: controller.isPhoneVerified,
+                  isLoading: controller.isVerifyingPhone,
+                  isBorder: !controller.isPhoneVerified,
+                  borderColor: AppColors.primary,
+                  textColor: controller.isPhoneVerified
+                      ? null
+                      : AppColors.primary,
+                ),
               ),
             ),
           ],
@@ -252,7 +276,6 @@ class _SaveButton extends StatelessWidget {
         children: [
           AppButton(
             text: 'Save',
-
             isLoading: controller.isUpdating,
             onPressed: controller.updateProfile,
           ),
