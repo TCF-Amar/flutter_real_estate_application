@@ -70,6 +70,7 @@ class _AvatarSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50),
                   child: AppImage(
                     path: user.profileImage,
+                    errorImagePath: Assets.icons.person,
                     width: 100,
                     height: 100,
                     fit: BoxFit.cover,

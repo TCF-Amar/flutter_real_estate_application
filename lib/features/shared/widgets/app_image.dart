@@ -76,12 +76,23 @@ class AppImage extends StatelessWidget {
         color: Colors.grey.shade200,
       ),
       alignment: Alignment.center,
-      child: errorImagePath != null && errorImagePath!.isNotEmpty
-          ? AppSvg(path: errorImagePath!)
-          : Icon(
-              errorIcon ?? Icons.image_not_supported,
-              color: Colors.grey.shade400,
-            ),
+      child: _buildErrorChild(),
+    );
+  }
+
+  Widget _buildErrorChild() {
+    if (errorImagePath != null && errorImagePath!.isNotEmpty) {
+      if (errorImagePath!.endsWith('.svg')) {
+        return AppSvg(path: errorImagePath!);
+      }
+      return Icon(
+        Icons.image_not_supported,
+        color: Colors.grey.shade400,
+      );
+    }
+    return Icon(
+      errorIcon ?? Icons.image_not_supported,
+      color: Colors.grey.shade400,
     );
   }
 }
