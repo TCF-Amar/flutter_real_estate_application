@@ -63,9 +63,10 @@ class VerifyCodeScreen extends GetView<AuthController> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: AppText(
-                    "We've sent a 6-digit code to your email — enter it below to verify your account.",
-                    fontSize: 16,
+                    "We've sent a 6-digit code to your email enter it below to verify your account.",
+                    fontSize: 14,
                     fontWeight: FontWeight.w400,
+                    overflow: .clip,
                     color: AppColors.white.withValues(alpha: 0.9),
                     textAlign: TextAlign.center,
                   ),

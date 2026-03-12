@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/services/agent_services.dart';
 import 'package:real_estate_app/features/agent/models/agent_model.dart';
@@ -11,6 +12,9 @@ class AgentController extends GetxController {
   final RxBool _isLoadingList = false.obs;
   final RxBool isLoadingMore = false.obs;
   bool get isLoadingList => _isLoadingList.value;
+
+  final Rxn<Failure> _error = Rxn<Failure>();
+  Failure? get error => _error.value;
 
   final RxList<AgentModel> _agents = RxList([]);
   List<AgentModel> get agents => _agents;
@@ -86,29 +90,36 @@ class AgentController extends GetxController {
     }
 
     final result = await services.getAgents();
-    result.fold((l) => log.e('fetchAgents error: ${l.message}'), (r) {
-      final pagination = r.data.pagination;
-      currentPage.value = pagination.currentPage;
-      lastPage.value = pagination.lastPage;
-      totalAgents.value = pagination.total;
-      perPage.value = pagination.perPage;
+    result.fold(
+      (l) {
+        log.e('fetchAgents error: ${l.message}');
+        _error.value = l; // Set the error value
+      },
+      (r) {
+        _error.value = null; // Clear any previous error on success
+        final pagination = r.data.pagination;
+        currentPage.value = pagination.currentPage;
+        lastPage.value = pagination.lastPage;
+        totalAgents.value = pagination.total;
+        perPage.value = pagination.perPage;
 
-      if (resetPage) {
-        _agents.assignAll(r.data.agents);
-        agentCache.clear();
-      } else {
-        _agents.addAll(r.data.agents);
-      }
+        if (resetPage) {
+          _agents.assignAll(r.data.agents);
+          agentCache.clear();
+        } else {
+          _agents.addAll(r.data.agents);
+        }
 
-      for (final agent in r.data.agents) {
-        agentCache[agent.id] = agent;
-      }
+        for (final agent in r.data.agents) {
+          agentCache[agent.id] = agent;
+        }
 
-      log.d(
-        'Page ${pagination.currentPage}/${pagination.lastPage} — '
-        '${r.data.agents.length} agents loaded (total: ${pagination.total})',
-      );
-    });
+        log.d(
+          'Page ${pagination.currentPage}/${pagination.lastPage} — '
+          '${r.data.agents.length} agents loaded (total: ${pagination.total})',
+        );
+      },
+    );
 
     _isLoadingList.value = false;
     isLoadingMore.value = false;

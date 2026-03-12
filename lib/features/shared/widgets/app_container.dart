@@ -21,6 +21,7 @@ class AppContainer extends StatelessWidget {
 
   final bool? showBorder;
   final Border? border;
+  final VoidCallback? onTap;
 
   const AppContainer({
     super.key,
@@ -36,12 +37,14 @@ class AppContainer extends StatelessWidget {
     this.boxShadow,
     this.showShadow = false,
     this.showBorder = false,
-    this.border,
+    this.border, this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
       height: height,
       width: width,
       padding: padding ?? const EdgeInsets.all(16),
@@ -68,6 +71,6 @@ class AppContainer extends StatelessWidget {
             : boxShadow,
       ),
       child: child,
-    );
+    ));
   }
 }

@@ -5,9 +5,9 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
-
 class SelectCountryScreen extends GetView<AuthController> {
-  const SelectCountryScreen({super.key});
+  final VoidCallback? onPress;
+  const SelectCountryScreen({super.key, this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -20,32 +20,19 @@ class SelectCountryScreen extends GetView<AuthController> {
     );
 
     return Scaffold(
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AppBackButton(),
+        ),
+        title: HeaderText(text: "Select Country"),
+        centerTitle: true,
+      ),
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: Column(
           children: [
             // Header — back button
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.background.withValues(alpha: 0.05),
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      onPressed: () => Get.back(),
-                      icon: Icon(
-                        Icons.arrow_back_ios_new,
-                        size: 20,
-                        color: AppColors.background,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             // Content
             Expanded(
@@ -54,15 +41,6 @@ class SelectCountryScreen extends GetView<AuthController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 16),
-
-                    AppText(
-                      "Select Country",
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.background,
-                    ),
-
                     const SizedBox(height: 16),
 
                     AppText(
@@ -184,7 +162,7 @@ class SelectCountryScreen extends GetView<AuthController> {
               padding: const EdgeInsets.all(24),
               child: AppButton(
                 text: "Continue",
-                onPressed: controller.handleContinue,
+                onPressed: onPress ?? controller.handleContinue,
                 backgroundColor: AppColors.primary,
                 textColor: AppColors.white,
               ),

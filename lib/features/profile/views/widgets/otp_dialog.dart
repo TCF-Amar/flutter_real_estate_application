@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-import 'package:real_estate_app/core/services/auth_services.dart';
+import 'package:real_estate_app/core/services/profile_services.dart';
 import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
@@ -10,8 +10,10 @@ void showOtpDialog(String fieldType, String targetValue) {
   final otpController = TextEditingController();
   final isVerifying = false.obs;
 
-  final authServices = Get.find<AuthServices>();
-  final profileController = Get.find<ProfileController>();
+  // final authServices = Get.find<AuthServices>();
+
+  final controller = Get.find<ProfileController>();
+  final services = Get.find<ProfileServices>();
 
   Get.dialog(
     AlertDialog(
@@ -81,7 +83,7 @@ void showOtpDialog(String fieldType, String targetValue) {
                     }
 
                     isVerifying.value = true;
-                    final result = await authServices.verifyChangeOtp(
+                    final result = await services.verifyChangeOtp(
                       fieldType,
                       targetValue,
                       otp,
@@ -95,7 +97,7 @@ void showOtpDialog(String fieldType, String targetValue) {
                           '${fieldType.capitalizeFirst} verified!',
                         );
                         Get.back();
-                        profileController.markFieldAsVerifiedLocally(
+                        controller.markFieldAsVerifiedLocally(
                           fieldType,
                           targetValue,
                         );

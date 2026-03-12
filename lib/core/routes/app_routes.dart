@@ -30,6 +30,7 @@ class AppRoutes {
   /// Profile
   static const String profile = '/profile';
   static const String editProfile = '$profile/edit-profile';
+  static const String settings = '$profile/settings';
 
   /// Support
   static const String support = '$profile/support';
@@ -38,4 +39,6 @@ class AppRoutes {
 
   // account detection
   static const String accountDelete = '/account-delete';
+
+  static const String changePassword = "$profile/change-password";
 }

@@ -102,7 +102,7 @@ class _HeroContent extends StatelessWidget {
         left: 20,
         right: 20,
         top: topPadding + 30,
-        bottom: searchBarHeight + 20,
+        bottom: searchBarHeight,
       ),
       child: SingleChildScrollView(
         // Actually scrollable content here
@@ -113,12 +113,12 @@ class _HeroContent extends StatelessWidget {
             // Only header row has opacity animation
             _HeaderRow(auth: auth, collapsedHeight: collapsedHeight),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
 
             // FIX #4: Single Opacity wrapper for text content
             _HeadlineText(collapsedHeight: collapsedHeight),
 
-            const SizedBox(height: 14),
+            const SizedBox(height: 1),
           ],
         ),
       ),
@@ -208,7 +208,7 @@ class _HeadlineText extends StatelessWidget {
       child: const AppText(
         'Find your perfect property to\nbuy or rent.',
         color: AppColors.white,
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: FontWeight.w500,
         height: 1.4,
         overflow: TextOverflow.visible,

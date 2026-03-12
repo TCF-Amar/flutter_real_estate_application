@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/services/property_services.dart';
 import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
@@ -29,6 +31,9 @@ class PropertyController extends GetxController {
   bool get isFilterLoading => _isFilterLoading.value;
   bool get isMoreLoading => _isMoreLoading.value;
 
+  final Rxn<Failure> _error = Rxn<Failure>();
+  Failure? get error => _error.value;
+
   // ─── Property Data ───────────────────────────────────────────────────────────
 
   final _properties = RxList<Property>([]);
@@ -54,6 +59,10 @@ class PropertyController extends GetxController {
   final selectedIndex = 0.obs;
   final searchController = TextEditingController();
   final searchQuery = ''.obs;
+
+  // ─── Header Visibility ───────────────────────────────────────────────────────
+
+  final isHeaderVisible = true.obs;
 
   // ─── Filters ─────────────────────────────────────────────────────────────────
 
@@ -102,6 +111,13 @@ class PropertyController extends GetxController {
   }
 
   void _onScroll() {
+    if (scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse) {
+      if (isHeaderVisible.value) isHeaderVisible.value = false;
+    } else {
+      if (!isHeaderVisible.value) isHeaderVisible.value = true;
+    }
+
     if (scrollController.position.pixels >=
             scrollController.position.maxScrollExtent - 200 &&
         !isLoading &&
@@ -225,7 +241,16 @@ class PropertyController extends GetxController {
   Future<void> _fetchFilterData() async {
     _isFilterLoading.value = true;
     final result = await _propertyServices.getFilterData();
-    result.fold((l) => null, (r) => filterData.value = r);
+    result.fold(
+      (l) {
+        _error.value = l;
+        return null;
+      },
+      (r) {
+        _error.value = null;
+        filterData.value = r;
+      },
+    );
     _isFilterLoading.value = false;
   }
 
@@ -237,23 +262,30 @@ class PropertyController extends GetxController {
     }
 
     final result = await _propertyServices.searchProperties();
-    result.fold((l) => log.e('Error fetching properties: ${l.message}'), (r) {
-      log.d(
-        'Fetched ${r.data.length} properties — page ${_propertyServices.page.value}',
-      );
-      if (_propertyServices.page.value == 1) {
-        _properties.assignAll(r.data);
-        _filteredProperties.assignAll(r.data);
-      } else {
-        _properties.addAll(r.data);
-        _filteredProperties.addAll(r.data);
-      }
-      _isEmpty.value = _properties.isEmpty;
-      currentPage.value = r.pagination?.currentPage ?? 1;
-      totalItems.value = r.pagination?.total ?? _properties.length;
-      lastPage.value = r.pagination?.lastPage ?? 1;
-      perPage.value = r.pagination?.perPage ?? 5;
-    });
+    result.fold(
+      (l) {
+        _error.value = l;
+        log.e('Error fetching properties: ${l.message}');
+      },
+      (r) {
+        _error.value = null;
+        log.d(
+          'Fetched ${r.data.length} properties — page ${_propertyServices.page.value}',
+        );
+        if (_propertyServices.page.value == 1) {
+          _properties.assignAll(r.data);
+          _filteredProperties.assignAll(r.data);
+        } else {
+          _properties.addAll(r.data);
+          _filteredProperties.addAll(r.data);
+        }
+        _isEmpty.value = _properties.isEmpty;
+        currentPage.value = r.pagination?.currentPage ?? 1;
+        totalItems.value = r.pagination?.total ?? _properties.length;
+        lastPage.value = r.pagination?.lastPage ?? 1;
+        perPage.value = r.pagination?.perPage ?? 5;
+      },
+    );
 
     _applySortToList();
     _isLoading.value = false;

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/services/agent_services.dart';
 import 'package:real_estate_app/core/services/property_services.dart';
@@ -23,6 +24,9 @@ class FavoriteController extends GetxController {
 
   final RxBool _isLoading = false.obs;
   bool get isLoading => _isLoading.value;
+
+  final Rxn<Failure> _error = Rxn<Failure>();
+  Failure? get error => _error.value;
 
   @override
   void onInit() {
@@ -97,6 +101,7 @@ class FavoriteController extends GetxController {
     result.fold(
       (failure) {
         _isLoading.value = false;
+        _error.value = failure;
         log.e("Failed to fetch saved properties: ${failure.message}");
       },
       (res) {
@@ -113,6 +118,7 @@ class FavoriteController extends GetxController {
     result.fold(
       (failure) {
         _isLoading.value = false;
+        _error.value = failure;
         log.e("Failed to fetch saved agents: ${failure.message}");
       },
       (res) {
@@ -158,6 +164,7 @@ class FavoriteController extends GetxController {
 
     result.fold(
       (failure) {
+        _error.value = failure;
         log.e("Favorite API failed: ${failure.message}");
       },
       (_) {

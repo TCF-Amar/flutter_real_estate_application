@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/errors/failure.dart';
-import 'package:real_estate_app/core/services/auth_services.dart';
 import 'package:real_estate_app/core/services/profile_services.dart';
 import 'package:real_estate_app/core/utils/image_picker_util.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/profile/views/widgets/image_preview.dart';
 import 'package:real_estate_app/features/profile/views/widgets/otp_dialog.dart';
+import 'package:real_estate_app/features/shared/models/profile_model.dart';
 import 'package:real_estate_app/features/shared/models/user_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
 
@@ -22,6 +22,8 @@ class ProfileController extends GetxController {
   // ─── User ────────────────────────────────────────────────────────────────────
 
   Rxn<UserModel> get user => _authController.user;
+  Rxn<ProfileModel> get profile => _authController.userProfile;
+
 
   // ─── Text Controllers ────────────────────────────────────────────────────────
 
@@ -93,15 +95,21 @@ class ProfileController extends GetxController {
 
     final result = await _profileServices.updateAvatar(image!);
 
-    result.fold((failure) => log.e(failure.message), (url) async {
-      _authController.user.value = _authController.user.value?.copyWith(
-        profileImage: url,
-      );
-      if (await image!.exists()) {
-        await image!.delete();
-        log.d('Avatar temp file deleted');
-      }
-    });
+    result.fold(
+      (failure) {
+        log.e(failure.message);
+        _authController.setError(failure);
+      },
+      (url) async {
+        _authController.user.value = _authController.user.value?.copyWith(
+          profileImage: url,
+        );
+        if (await image!.exists()) {
+          await image!.delete();
+          log.d('Avatar temp file deleted');
+        }
+      },
+    );
 
     _isUploading.value = false;
   }
@@ -166,16 +174,20 @@ class ProfileController extends GetxController {
   Future<void> _updateUserData({required String name}) async {
     final result = await _profileServices.updateBasicInfo(name);
 
-    result.fold((failure) => log.e(failure.message), (data) {
-      final current = _authController.user.value;
-      if (current == null) return;
-      _authController.user.value = current.copyWith(fullName: data.fullName);
-    });
+    result.fold(
+      (failure) {
+        log.e(failure.message);
+        _authController.setError(failure);
+      },
+      (data) {
+        final current = _authController.user.value;
+        if (current == null) return;
+        _authController.user.value = current.copyWith(fullName: data.fullName);
+      },
+    );
   }
 
   // ─── Verify OTP Dialog ───────────────────────────────────────────────────────
-
-  final _authServices = Get.find<AuthServices>();
 
   Future<void> verifyField(String fieldType) async {
     final targetValue = fieldType == 'email'
@@ -191,13 +203,17 @@ class ProfileController extends GetxController {
         ? _isVerifyingEmail
         : _isVerifyingPhone;
     isVerifyingFlag.value = true;
-    final result = await _authServices.requestToUpdate(fieldType, targetValue);
+    final result = await _profileServices.requestToUpdate(
+      fieldType,
+      targetValue,
+    );
     isVerifyingFlag.value = false;
 
     result.fold(
       (failure) {
         log.e(failure.message);
         AppSnackbar.error(failure.message);
+        _authController.setError(failure);
       },
       (_) {
         // Success sending code, open BottomSheet or Dialog
@@ -230,5 +246,52 @@ class ProfileController extends GetxController {
     emailController.dispose();
     phoneController.dispose();
     super.onClose();
+  }
+
+  void handleDeleteAccount({
+    required String password,
+    required String confirmation,
+  }) async {
+    // _isLoading.value = true;
+    final result = await _profileServices.deleteAccount(password, confirmation);
+    result.fold(
+      (failure) {
+        AppSnackbar.error(failure.message);
+        _authController.setError(failure);
+      },
+      (_) {
+        AppSnackbar.success('Account deleted successfully');
+        _authController.logout();
+      },
+    );
+    // _isLoading.value = false;
+  }
+
+  final currentPassword = ''.obs;
+  final newPassword = ''.obs;
+  final confirmPassword = ''.obs;
+  final passChanging = false.obs;
+
+  Future<void> changePassword() async {
+    passChanging.value = true;
+    final result = await _profileServices.changePassword(
+      currentPassword: currentPassword.value,
+      newPassword: newPassword.value,
+      confirmPassword: confirmPassword.value,
+    );
+    result.fold(
+      (failure) {
+        AppSnackbar.error(failure.message);
+        _authController.setError(failure);
+      },
+      (_) {
+        AppSnackbar.success('Password changed successfully');
+        currentPassword.value = '';
+        newPassword.value = '';
+        confirmPassword.value = '';
+        Get.back();
+      },
+    );
+    passChanging.value = false;
   }
 }

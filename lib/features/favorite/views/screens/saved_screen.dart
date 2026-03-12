@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
 import 'package:real_estate_app/features/favorite/views/widgets/favorite_card.dart';
 import 'package:real_estate_app/features/main/controllers/main_controller.dart';
@@ -74,7 +75,15 @@ class FavoriteScreen extends GetView<FavoriteController> {
                       ...controller.savedAgents.map(
                         (agent) => Padding(
                           padding: const EdgeInsets.only(bottom: 12),
-                          child: ExploreAgentCard(agent: agent,onFavoriteTap: () => controller.toggleFavoriteAgent(agent),),
+                          child: ExploreAgentCard(
+                            agent: agent,
+                            onFavoriteTap: () =>
+                                controller.toggleFavoriteAgent(agent),
+                            onTap: () => Get.toNamed(
+                              AppRoutes.agentDetails,
+                              arguments: {"id": agent.id},
+                            ),
+                          ),
                         ),
                       ),
                     ],

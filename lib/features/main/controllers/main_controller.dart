@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/utils/location_permission_util.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
@@ -13,6 +14,9 @@ import 'package:real_estate_app/features/shared/widgets/location_permission_dial
 
 class MainController extends GetxController {
   final RxInt currentIndex = 0.obs;
+
+  final Rxn<Failure> _error = Rxn<Failure>();
+  Failure? get error => _error.value;
 
   @override
   void onInit() {

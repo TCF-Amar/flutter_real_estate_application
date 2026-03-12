@@ -15,7 +15,10 @@ class ProfileServices {
   final Logger log = Logger();
   final dio = Get.find<DioHelper>();
 
+  // ── Update Avatar ───────────────────────────────────────────
+
   FutureResult<String?> updateAvatar(File image) async {
+    log.i('Uploading avatar: ${image.path.split('/').last}');
     try {
       final formData = FormData.fromMap({
         "profile_image": await MultipartFile.fromFile(
@@ -32,15 +35,23 @@ class ProfileServices {
         ),
       );
 
-      return Right(response.data['data']["profile_url"]);
+      final profileUrl = response.data['data']["profile_url"];
+      log.i('Avatar uploaded successfully');
+      log.d('Profile URL: $profileUrl');
+      return Right(profileUrl);
     } on AppException catch (e) {
+      log.e('Upload avatar failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
     } catch (e) {
+      log.e('Upload avatar failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.network));
     }
   }
 
+  // ── Update Basic Info ───────────────────────────────────────
+
   FutureResult<BasicInfoUpdateModel> updateBasicInfo(String name) async {
+    log.i('Updating basic info — name: $name');
     final data = {if (name.isNotEmpty) 'full_name': name};
     try {
       final res = await dio.request(
@@ -50,13 +61,123 @@ class ProfileServices {
           body: data,
         ),
       );
-      log.d(res.data);
+      log.d('Update basic info response: ${res.data}');
       final response = res.data["data"] as Map<String, dynamic>;
+      log.i('Basic info updated successfully');
       return Right(BasicInfoUpdateModel.fromJson(response));
     } on AppException catch (e) {
+      log.e('Update basic info failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
     } catch (e) {
+      log.e('Update basic info failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+  // ── Delete Account ──────────────────────────────────────────
+
+  FutureResult<void> deleteAccount(String password, String confirmation) async {
+    log.i('Delete account request...');
+    try {
+      await dio.request(
+        ApiRequest(
+          url: ApiEndpoints.deleteAccount,
+          method: ApiMethod.delete,
+          body: {'password': password, 'confirmation': confirmation},
+        ),
+      );
+      log.i('Account deleted successfully');
+      return const Right(null);
+    } on AppException catch (e) {
+      log.e('Delete account failed (AppException): ${e.message}');
+      return Left(ApiException.map(e));
+    } catch (e) {
+      log.e('Delete account failed (Unknown): $e');
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
+
+  // ── Request to Update (Send OTP) ────────────────────────────
+
+  FutureResult<bool> requestToUpdate(String fieldType, String value) async {
+    log.i('Request to update — type: $fieldType, value: $value');
+    try {
+      final res = await dio.request(
+        ApiRequest(
+          url: ApiEndpoints.requestToUpdate,
+          method: ApiMethod.post,
+          body: {'type': fieldType, 'value': value},
+        ),
+      );
+      log.d('Request to update response: ${res.data}');
+      log.i('OTP sent successfully for $fieldType update');
+      return const Right(true);
+    } on AppException catch (e) {
+      log.e('Request to update failed (AppException): ${e.message}');
+      return Left(ApiException.map(e));
+    } catch (e) {
+      log.e('Request to update failed (Unknown): $e');
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
+
+  // ── Verify Change OTP ───────────────────────────────────────
+
+  FutureResult<bool> verifyChangeOtp(
+    String fieldType,
+    String value,
+    String otp,
+  ) async {
+    log.i('Verify change OTP — type: $fieldType');
+    try {
+      final res = await dio.request(
+        ApiRequest(
+          url: ApiEndpoints.verifyChangeOtp,
+          method: ApiMethod.post,
+          body: {'type': fieldType, 'value': value, 'otp': otp},
+        ),
+      );
+      log.d('Verify change OTP response: ${res.data}');
+      log.i('OTP verified successfully for $fieldType');
+      return const Right(true);
+    } on AppException catch (e) {
+      log.e('Verify change OTP failed (AppException): ${e.message}');
+      return Left(ApiException.map(e));
+    } catch (e) {
+      log.e('Verify change OTP failed (Unknown): $e');
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
+
+  // ── Change Password ─────────────────────────────────────────
+
+  FutureResult<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    log.i('Change password request...');
+    try {
+      final res = await dio.request(
+        ApiRequest(
+          url: ApiEndpoints.changePassword,
+          method: ApiMethod.put,
+          body: {
+            'current_password': currentPassword,
+            'password': newPassword,
+            'password_confirmation': confirmPassword,
+          },
+        ),
+      );
+      log.d('Change password response: ${res.data}');
+      log.i('Password changed successfully');
+      return const Right(true);
+    } on AppException catch (e) {
+      log.e('Change password failed (AppException): ${e.message}');
+      return Left(ApiException.map(e));
+    } catch (e) {
+      log.e('Change password failed (Unknown): $e');
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }
 }

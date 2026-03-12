@@ -4,7 +4,7 @@ import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
-import 'package:real_estate_app/features/profile/views/widgets/accoun_delete_widget/delete.dart';
+import 'package:real_estate_app/features/profile/views/widgets/account_delete_widget/delete.dart';
 import 'package:real_estate_app/features/profile/views/widgets/log_out_confirm.dart';
 import 'package:real_estate_app/features/profile/views/widgets/profile_tile.dart';
 import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
@@ -71,7 +71,9 @@ class ProfileOption extends StatelessWidget {
         label: "Setting",
         color: AppColors.primary,
         textColor: AppColors.textPrimary,
-        action: () {},
+        action: () {
+          Get.toNamed(AppRoutes.settings);
+        },
       ),
       ProfileOptionItem(
         icon: Assets.icons.icon6,
@@ -92,7 +94,9 @@ class ProfileOption extends StatelessWidget {
         label: "Change password",
         color: AppColors.primary,
         textColor: AppColors.textPrimary,
-        action: () {},
+        action: () {
+          Get.toNamed(AppRoutes.changePassword);
+        },
       ),
       ProfileOptionItem(
         icon: Assets.icons.icon9,

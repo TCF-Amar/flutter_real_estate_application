@@ -10,8 +10,10 @@ import 'package:real_estate_app/features/auth/views/screens/reset_password_scree
 import 'package:real_estate_app/features/auth/views/screens/select_country_screen.dart';
 import 'package:real_estate_app/features/auth/views/screens/verity_code.dart';
 import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
+import 'package:real_estate_app/features/profile/views/screens/change_password.dart';
 import 'package:real_estate_app/features/profile/views/screens/delete_account.dart';
 import 'package:real_estate_app/features/profile/views/screens/profile_edit.dart';
+import 'package:real_estate_app/features/profile/views/screens/setting_screen.dart';
 import 'package:real_estate_app/features/profile/views/screens/support/new_request.dart';
 import 'package:real_estate_app/features/profile/views/screens/support/support_details.dart';
 import 'package:real_estate_app/features/profile/views/screens/support/support_screen.dart';
@@ -34,7 +36,14 @@ class AppPages {
     GetPage(name: AppRoutes.verifyCode, page: () => VerifyCodeScreen()),
     GetPage(name: AppRoutes.forgotPassword, page: () => ForgotPasswordScreen()),
     GetPage(name: AppRoutes.resetPassword, page: () => ResetPasswordScreen()),
-    GetPage(name: AppRoutes.selectCountry, page: () => SelectCountryScreen()),
+    GetPage(
+      name: AppRoutes.selectCountry,
+      page: () {
+        final opPress = Get.arguments['onPress'];
+        
+        return SelectCountryScreen(onPress: opPress);
+      },
+    ),
     GetPage(
       name: AppRoutes.main,
       page: () => MainScreen(),
@@ -76,5 +85,7 @@ class AppPages {
     GetPage(name: AppRoutes.supportDetails, page: () => SupportDetails()),
 
     GetPage(name: AppRoutes.accountDelete, page: () => DeleteAccount()),
+    GetPage(name: AppRoutes.changePassword, page: () => ChangePassword()),
+    GetPage(name: AppRoutes.settings, page: () => SettingScreen()),
   ];
 }

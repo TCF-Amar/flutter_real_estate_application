@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/services/property_services.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_controller.dart';
@@ -29,9 +30,11 @@ class PropertyDetailsController extends GetxController {
   final _propertyDetail = Rxn<PropertyDetail>();
   final _isLoading = false.obs;
   final propertyId = 0.obs;
+  final _error = Rxn<Failure>();
 
   PropertyDetail? get propertyDetail => _propertyDetail.value;
   bool get isLoading => _isLoading.value;
+  Failure? get error => _error.value;
 
   // ─── Lifecycle ───────────────────────────────────────────────────────────────
 
@@ -60,14 +63,18 @@ class PropertyDetailsController extends GetxController {
   Future<void> fetchPropertyDetails(int id) async {
     _isLoading.value = true;
     final result = await _propertyServices.getPropertyDetails(id);
-    result.fold((l) => log.e('Error fetching property details: ${l.message}'), (
-      r,
-    ) {
-      log.d(
-        'Fetched property details — images: ${r.data?.media?.images.length}',
-      );
-      _propertyDetail.value = r.data;
-    });
+    result.fold(
+      (l) {
+        log.e('Error fetching property details: ${l.message}');
+        _error.value = l;
+      },
+      (r) {
+        log.d(
+          'Fetched property details — images: ${r.data?.media?.images.length}',
+        );
+        _propertyDetail.value = r.data;
+      },
+    );
     _isLoading.value = false;
   }
 

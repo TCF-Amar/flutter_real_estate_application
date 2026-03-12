@@ -58,4 +58,5 @@ class ApiEndpoints {
 
   static const String requestToUpdate = "$_buyer/request-change-otp";
   static const String verifyChangeOtp = "$_buyer/verify-change-otp";
+  static const String changePassword = "$_profile/password";
 }

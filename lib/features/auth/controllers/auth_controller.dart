@@ -28,8 +28,11 @@ class AuthController extends GetxController {
 
   // final error = ''.obs;
 
-  final Rxn<Failure?> _failure = Rxn<Failure?>();
-  Failure? get error => _failure.value;
+  final Rxn<Failure> _error = Rxn<Failure>();
+  Failure? get error => _error.value;
+  void setError(Failure failure) {
+    _error.value = failure;
+  }
 
   @override
   void onClose() {
@@ -57,18 +60,24 @@ class AuthController extends GetxController {
   }
 
   Future<void> getCurrentUser() async {
+    log.i('Fetching current user...');
     final result = await _authServices.getCurrentUser();
     result.fold(
       (failure) {
         log.e('Failed to fetch user: ${failure.message}');
-        AppSnackbar.error(failure.message);
-        _failure.value = failure;
+        _error.value = failure;
       },
       (userData) {
-        log.d(userData.data.user.fullName);
+        log.d('User fetched: ${userData.data.user.toJson()}');
+        log.d('Onboarding completed: ${userData.data.onboarding.completed}');
         user.value = userData.data.user;
         userProfile.value = userData.data.profile;
         _currentUser.value = userData;
+
+        if (!userData.data.onboarding.completed) {
+          log.i('Onboarding incomplete → navigating to SelectCountry');
+          Get.offAllNamed(AppRoutes.selectCountry);
+        }
       },
     );
   }
@@ -80,21 +89,32 @@ class AuthController extends GetxController {
   void handleSignIn() async {
     FocusScope.of(Get.context!).unfocus();
     _isLoading.value = true;
+    log.i('Sign-in attempt for: ${signInEmailController.text.trim()}');
     final result = await _authServices.login(
       signInEmailController.text.trim(),
       signInPasswordController.text,
     );
     result.fold(
       (failure) {
+        log.e('Sign-in failed: ${failure.message}');
         _clearSignInFields();
         AppSnackbar.error(failure.message);
       },
       (response) {
         if (response.data?.token != null) {
-          AppSnackbar.success('Login successful');
+          log.i('Sign-in successful');
           log.d('Token: ${response.data?.token}');
-          Get.offAllNamed(AppRoutes.main);
+          AppSnackbar.success('Login successful');
+
+          if (response.data?.onboardingCompleted == true) {
+            log.i('Onboarding complete → navigating to Main');
+            Get.offAllNamed(AppRoutes.main);
+          } else {
+            log.i('Onboarding incomplete → navigating to SelectCountry');
+            Get.offAllNamed(AppRoutes.selectCountry);
+          }
         } else {
+          log.w('Sign-in response missing token');
           _clearSignInFields();
           AppSnackbar.error('Login failed. Please try again.');
         }
@@ -122,6 +142,7 @@ class AuthController extends GetxController {
   void handleSignUp() async {
     FocusScope.of(Get.context!).unfocus();
     _isLoading.value = true;
+    log.i('Sign-up attempt for: ${signUpEmailController.text.trim()}');
     final result = await _authServices.signUp(
       SignUpRequestModel(
         fullName: signUpFullNameController.text,
@@ -133,10 +154,12 @@ class AuthController extends GetxController {
     );
     result.fold(
       (failure) {
+        log.e('Sign-up failed: ${failure.message}');
         _clearSignUpFields();
         AppSnackbar.error(failure.message);
       },
       (response) {
+        log.i('Sign-up successful → navigating to VerifyCode');
         otpEmail.value = signUpEmailController.text.trim();
         AppSnackbar.success('Verification code sent to ${otpEmail.value}');
         Get.toNamed(AppRoutes.verifyCode, arguments: {'source': 'signup'});
@@ -160,12 +183,18 @@ class AuthController extends GetxController {
     _isLoading.value = true;
     final email = signInEmailController.text.trim();
     if (email.isEmpty) {
+      log.w('Forgot password: email field is empty');
       AppSnackbar.error('Please enter your email');
       _isLoading.value = false;
       return;
     }
+    log.i('Forgot password request for: $email');
     final result = await _authServices.resendOtp(email);
-    result.fold((failure) => AppSnackbar.error(failure.message), (_) {
+    result.fold((failure) {
+      log.e('Forgot password failed: ${failure.message}');
+      AppSnackbar.error(failure.message);
+    }, (_) {
+      log.i('OTP sent → navigating to VerifyCode');
       otpEmail.value = email;
       AppSnackbar.success('Verification code sent to $email');
       Get.toNamed(AppRoutes.verifyCode, arguments: {'source': 'forgot'});
@@ -174,8 +203,10 @@ class AuthController extends GetxController {
   }
 
   void logout() async {
+    log.i('Logging out...');
     _isLoading.value = true;
     await _authServices.logout();
+    log.i('Logged out → navigating to SignIn');
     Get.offAllNamed(AppRoutes.signin);
     _isLoading.value = false;
   }
@@ -241,25 +272,36 @@ class AuthController extends GetxController {
     FocusScope.of(Get.context!).unfocus();
     _isLoading.value = true;
     if (verificationCode.length == 6) {
+      log.i('Verifying OTP for: ${otpEmail.value}');
       final result = await _authServices.verifyOtp(
         otpEmail.value,
         verificationCode,
       );
       result.fold(
         (failure) {
+          log.e('OTP verification failed: ${failure.message}');
           _clearOtpFields();
           AppSnackbar.error(failure.message);
         },
         (response) {
+          log.i('OTP verified successfully (source: ${verifySource.value})');
           AppSnackbar.success('Email verified successfully');
           if (verifySource.value == 'signup') {
-            Get.offAllNamed(AppRoutes.selectCountry);
+            if (response.data?.onboardingCompleted == true) {
+              log.i('Onboarding complete → navigating to Main');
+              Get.offAllNamed(AppRoutes.main);
+            } else {
+              log.i('Onboarding incomplete → navigating to SelectCountry');
+              Get.offAllNamed(AppRoutes.selectCountry);
+            }
           } else {
+            log.i('Forgot password flow → navigating to ResetPassword');
             Get.toNamed(AppRoutes.resetPassword);
           }
         },
       );
     } else {
+      log.w('OTP incomplete: ${verificationCode.length}/6 digits entered');
       _clearOtpFields();
       AppSnackbar.error('Please enter the complete 6-digit code');
     }
@@ -276,8 +318,13 @@ class AuthController extends GetxController {
   void handleResendCode() async {
     if (!canResend.value) return;
     _isLoading.value = true;
+    log.i('Resending OTP to: ${otpEmail.value}');
     final result = await _authServices.resendOtp(otpEmail.value);
-    result.fold((failure) => AppSnackbar.error(failure.message), (_) {
+    result.fold((failure) {
+      log.e('Resend OTP failed: ${failure.message}');
+      AppSnackbar.error(failure.message);
+    }, (_) {
+      log.i('OTP resent successfully');
       AppSnackbar.info(
         'A new code was sent to ${otpEmail.value}',
         title: 'Code Sent',
@@ -320,29 +367,20 @@ class AuthController extends GetxController {
 
   void handleContinue() async {
     if (selectedCountry.value.isEmpty) {
+      log.w('handleContinue: no country selected');
       AppSnackbar.error('Please select a country');
       return;
     }
     _isLoading.value = true;
+    log.i('Onboarding with country: ${selectedCountry.value}');
     final result = await _authServices.onboardBuyer(selectedCountry.value);
-    result.fold((failure) => AppSnackbar.error(failure.message), (_) {
+    result.fold((failure) {
+      log.e('Onboarding failed: ${failure.message}');
+      AppSnackbar.error(failure.message);
+    }, (_) {
+      log.i('Onboarding complete → navigating to Main');
       AppSnackbar.success('Country selected: ${selectedCountry.value}');
       Get.offAllNamed(AppRoutes.main);
-    });
-    _isLoading.value = false;
-  }
-
-  // delete account
-
-  void handleDeleteAccount({
-    required String password,
-    required String confirmation,
-  }) async {
-    _isLoading.value = true;
-    final result = await _authServices.deleteAccount(password, confirmation);
-    result.fold((failure) => AppSnackbar.error(failure.message), (_) {
-      AppSnackbar.success('Account deleted successfully');
-      logout();
     });
     _isLoading.value = false;
   }

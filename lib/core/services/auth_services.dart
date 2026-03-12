@@ -20,16 +20,24 @@ class AuthServices extends GetxService {
   final DioHelper _dioHelper = Get.find<DioHelper>();
   final TokenStorage _tokenStorage = Get.find<TokenStorage>();
 
+  // ── Auth State ──────────────────────────────────────────────
+
   Future<void> checkAuthState() async {
+    log.i('Checking auth state...');
     final token = await _tokenStorage.getToken();
     if (token != null && token.isNotEmpty) {
+      log.i('Token found → navigating to Main');
       Get.offAllNamed(AppRoutes.main);
     } else {
+      log.i('No token → navigating to GetStarted');
       Get.offAllNamed(AppRoutes.getStart);
     }
   }
 
+  // ── Login ───────────────────────────────────────────────────
+
   Future<Result<AuthResponse>> login(String email, String password) async {
+    log.i('Login request for: $email');
     try {
       final response = await _dioHelper.request(
         ApiRequest(
@@ -43,16 +51,22 @@ class AuthServices extends GetxService {
       );
       if (authResponse.data != null) {
         await _saveTokensFromAuthData(authResponse.data!);
+        log.i('Login successful — tokens saved');
       }
       return Right(authResponse);
     } on AppException catch (e) {
+      log.e('Login failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
     } catch (e) {
+      log.e('Login failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }
 
+  // ── Sign Up ─────────────────────────────────────────────────
+
   Future<Result<SignUpResponseModel>> signUp(SignUpRequestModel model) async {
+    log.i('Sign-up request for: ${model.email}');
     try {
       final response = await _dioHelper.request(
         ApiRequest(
@@ -61,19 +75,25 @@ class AuthServices extends GetxService {
           body: model.toJson(),
         ),
       );
-      log.d(response.data);
+      log.d('Sign-up response: ${response.data}');
       final signUpResponse = SignUpResponseModel.fromJson(
         response.data as Map<String, dynamic>,
       );
+      log.i('Sign-up successful');
       return Right(signUpResponse);
     } on AppException catch (e) {
+      log.e('Sign-up failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
     } catch (e) {
+      log.e('Sign-up failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }
 
+  // ── OTP Verification ───────────────────────────────────────
+
   Future<Result<AuthResponse>> verifyOtp(String email, String otp) async {
+    log.i('Verify OTP for: $email');
     try {
       final response = await _dioHelper.request(
         ApiRequest(
@@ -87,16 +107,22 @@ class AuthServices extends GetxService {
       );
       if (authResponse.data != null) {
         await _saveTokensFromAuthData(authResponse.data!);
+        log.i('OTP verified — tokens saved');
       }
       return Right(authResponse);
     } on AppException catch (e) {
+      log.e('OTP verification failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
     } catch (e) {
+      log.e('OTP verification failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }
 
+  // ── Resend OTP ──────────────────────────────────────────────
+
   Future<Result<bool>> resendOtp(String email) async {
+    log.i('Resend OTP to: $email');
     try {
       final res = await _dioHelper.request(
         ApiRequest(
@@ -105,33 +131,46 @@ class AuthServices extends GetxService {
           body: {'email': email},
         ),
       );
-      log.d(res.data);
+      log.d('Resend OTP response: ${res.data}');
+      log.i('OTP resent successfully');
       return const Right(true);
     } on AppException catch (e) {
+      log.e('Resend OTP failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
     } catch (e) {
+      log.e('Resend OTP failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }
 
+  // ── Buyer Onboarding ────────────────────────────────────────
+
   Future<Result<bool>> onboardBuyer(String country) async {
+    log.i('Onboarding buyer — country: $country');
     try {
-      await _dioHelper.request(
+      final res = await _dioHelper.request(
         ApiRequest(
           url: ApiEndpoints.buyerOnboarding,
           method: ApiMethod.post,
           body: {'country': country},
         ),
       );
-      return const Right(true);
+      log.d('Onboarding response: ${res.data}');
+      log.i('Buyer onboarded successfully');
+      return Right(true);
     } on AppException catch (e) {
+      log.e('Onboarding failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
     } catch (e) {
+      log.e('Onboarding failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }
 
+  // ── Current User ────────────────────────────────────────────
+
   FutureResult<CurrentUserModel> getCurrentUser() async {
+    log.i('Fetching current user...');
     try {
       final response = await _dioHelper.request(
         ApiRequest(url: ApiEndpoints.currentUser, method: ApiMethod.get),
@@ -139,90 +178,44 @@ class AuthServices extends GetxService {
       final user = CurrentUserModel.fromJson(
         response.data as Map<String, dynamic>,
       );
+      log.i('Current user fetched successfully');
       return Right(user);
     } on AppException catch (e) {
+      log.e('Fetch current user failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
     } catch (e) {
+      log.e('Fetch current user failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }
 
+  // ── Logout ──────────────────────────────────────────────────
+
   Future<void> logout() async {
+    log.i('Logging out — clearing tokens...');
     await _tokenStorage.deleteTokens();
     try {
       await _dioHelper.request(
         ApiRequest(url: ApiEndpoints.logout, method: ApiMethod.post),
       );
-    } catch (_) {}
+      log.i('Logout API called successfully');
+    } catch (e) {
+      log.w('Logout API call failed (non-critical): $e');
+    }
   }
 
+  // ── Token Helper ────────────────────────────────────────────
+
   Future<void> _saveTokensFromAuthData(AuthDataModel data) async {
-    if (data.token.isEmpty) return;
+    if (data.token.isEmpty) {
+      log.w('Token is empty — skipping save');
+      return;
+    }
     await _tokenStorage.saveTokens(
       data.token,
       data.refreshToken,
       expiresAt: data.expiresAt.toIso8601String(),
     );
-  }
-
-  FutureResult<void> deleteAccount(String password, String confirmation) async {
-    try {
-      await _dioHelper.request(
-        ApiRequest(
-          url: ApiEndpoints.deleteAccount,
-          method: ApiMethod.delete,
-          body: {'password': password, 'confirmation': confirmation},
-        ),
-      );
-      return const Right(null);
-    } on AppException catch (e) {
-      return Left(ApiException.map(e));
-    } catch (e) {
-      return Left(Failure(message: e.toString(), type: FailureType.unknown));
-    }
-  }
-
-  FutureResult<bool> requestToUpdate(String fieldType, String value) async {
-    try {
-      final res = await _dioHelper.request(
-        ApiRequest(
-          url: ApiEndpoints.requestToUpdate,
-          method: ApiMethod.post,
-          body: {'type': fieldType, 'value': value},
-        ),
-      );
-
-      log.d('OTP sent successfully ${res.data}');
-
-      return const Right(true);
-    } on AppException catch (e) {
-      return Left(ApiException.map(e));
-    } catch (e) {
-      return Left(Failure(message: e.toString(), type: FailureType.unknown));
-    }
-  }
-
-  FutureResult<bool> verifyChangeOtp(
-    String fieldType,
-    String value,
-    String otp,
-  ) async {
-    try {
-      final res = await _dioHelper.request(
-        ApiRequest(
-          url: ApiEndpoints.verifyChangeOtp,
-          method: ApiMethod.post,
-          body: {'type': fieldType, 'value': value, 'otp': otp},
-        ),
-      );
-
-      log.d('OTP sent successfully ${res.data}');
-
-      return const Right(true);
-    } on AppException catch (e) {
-      return Left(ApiException.map(e));
-    } catch (e) {
-      return Left(Failure(message: e.toString(), type: FailureType.unknown));
-    }
+    log.d('Tokens saved (expires: ${data.expiresAt.toIso8601String()})');
   }
 }

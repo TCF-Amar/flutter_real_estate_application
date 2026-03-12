@@ -1,18 +1,24 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/core/networks/interceptors/dio_interceptor.dart';
 import 'package:real_estate_app/core/storage/token_storage.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();
+  static final Logger _log = Logger();
+
   late final Dio dio;
 
   factory DioClient() => _instance;
 
   DioClient._internal() {
     dio = _createDio();
+    _log.i('DioClient initialized — baseUrl: ${Environments.baseUrl}');
   }
+
+  // ── Dio Factory ──────────────────────────────────────────
 
   Dio _createDio() {
     final dio = Dio(
@@ -31,6 +37,7 @@ class DioClient {
         },
       ),
     );
+
     dio.interceptors.add(
       DioInterceptors(tokenStorage: Get.find<TokenStorage>(), dio: dio),
     );

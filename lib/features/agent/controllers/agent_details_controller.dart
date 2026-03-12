@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:logger/web.dart';
+import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:real_estate_app/core/services/agent_services.dart';
 import 'package:real_estate_app/features/agent/models/agent_details_response_model.dart';
 import 'package:real_estate_app/features/favorite/controllers/favorite_controller.dart';
@@ -69,12 +70,15 @@ class AgentDetailsController extends GetxController {
   final Rx<AgentDetailModel?> _agentDetails = Rxn<AgentDetailModel>();
   AgentDetailModel? get agentDetails => _agentDetails.value;
 
+  final Rxn<Failure> _error = Rxn<Failure>();
+  Failure? get error => _error.value;
+
   void _fetchAgentById(int id) async {
     final result = await agentServices.getAgentDetails(id);
-    result.fold(
-      (l) => log.e("Error fetching agent details: ${l.message}"),
-      (r) => _agentDetails.value = r,
-    );
+    result.fold((l) {
+      log.e("Error fetching agent details: ${l.message}");
+      _error.value = l;
+    }, (r) => _agentDetails.value = r);
   }
 
   // ── Property Filtering ────────────────────

@@ -25,6 +25,34 @@ class ProfileModel {
     required this.updatedAt,
   });
 
+  ProfileModel copyWith({
+    int? id,
+    int? userId,
+    String? country,
+    int? locationAccess,
+    String? appLanguage,
+    int? onboardingStep,
+    bool? onboardingCompleted,
+    DateTime? onboardingCompletedAt,
+    String? profileImage,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return ProfileModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      country: country ?? this.country,
+      locationAccess: locationAccess ?? this.locationAccess,
+      appLanguage: appLanguage ?? this.appLanguage,
+      onboardingStep: onboardingStep ?? this.onboardingStep,
+      onboardingCompleted: onboardingCompleted ?? this.onboardingCompleted,
+      onboardingCompletedAt: onboardingCompletedAt ?? this.onboardingCompletedAt,
+      profileImage: profileImage ?? this.profileImage,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
       id: json['id'],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
-import 'package:real_estate_app/features/profile/views/widgets/accoun_delete_widget/delete.dart';
+import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
+import 'package:real_estate_app/features/profile/views/widgets/account_delete_widget/delete.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class DeleteAccount extends StatefulWidget {
@@ -26,7 +26,8 @@ class _DeleteAccountState extends State<DeleteAccount> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthController authController = Get.find();
+    final ProfileController controller = Get.find();
+    final formKey = GlobalKey<FormState>();
     return Scaffold(
       appBar: AppBar(
         leading: const Padding(
@@ -36,68 +37,74 @@ class _DeleteAccountState extends State<DeleteAccount> {
         title: HeaderText(text: "Delete Account"),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AppText("Password", fontSize: 14),
-            const SizedBox(height: 4),
-            AppTextFormField(
-              hintText: "password",
-              controller: _passwordController,
-              isPassword: true,
-              // keyboardType: TextInputType.,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppTextFormField(
+                  hintText: "password",
+                  controller: _passwordController,
+                  isPassword: true,
+                  validator: (v) {
+                    if (v == null || v.isEmpty) {
+                      return "Please enter your password";
+                    }
+                    return null;
+                  },
+                  // keyboardType: TextInputType.,
+                ),
+
+                const SizedBox(height: 20),
+
+                AppTextFormField(
+                  hintText: "confirm password",
+                  controller: _confirmPasswordController,
+                  isPassword: true,
+                  validator: (v) {
+                    if (v == null || v.isEmpty) {
+                      return "Please enter your confirm password";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                AppTextFormField(
+                  hintText: "Type \"DELETE\"",
+                  controller: _confirmationController,
+                  validator: (v) {
+                    if (v == null || v.isEmpty) {
+                      return "Please enter your confirmation";
+                    }
+                    if (v != "DELETE") {
+                      return "Please type \"DELETE\" correctly";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                AppButton(
+                  text: "Delete Account",
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      final password = _passwordController.text.trim();
+                      final confirmation = _confirmationController.text.trim();
+
+                      accountDeleteConfirmation(context, () {
+                        controller.handleDeleteAccount(
+                          password: password,
+                          confirmation: confirmation,
+                        );
+                      });
+                    }
+                  },
+                ),
+              ],
             ),
-
-            const SizedBox(height: 20),
-            AppText("Confirm Password", fontSize: 14),
-            const SizedBox(height: 4),
-
-            AppTextFormField(
-              hintText: "confirm password",
-              controller: _confirmPasswordController,
-              isPassword: true,
-            ),
-            const SizedBox(height: 20),
-            AppText("Type \"DELETE\"", fontSize: 14),
-            const SizedBox(height: 4),
-            AppTextFormField(
-              hintText: "Type \"DELETE\"",
-              controller: _confirmationController,
-            ),
-            const SizedBox(height: 20),
-            AppButton(
-              text: "Delete Account",
-              onPressed: () {
-                final password = _passwordController.text.trim();
-                final confirmPassword = _confirmPasswordController.text.trim();
-                final confirmation = _confirmationController.text.trim();
-
-                if (password.isEmpty || confirmPassword.isEmpty) {
-                  AppSnackbar.error("Please enter your password");
-                  return;
-                }
-
-                if (password != confirmPassword) {
-                  AppSnackbar.error("Passwords do not match");
-                  return;
-                }
-
-                if (confirmation != "DELETE") {
-                  AppSnackbar.error('Please type "DELETE" correctly');
-                  return;
-                }
-
-                accountDeleteConfirmation(context, () {
-                  authController.handleDeleteAccount(
-                    password: password,
-                    confirmation: confirmation,
-                  );
-                });
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -44,7 +44,7 @@ class AuthTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(0),
 
           isPassword: isPassword,
-          prefixIcon: Icon(prefixIcon, size: 20),
+          prefixIcon: Icon(prefixIcon, size: 20, color: AppColors.white,),
           textColor: AppColors.white,
           hintColor: AppColors.white.withValues(alpha: 0.6),
           iconColor: AppColors.white,
