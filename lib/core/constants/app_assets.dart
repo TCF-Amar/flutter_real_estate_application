@@ -58,6 +58,8 @@ class _Icons {
   final exit = "assets/icons/exit.svg";
   final property = "assets/icons/property.svg";
   final wallet = "assets/icons/wallet.svg";
+  final watch = "assets/icons/watch.svg";
+  final boxTimer = "assets/icons/box_timer.svg";
 }
 
 class _Images {

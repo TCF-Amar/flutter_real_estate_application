@@ -29,6 +29,7 @@ class ApiEndpoints {
   static String similarProperties(int id) => "$_buyer/properties/$id/similar";
   static String propertyReviews(int id) => "$_buyer/properties/$id/reviews";
   static String visitBook = "$_base/visits";
+  static String getVisitDetails(int id) => "$_base/visits/$id";
 
   // ── Search & Filter ──────────────────────────────────────────────────────
   static const String filterData = "$_buyer/filter-options";

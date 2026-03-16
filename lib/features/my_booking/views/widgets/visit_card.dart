@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/my_booking/models/visit_confirmation_model.dart';
 import 'package:real_estate_app/features/my_booking/views/widgets/booking_status_tag.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
@@ -15,6 +17,9 @@ class VisitCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(10),
       showShadow: true,
+      onTap: () {
+        Get.toNamed(AppRoutes.visitDetails, arguments: visit.id);
+      },
       radius: 20,
       child: Row(
         children: [
@@ -54,7 +59,8 @@ class VisitCard extends StatelessWidget {
                     const SizedBox(width: 4),
                     Flexible(
                       child: AppText(
-                        (visit.property.location ?? visit.property.address) ?? "",
+                        (visit.property.location ?? visit.property.address) ??
+                            "",
                         fontSize: 10,
                         color: AppColors.textSecondary.withValues(alpha: 0.8),
                         overflow: TextOverflow.ellipsis,

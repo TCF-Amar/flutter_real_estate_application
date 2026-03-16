@@ -34,11 +34,14 @@ dependencies:
   path_provider: ^2.1.5
   geolocator: ^14.0.2
   flutter_advanced_switch: ^3.1.0
+  json_annotation: ^4.11.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  build_runner: ^2.12.2
+  json_serializable: ^6.13.0
 
 flutter:
   uses-material-design: true

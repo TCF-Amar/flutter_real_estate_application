@@ -25,8 +25,10 @@ class AppRoutes {
   static const String property = '/property';
   static const String propertyDetails = '$property/details';
   static const String bookVisit = "$property/book-visit";
-  static const String visitConfirmationPrev = '/visit-confirmation-prev';
-  static const String visitBookingConfirm = '/visit-booking-confirm';
+  static const String visitConfirmationPrev =
+      '$property/visit-confirmation-prev';
+  static const String visitBookingConfirm = '$property/visit-booking-confirm';
+  static const String visitDetails = "$property/visit-details";
 
   /// Agent
   static const String agent = '/agent';

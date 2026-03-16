@@ -1,5 +1,6 @@
 import 'package:real_estate_app/features/property/models/property_detail_model.dart';
 import 'package:real_estate_app/features/shared/models/pagination_model.dart';
+import 'package:real_estate_app/core/utils/safe_parser.dart';
 
 class VisitConfirmationModel {
   final PropertyDetail property;
@@ -161,7 +162,7 @@ class VisitResponseData {
 
   factory VisitResponseData.fromJson(Map<String, dynamic> json) =>
       VisitResponseData(
-        id: json['id'] as int,
+        id: toInt(json['id']) ?? 0,
         property: PProperty.fromJson(json['property'] as Map<String, dynamic>),
         unit: json['unit'] as String? ?? '',
         preferredDate: json['preferred_date'] as String?,
@@ -172,7 +173,7 @@ class VisitResponseData {
         statusLabel: json['status_label'] as String? ?? '',
         canCancel: json['can_cancel'] as bool? ?? false,
         canReschedule: json['can_reschedule'] as bool? ?? false,
-        finalAmount: json['final_amount'] as double?,
+        finalAmount: toDouble(json['final_amount']),
         formattedFinalAmount: json['formatted_final_amount'] as String?,
         createdAt: json['created_at'] as String?,
       );
@@ -219,7 +220,7 @@ class PProperty {
   });
 
   factory PProperty.fromJson(Map<String, dynamic> json) => PProperty(
-    id: json['id'] as int,
+    id: toInt(json['id']) ?? 0,
     title: json['title'] as String? ?? '',
     location: json['location'] as String?,
     address: json['address'] as String?,

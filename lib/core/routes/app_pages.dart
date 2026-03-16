@@ -19,7 +19,9 @@ import 'package:real_estate_app/features/auth/views/screens/verity_code.dart';
 // Main
 import 'package:real_estate_app/features/main/bindings/main_binding.dart';
 import 'package:real_estate_app/features/main/views/screens/main_screen.dart';
+import 'package:real_estate_app/features/my_booking/bindings/visit_details_binding.dart';
 import 'package:real_estate_app/features/my_booking/views/screens/visit/booking_flow_screen.dart';
+import 'package:real_estate_app/features/my_booking/views/screens/visit/visit_details_screen.dart';
 
 // Search
 import 'package:real_estate_app/features/search/views/screens/search_result.dart';
@@ -88,6 +90,12 @@ class AppPages {
     GetPage(
       name: AppRoutes.bookVisit,
       page: () => BookingFlowScreen(propertyDetail: Get.arguments),
+    ),
+
+    GetPage(
+      name: AppRoutes.visitDetails,
+      binding: VisitDetailsBinding(),
+      page: () => VisitDetails(),
     ),
     // ─── Agent ────────────────────────────────────────────────────────────
     GetPage(

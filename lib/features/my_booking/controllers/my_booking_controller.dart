@@ -11,24 +11,38 @@ class MyBookingController extends GetxController {
   final Logger log = Logger();
   final BookingServices bookingServices = Get.find();
 
-  final Rxn<Failure> failure = Rxn<Failure>();
+  final scrollController = ScrollController();
+
+  final Rxn<Failure> failure = Rxn();
+
+  final visitList = <VisitResponseData>[].obs;
+
+  final pendingVisitList = <VisitResponseData>[].obs;
+  final cancelledVisitList = <VisitResponseData>[].obs;
+  final completedVisitList = <VisitResponseData>[].obs;
+
+  final visitLoading = false.obs;
+  final visitLoadingMore = false.obs;
+
+  final visitPagination = Rxn<PaginationModel>();
 
   @override
   void onInit() {
     super.onInit();
+
     getVisitList();
+
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent - 200) {
         loadMoreVisits();
       }
     });
+
+    ever(visitList, (_) {
+      filterVisitList();
+    });
   }
-
-  final scrollController = ScrollController(
-
-  );
-  
 
   @override
   void onClose() {
@@ -36,73 +50,113 @@ class MyBookingController extends GetxController {
     super.onClose();
   }
 
-  //* book site visit
+  /// GET VISIT LIST
 
-  final visitBooking = false.obs;
-  bool get isVisitBooking => visitBooking.value;
-  Future<bool> visitBook(VisitConfirmRequestModel model) async {
-    visitBooking.value = true;
-    failure.value = null;
-    final result = await bookingServices.visitBooking(model);
-    result.fold(
-      (l) {
-        failure.value = l;
-        AppSnackbar.error(l.message);
-        return false;
-      },
-      (r) {
-        // Get.back();
-        AppSnackbar.success('Visit booked successfully');
-        return true;
-      },
-    );
-    visitBooking.value = false;
-    return result.isRight();
+  Future<void> getVisitList() async {
+    await _getVisitList(isRefresh: true);
   }
-
-  final visitPagination = Rxn<PaginationModel>();
-  final visitList = <VisitResponseData>[].obs;
-  final visitLoading = false.obs;
 
   Future<void> _getVisitList({bool isRefresh = true}) async {
     if (isRefresh) {
       visitLoading.value = true;
     }
+
     failure.value = null;
 
-    final int page = isRefresh
-        ? 1
-        : (visitPagination.value?.currentPage ?? 0) + 1;
+    final page = isRefresh ? 1 : (visitPagination.value?.currentPage ?? 0) + 1;
 
     final result = await bookingServices.getVisits(page: page);
+
     result.fold(
-      (l) {
-        failure.value = l;
-        AppSnackbar.error(l.message);
+      (error) {
+        failure.value = error;
+        AppSnackbar.error(error.message);
       },
-      (r) {
-        log.d(r.data.map((e) => e.toJson()).toList());
-        visitPagination.value = r.pagination;
+
+      (response) {
+        visitPagination.value = response.pagination;
+
         if (isRefresh) {
-          visitList.value = [...r.data];
+          visitList.value = response.data;
         } else {
-          visitList.addAll(r.data);
+          visitList.addAll(response.data);
         }
       },
     );
+
     visitLoading.value = false;
   }
 
+  /// LOAD MORE
+
   Future<void> loadMoreVisits() async {
     final pagination = visitPagination.value;
-    if (pagination != null &&
-        pagination.currentPage < pagination.lastPage &&
-        !visitLoading.value) {
-      await _getVisitList(isRefresh: false);
-    }
+
+    if (pagination == null) return;
+
+    if (pagination.currentPage >= pagination.lastPage) return;
+
+    if (visitLoadingMore.value) return;
+
+    visitLoadingMore.value = true;
+
+    await _getVisitList(isRefresh: false);
+
+    visitLoadingMore.value = false;
   }
 
-  void getVisitList() async {
-    await _getVisitList();
+  /// FILTER LIST
+
+  void filterVisitList() {
+    pendingVisitList.clear();
+    cancelledVisitList.clear();
+    completedVisitList.clear();
+
+    for (final visit in visitList) {
+      switch (visit.statusLabel) {
+        case "Requested":
+          pendingVisitList.add(visit);
+          break;
+
+        case "Canceled":
+          cancelledVisitList.add(visit);
+          break;
+
+        case "Completed":
+          completedVisitList.add(visit);
+          break;
+      }
+    }
+
+    log.d("Pending : ${pendingVisitList.length}");
+    log.d("Cancelled : ${cancelledVisitList.length}");
+    log.d("Completed : ${completedVisitList.length}");
+  }
+
+  /// BOOK VISIT
+
+  final visitBooking = false.obs;
+
+  Future<bool> visitBook(VisitConfirmRequestModel model) async {
+    visitBooking.value = true;
+
+    failure.value = null;
+
+    final result = await bookingServices.visitBooking(model);
+
+    visitBooking.value = false;
+
+    result.fold(
+      (error) {
+        failure.value = error;
+        AppSnackbar.error(error.message);
+      },
+
+      (_) {
+        AppSnackbar.success("Visit booked successfully");
+      },
+    );
+
+    return result.isRight();
   }
 }

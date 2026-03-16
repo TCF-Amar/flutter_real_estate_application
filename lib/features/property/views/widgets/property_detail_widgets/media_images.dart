@@ -34,17 +34,15 @@ class MediaImages extends StatelessWidget {
                           controller.updateCurrentIndex(index);
                         },
                         child: Obx(
-                          () => Container(
+                          () => AppContainer(
                             margin: const EdgeInsets.only(right: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey.withValues(alpha: 0.8),
-                              border: Border.all(
-                                width: controller.currentIndex == index ? 2 : 0,
-                                color: controller.currentIndex == index
-                                    ? AppColors.primary.withValues(alpha: 0.8)
-                                    : Colors.transparent,
-                              ),
+
+                            color: Colors.grey.withValues(alpha: 0.8),
+                            border: Border.all(
+                              width: controller.currentIndex == index ? 2 : 0,
+                              color: controller.currentIndex == index
+                                  ? AppColors.primary.withValues(alpha: 0.8)
+                                  : Colors.transparent,
                             ),
                             width: 70,
                             height: 70,

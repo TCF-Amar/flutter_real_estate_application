@@ -184,7 +184,7 @@ class VisitConfirmationPrev extends StatelessWidget {
                       () => AppButton(
                         text: "Confirm booking",
                         fontSize: 14,
-                        isLoading: controller.isVisitBooking,
+                        isLoading: controller.visitBooking.value,
                         onPressed: () async {
                           final requestModel = VisitConfirmRequestModel(
                             name: m.name,
