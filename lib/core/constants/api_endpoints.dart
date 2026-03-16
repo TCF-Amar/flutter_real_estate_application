@@ -28,6 +28,7 @@ class ApiEndpoints {
   static String getPropertyDetails(int id) => "$_buyer/properties/$id";
   static String similarProperties(int id) => "$_buyer/properties/$id/similar";
   static String propertyReviews(int id) => "$_buyer/properties/$id/reviews";
+  static String visitBook = "$_base/visits";
 
   // ── Search & Filter ──────────────────────────────────────────────────────
   static const String filterData = "$_buyer/filter-options";
@@ -59,4 +60,6 @@ class ApiEndpoints {
   static const String requestToUpdate = "$_buyer/request-change-otp";
   static const String verifyChangeOtp = "$_buyer/verify-change-otp";
   static const String changePassword = "$_profile/password";
+
+  static const String getVisits = "$_base/visits";
 }

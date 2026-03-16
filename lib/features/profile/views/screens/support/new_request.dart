@@ -11,14 +11,7 @@ class NewRequest extends StatelessWidget {
   Widget build(BuildContext context) {
     final dropItem = ["Property", "Payment", "Booking", "Document"];
     return Scaffold(
-      appBar: AppBar(
-        leading: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: AppBackButton(),
-        ),
-        title: HeaderText(text: "New Request"),
-        centerTitle: true,
-      ),
+      appBar: DefaultAppBar(title: "New Request"),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),

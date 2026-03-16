@@ -70,7 +70,7 @@ void showOtpDialog(String fieldType, String targetValue) {
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+        TextButton(onPressed: () => Get.back(), child: const AppText('Cancel')),
         Obx(
           () => ElevatedButton(
             onPressed: isVerifying.value
@@ -110,7 +110,7 @@ void showOtpDialog(String fieldType, String targetValue) {
                     height: 16,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : const Text('Verify'),
+                : const AppText('Verify'),
           ),
         ),
       ],

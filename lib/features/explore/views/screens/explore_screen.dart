@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
-// import 'package:real_estate_app/features/agent/controllers/agent_controller.dart';
 import 'package:real_estate_app/features/explore/controllers/explore_controller.dart';
 import 'package:real_estate_app/features/agent/view/screens/agents_screen.dart';
 import 'package:real_estate_app/features/developer/view/screens/developers_view.dart';
-// import 'package:real_estate_app/features/property/controllers/property_controller.dart';
 import 'package:real_estate_app/features/property/views/screens/property_screen.dart';
-// import 'package:real_estate_app/features/property/views/widgets/empty_explore.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ExploreScreen extends GetView<ExploreController> {
@@ -16,105 +12,75 @@ class ExploreScreen extends GetView<ExploreController> {
 
   @override
   Widget build(BuildContext context) {
-    // final propertyController = Get.find<PropertyController>();
-    // final agentController = Get.find<AgentController>();
     final tabs = ["Projects", "Agents", "Developers"];
 
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 48,
-        centerTitle: true,
-        title: HeaderText(text: "Explore"),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
+    return DefaultTabController(
+      length: tabs.length,
+      initialIndex: controller.selectedTabIndex.value,
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 48,
+          centerTitle: true,
+          title: HeaderText(text: "Explore"),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            // Custom Tab Toggle
-            Container(
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.primary),
-              ),
-              child: Stack(
-                children: [
-                  Obx(() {
-                    return AnimatedAlign(
-                      duration: const Duration(milliseconds: 250),
-                      curve: Curves.easeOutCubic,
-                      alignment: Alignment(
-                        -1.0 + (controller.selectedTabIndex.value * 1.0),
-                        0,
-                      ),
-                      child: FractionallySizedBox(
-                        widthFactor: 1 / 3,
-                        child: Container(
-                          margin: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
-                  Row(
-                    children: List.generate(tabs.length, (index) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () => controller.changeTab(index),
-                          behavior: HitTestBehavior.opaque,
-                          child: Center(
-                            child: Obx(
-                              () => AppText(
-                                tabs[index],
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color:
-                                    controller.selectedTabIndex.value == index
-                                    ? Colors.white
-                                    : AppColors.textSecondary,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              Container(
+                height: 55,
+                padding: const EdgeInsets.all(4.0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.primary.withValues(alpha: 0.5),
                   ),
-                ],
+                ),
+                child: TabBar(
+                  onTap: (index) => controller.changeTab(index),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: AppColors.textSecondary,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  dividerColor: Colors.transparent,
+                  labelStyle: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.primary,
+                  ),
+                  tabs: tabs.map((tab) => Tab(text: tab)).toList(),
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
+              const SizedBox(height: 10),
 
-            // Search Bar & Filter
+              // Content Views
+              Expanded(
+                child: Obx(() {
+                  // Only show empty state if not loading and no data found
 
-            // Content Views
-            Expanded(
-              child: Obx(() {
-                // Only show empty state if not loading and no data found
-
-                switch (controller.selectedTabIndex.value) {
-                  case 0:
-                    return const PropertyScreen();
-                  case 1:
-                    return const AgentsScreen();
-                  case 2:
-                    return const DevelopersView();
-                  default:
-                    return const Center(child: Text("Unknown Tab"));
-                }
-              }),
-            ),
-          ],
+                  switch (controller.selectedTabIndex.value) {
+                    case 0:
+                      return const PropertyScreen();
+                    case 1:
+                      return const AgentsScreen();
+                    case 2:
+                      return const DevelopersView();
+                    default:
+                      return const Center(child: AppText("Unknown Tab"));
+                  }
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );

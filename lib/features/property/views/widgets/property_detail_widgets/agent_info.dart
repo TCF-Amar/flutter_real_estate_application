@@ -28,10 +28,10 @@ class AgentInfo extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasError) {
-                return Center(child: Text(snapshot.error.toString()));
+                return Center(child: AppText(snapshot.error.toString()));
               }
               if (!snapshot.hasData) {
-                return const Center(child: Text("No agent found"));
+                return const Center(child: AppText("No agent found"));
               }
               final agent = snapshot.data;
               return ExploreAgentCard(

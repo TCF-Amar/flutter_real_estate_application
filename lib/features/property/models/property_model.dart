@@ -151,7 +151,6 @@ class Property {
       'share_data': shareData.toJson(),
     };
   }
-  
 
   Property copyWith({
     int? id,

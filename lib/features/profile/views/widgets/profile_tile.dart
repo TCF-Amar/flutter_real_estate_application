@@ -20,7 +20,7 @@ class ProfileTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      contentPadding:const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
 
       leading: Container(
         padding: const EdgeInsets.all(12),
@@ -31,7 +31,7 @@ class ProfileTile extends StatelessWidget {
         ),
         child: AppSvg(path: icon, color: color),
       ),
-      title:  AppText(label, color: textColor),
+      title: AppText(label, color: textColor),
       trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 18),
 
       onTap: action,

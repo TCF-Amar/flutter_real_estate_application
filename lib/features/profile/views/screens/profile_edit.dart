@@ -36,15 +36,8 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 
-  AppBar _buildAppBar() {
-    return AppBar(
-      leading: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: AppBackButton(),
-      ),
-      title: HeaderText(text: 'Edit Profile'),
-      centerTitle: true,
-    );
+  DefaultAppBar _buildAppBar() {
+    return DefaultAppBar(title: 'Edit Profile');
   }
 }
 

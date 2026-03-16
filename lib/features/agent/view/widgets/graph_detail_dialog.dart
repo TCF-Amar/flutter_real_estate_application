@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 const List<Color> _dotColors = [
   Color(0xFF885EFF),
@@ -27,20 +28,19 @@ void showGraphDetailDialog(
         backgroundColor: AppColors.white,
         titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
         contentPadding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-        title: Text(
+        title: AppText(
           title,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
-          ),
+           fontSize: 17,
+          fontWeight: FontWeight.w700,
+          color: AppColors.textPrimary,
+        
         ),
         content: SizedBox(
           width: double.maxFinite,
           child: entries.isEmpty
               ? const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Text('No data available.'),
+                  child: AppText('No data available.'),
                 )
               : ListView.separated(
                   shrinkWrap: true,
@@ -66,12 +66,11 @@ void showGraphDetailDialog(
                           ),
                           const SizedBox(width: 10),
                           Expanded(
-                            child: Text(
+                            child: AppText(
                               key,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: AppColors.textPrimary,
-                              ),
+                               fontSize: 14,
+                              color: AppColors.textPrimary,
+                             
                             ),
                           ),
                           Container(
@@ -83,13 +82,12 @@ void showGraphDetailDialog(
                               color: color.withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: Text(
+                            child: AppText(
                               '$pct%',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: color,
-                              ),
+                               fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: color,
+                             
                             ),
                           ),
                         ],
@@ -102,7 +100,7 @@ void showGraphDetailDialog(
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: const AppText('Close'),
           ),
         ],
       );

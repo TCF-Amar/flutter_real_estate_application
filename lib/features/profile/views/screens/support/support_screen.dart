@@ -52,18 +52,8 @@ class SupportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: const Padding(
-          padding: EdgeInsets.all(8),
-          child: AppBackButton(),
-        ),
-        title: const AppText(
-          'Support',
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
-        centerTitle: true,
-        elevation: 0,
+      appBar: DefaultAppBar(
+        title: 'Support',
       ),
       body: RefreshIndicator(
         onRefresh: () async {},

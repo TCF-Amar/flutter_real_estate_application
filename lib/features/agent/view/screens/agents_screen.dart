@@ -31,7 +31,7 @@ class AgentsScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: AppText('Explore Agents', color: Colors.grey),
+            child: AppText('Explore Agents'.tr, color: Colors.grey),
           ),
         ),
 
@@ -45,7 +45,7 @@ class AgentsScreen extends StatelessWidget {
               }
 
               if (controller.agents.isEmpty) {
-                return const Center(child: Text('No agents found'));
+                return Center(child: AppText('No agents found'.tr));
               }
 
               return ListView.separated(

@@ -100,7 +100,7 @@ class ProfileOption extends StatelessWidget {
       ),
       ProfileOptionItem(
         icon: Assets.icons.icon9,
-        label: "Delete account",
+        label: "delete account".tr,
         color: AppColors.primary,
         textColor: AppColors.textPrimary,
         action: () {

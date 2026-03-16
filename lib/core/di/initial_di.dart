@@ -4,6 +4,7 @@ import 'package:real_estate_app/core/networks/dio_client.dart';
 import 'package:real_estate_app/core/networks/dio_helper.dart';
 import 'package:real_estate_app/core/services/agent_services.dart';
 import 'package:real_estate_app/core/services/auth_services.dart';
+import 'package:real_estate_app/core/services/booking_services.dart';
 import 'package:real_estate_app/core/services/home_services.dart';
 import 'package:real_estate_app/core/services/profile_services.dart';
 import 'package:real_estate_app/core/services/property_services.dart';
@@ -33,5 +34,6 @@ class InitialDi {
     Get.lazyPut<AgentServices>(() => AgentServices(), fenix: true);
    
     Get.lazyPut<ProfileServices>(() => ProfileServices(), fenix: true);
+    Get.lazyPut<BookingServices>(() => BookingServices(), fenix: true);
   }
 }

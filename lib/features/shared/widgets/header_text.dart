@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
 
@@ -22,7 +23,7 @@ class HeaderText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppText(
-      text,
+      text.tr,
       fontSize: fontSize ?? 18,
       fontWeight: fontWeight ?? FontWeight.w500,
       color: color ?? AppColors.black.withValues(alpha: 0.70),

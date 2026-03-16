@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ImagePickerUtil {
   static final ImagePicker _picker = ImagePicker();
@@ -19,16 +20,17 @@ class ImagePickerUtil {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                const AppText(
                   "Select Image",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
 
                 const SizedBox(height: 20),
 
                 ListTile(
                   leading: const Icon(Icons.camera_alt),
-                  title: const Text("Camera"),
+                  title: const AppText("Camera"),
                   onTap: () async {
                     final image = await _picker.pickImage(
                       source: ImageSource.camera,
@@ -41,7 +43,7 @@ class ImagePickerUtil {
 
                 ListTile(
                   leading: const Icon(Icons.photo_library),
-                  title: const Text("Gallery"),
+                  title: const AppText("Gallery"),
                   onTap: () async {
                     final image = await _picker.pickImage(
                       source: ImageSource.gallery,

@@ -12,14 +12,7 @@ class ChangePassword extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
     final controller = Get.find<ProfileController>();
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AppBackButton(),
-        ),
-        title: HeaderText(text: "Change Password"),
-        centerTitle: true,
-      ),
+      appBar: DefaultAppBar(title: "Change Password"),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(

@@ -130,12 +130,12 @@ class _DeveloperFilterSheetState extends State<DeveloperFilterSheet> {
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         isExpanded: true,
-                        hint: const Text('Select'),
+                        hint: const AppText('Select'),
                         value: _selectedYearsActive,
                         items: _yearsActiveOptions.map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: AppText(value),
                           );
                         }).toList(),
                         onChanged: (newValue) {
@@ -164,12 +164,12 @@ class _DeveloperFilterSheetState extends State<DeveloperFilterSheet> {
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         isExpanded: true,
-                        hint: const Text('Select'),
+                        hint: const AppText('Select'),
                         value: _selectedProjectsCount,
                         items: _projectsCountOptions.map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: AppText(value),
                           );
                         }).toList(),
                         onChanged: (newValue) {
@@ -195,7 +195,7 @@ class _DeveloperFilterSheetState extends State<DeveloperFilterSheet> {
                     children: _ratingOptions.map((rating) {
                       final isSelected = _selectedRating.contains(rating);
                       return ChoiceChip(
-                        label: Text(rating),
+                        label: AppText(rating),
                         selected: isSelected,
                         onSelected: (selected) {
                           setState(() {

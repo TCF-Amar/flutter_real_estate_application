@@ -10,14 +10,7 @@ class SupportDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = PaymentStatus.pending;
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AppBackButton(),
-        ),
-        title: HeaderText(text: "Support Detail"),
-        centerTitle: true,
-      ),
+      appBar: DefaultAppBar(title: "Support Detail"),
 
       body: SingleChildScrollView(
         child: SafeArea(

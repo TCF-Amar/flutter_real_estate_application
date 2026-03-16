@@ -125,7 +125,7 @@ class AgentFilterSheet extends StatelessWidget {
                       children: _ratingOptions.map((rating) {
                         final isSelected = controller.rating.value == rating;
                         return ChoiceChip(
-                          label: Text(rating),
+                          label: AppText(rating),
                           selected: isSelected,
                           onSelected: (_) => controller.rating.value = rating,
                           selectedColor: AppColors.primary,
@@ -159,7 +159,6 @@ class AgentFilterSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Obx(() {
-                    
                     final storedValue = controller.experience.value;
                     final matchedOption = storedValue.isNotEmpty
                         ? _experienceOptions.firstWhereOrNull(

@@ -23,6 +23,8 @@ class AppTextFormField extends StatefulWidget {
   final void Function(String)? onChanged;
 
   final bool enabled;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   final int? maxLines;
   final int? minLines;
@@ -43,6 +45,7 @@ class AppTextFormField extends StatefulWidget {
 
   final Color? fillColor;
   final Color? borderColor;
+  
   final Color? focusedBorderColor;
   final Color? errorBorderColor;
 
@@ -66,6 +69,8 @@ class AppTextFormField extends StatefulWidget {
     this.onFieldSubmitted,
     this.onChanged,
     this.enabled = true,
+    this.readOnly = false,
+    this.onTap,
     this.maxLines = 1,
     this.minLines,
     this.maxLength,
@@ -143,6 +148,8 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
       validator: widget.validator,
       keyboardType: widget.keyboardType,
       onChanged: widget.onChanged,
+      readOnly: widget.readOnly,
+      onTap: widget.onTap,
       textInputAction: widget.textInputAction,
       onFieldSubmitted: widget.onFieldSubmitted,
       maxLines: widget.isPassword ? 1 : widget.maxLines,

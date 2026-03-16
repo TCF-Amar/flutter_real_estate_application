@@ -54,6 +54,15 @@ class PropertyDetailsController extends GetxController {
     ever(propertyId, _loadAll);
   }
 
+  void retry() {
+    if (propertyId.value != 0) {
+      _loadAll(propertyId.value);
+    } else {
+      log.w('Retry failed: propertyId is 0');
+      AppSnackbar.error('Cannot retry: Property ID missing');
+    }
+  }
+
   void _loadAll(int id) {
     fetchPropertyDetails(id);
     fetchReviews(id);
@@ -69,6 +78,7 @@ class PropertyDetailsController extends GetxController {
         _error.value = l;
       },
       (r) {
+        _error.value = null;
         log.d(
           'Fetched property details — images: ${r.data?.media?.images.length}',
         );

@@ -77,7 +77,7 @@ class _AmenitiesFeaturesState extends State<AmenitiesFeatures> {
                   _isExpanded = !_isExpanded;
                 });
               },
-              child: Text(_isExpanded ? "Show Less" : "Show More"),
+              child: AppText(_isExpanded ? "Show Less" : "Show More"),
             ),
         ],
       ),

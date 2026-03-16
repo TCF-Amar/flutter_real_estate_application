@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 
 class AppText extends StatelessWidget {
@@ -40,17 +41,10 @@ class AppText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    final textColor =
-        color ??
-        Color.lerp(
-          Colors.black,
-          Colors.black87,
-          0.87,
-        )!; 
+    final textColor = color ?? Color.lerp(Colors.black, Colors.black87, 0.87)!;
 
     return Text(
-      uppercase == true ? text.toUpperCase() : text,
+      (uppercase == true ? text.toUpperCase() : text).tr,
       maxLines: maxLines,
       overflow: overflow,
       textAlign: textAlign,

@@ -57,7 +57,7 @@ Future<void> showLocationDialog(BuildContext context) {
                     //   onPressed: () {
                     //     Get.back();
                     //   },
-                    //   child: const Text("Maybe later"),
+                    //   child: const AppText("Maybe later"),
                     // ),
                   ),
 

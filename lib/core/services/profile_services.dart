@@ -180,4 +180,25 @@ class ProfileServices {
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }
+
+  FutureResult<void> updateCountry(String? country) async {
+    try {
+      final response = await dio.request(
+        ApiRequest(
+          url: ApiEndpoints.updateSettings,
+          method: ApiMethod.post,
+          body: {'country': country},
+        ),
+      );
+      log.d('Update country response: ${response.data}');
+      log.i('Country updated successfully');
+      return const Right(null);
+    } on AppException catch (e) {
+      log.e('Update country failed (AppException): ${e.message}');
+      return Left(ApiException.map(e));
+    } catch (e) {
+      log.e('Update country failed (Unknown): $e');
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
 }

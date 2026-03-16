@@ -5,7 +5,6 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/property/models/property_detail_model.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
-
 class Overview extends StatelessWidget {
   final PropertyDetail property;
   const Overview({super.key, required this.property});

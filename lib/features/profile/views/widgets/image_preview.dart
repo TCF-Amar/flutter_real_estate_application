@@ -55,7 +55,7 @@ Future<File?> showImagePreviewDialog(BuildContext context, File image) async {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: const Text("Cancel"),
+                        child: const AppText("Cancel"),
                       ),
                     ),
 

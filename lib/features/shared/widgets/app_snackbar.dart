@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class AppSnackbar {
   static void success(String message, {String? title}) => _show(
@@ -50,17 +51,16 @@ class AppSnackbar {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  AppText(
                     title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
-                  Text(
+                  AppText(
                     message,
-                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                    fontSize: 13,
+                    color: Colors.white,
                   ),
                 ],
               ),

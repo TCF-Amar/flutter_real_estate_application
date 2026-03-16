@@ -13,6 +13,31 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
     return Scaffold(
       body: Obx(() {
         final agent = controller.agentDetails;
+        final err = controller.error;
+        if (err != null) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Column(
+                mainAxisAlignment: .center,
+
+                children: [
+                  Icon(Icons.error_outline, size: 48, color: Colors.red),
+                  AppText(
+                    err.message,
+                    overflow: .visible,
+                    textAlign: .center,
+                    color: Colors.red,
+                    fontSize: 24,
+                  ),
+                  SizedBox(height: 20),
+
+                  AppButton(text: "Back", onPressed: () => Get.back()),
+                ],
+              ),
+            ),
+          );
+        }
 
         if (agent == null) {
           return const Center(child: CircularProgressIndicator());

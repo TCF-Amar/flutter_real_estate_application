@@ -109,7 +109,7 @@ class ProjectFilterSheet extends StatelessWidget {
                           bhk.value,
                         );
                         return ChoiceChip(
-                          label: Text(label),
+                          label: AppText(label),
                           selected: isSelected,
                           onSelected: (selected) {
                             if (selected) {
@@ -190,7 +190,7 @@ class ProjectFilterSheet extends StatelessWidget {
                         final isSelected = controller.selectedAmenities.value
                             .contains(amenity);
                         return ChoiceChip(
-                          label: Text(amenity),
+                          label: AppText(amenity),
                           selected: isSelected,
                           onSelected: (selected) {
                             controller.selectedAmenities.value = selected

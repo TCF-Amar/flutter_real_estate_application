@@ -24,10 +24,10 @@ void accountDeleteConfirmation(BuildContext context, Function onDelete) {
             ),
           ],
         ),
-        content: const Text('Are you sure you want to delete your account?'),
+        content: const AppText('Are you sure you want to delete your account?'),
         actions: [
           TextButton(
-            child: const Text('Cancel'),
+            child: const AppText('Cancel'),
             onPressed: () {
               Get.back();
             },

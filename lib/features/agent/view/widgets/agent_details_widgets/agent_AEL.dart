@@ -1,9 +1,9 @@
-// ignore_for_file: file_names
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/features/agent/controllers/agent_details_controller.dart';
-import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class AgentAel extends StatelessWidget {
   const AgentAel({super.key});
@@ -60,18 +60,18 @@ class AgentAel extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              AppText(
                 value,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
-              Text(
+              AppText(
                 label,
-                style: const TextStyle(color: Colors.grey, fontSize: 11),
+                color: Colors.grey,
+                fontSize: 11,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

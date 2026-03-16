@@ -20,13 +20,8 @@ class SelectCountryScreen extends GetView<AuthController> {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AppBackButton(),
-        ),
-        title: HeaderText(text: "Select Country"),
-        centerTitle: true,
+      appBar: const DefaultAppBar(
+        title: "Select Country",
       ),
       backgroundColor: AppColors.white,
       body: SafeArea(
@@ -115,11 +110,9 @@ class SelectCountryScreen extends GetView<AuthController> {
                                           ),
                                         ),
                                         child: Center(
-                                          child: Text(
+                                          child: AppText(
                                             country['flag']!,
-                                            style: const TextStyle(
-                                              fontSize: 24,
-                                            ),
+                                            fontSize: 24,
                                           ),
                                         ),
                                       ),

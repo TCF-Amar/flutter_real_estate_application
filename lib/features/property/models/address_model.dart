@@ -38,6 +38,11 @@ class AddressModel {
     'zipcode': zipcode,
     'locality': locality,
   };
+
+  @override
+  String toString() {
+    return '$line1, $line2, $city, $state, $country, $zipcode, $locality';
+  }
 }
 
 class Coordinates {

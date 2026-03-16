@@ -21,13 +21,16 @@ class MainController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (Get.arguments is int) {
+      currentIndex.value = Get.arguments;
+    }
     Get.find<AuthController>().getCurrentUser();
     checkLocationPermission(Get.context!);
   }
 
   final List<Widget> screens = [
     const HomeScreen(),
-    // const Center(child: Text("Home"),),
+    // const Center(child: AppText("Home"),),
     const ExploreScreen(),
     const FavoriteScreen(),
     const MyBookingScreen(),

@@ -24,8 +24,7 @@ class ProfileController extends GetxController {
   Rxn<UserModel> get user => _authController.user;
   Rxn<ProfileModel> get profile => _authController.userProfile;
 
-
-  // ─── Text Controllers ────────────────────────────────────────────────────────
+  // ─── AppText Controllers ────────────────────────────────────────────────────────
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -293,5 +292,24 @@ class ProfileController extends GetxController {
       },
     );
     passChanging.value = false;
+  }
+
+  final _updatingCountry = false.obs;
+  bool get updatingCountry => _updatingCountry.value;
+  void updateCountry(String? country) async {
+    _updatingCountry.value = true;
+    final res = await _profileServices.updateCountry(country);
+    res.fold(
+      (failure) {
+        AppSnackbar.error(failure.message);
+        _authController.setError(failure);
+      },
+      (_) {
+        _authController.userProfile.value = _authController.userProfile.value
+            ?.copyWith(country: country);
+        AppSnackbar.success('Country updated successfully');
+      },
+    );
+    _updatingCountry.value = false;
   }
 }

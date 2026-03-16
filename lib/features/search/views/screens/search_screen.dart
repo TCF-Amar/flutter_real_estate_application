@@ -15,8 +15,8 @@ class SearchScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 AppBackButton(),
-                
+                AppBackButton(),
+
                 AppText(
                   "Search",
                   fontSize: 18,
@@ -83,7 +83,7 @@ class SearchScreen extends StatelessWidget {
                     return SizedBox(height: 10);
                   },
                   itemBuilder: (context, index) {
-                    return ListTile(title: Text("Search"));
+                    return ListTile(title: AppText("Search"));
                   },
                 ),
               ),

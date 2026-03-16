@@ -22,23 +22,28 @@ class AppRoutes {
   static const String searchResult = '/search-result';
 
   /// Property
-  static const String propertyDetails = '/property-details';
+  static const String property = '/property';
+  static const String propertyDetails = '$property/details';
+  static const String bookVisit = "$property/book-visit";
+  static const String visitConfirmationPrev = '/visit-confirmation-prev';
+  static const String visitBookingConfirm = '/visit-booking-confirm';
 
   /// Agent
-  static const String agentDetails = '/agent-details';
+  static const String agent = '/agent';
+  static const String agentDetails = '$agent/details';
 
   /// Profile
   static const String profile = '/profile';
-  static const String editProfile = '$profile/edit-profile';
+  static const String editProfile = '$profile/edit';
   static const String settings = '$profile/settings';
 
   /// Support
   static const String support = '$profile/support';
-  static const String newRequest = '$support/new-request';
-  static const String supportDetails = '$support/support-details';
+  static const String newRequest = '$support/request';
+  static const String supportDetails = '$support/details';
 
   // account detection
-  static const String accountDelete = '/account-delete';
+  static const String accountDelete = '$profile/account/delete';
 
   static const String changePassword = "$profile/change-password";
 }

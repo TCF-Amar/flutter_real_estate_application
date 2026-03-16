@@ -21,18 +21,21 @@ Future<bool?> showLogoutDialog(BuildContext context) {
             ),
           ],
         ),
-        content: const Text(
+        content: const AppText(
           "Are you sure you want to logout from your account?",
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const AppText("Cancel"),
+          ),
 
           TextButton(
             onPressed: () {
               authController.logout();
               Get.back();
             },
-            child: const AppText("Logout", color: Colors.red),
+            child: AppText("Logout".tr, color: Colors.red),
           ),
         ],
       );

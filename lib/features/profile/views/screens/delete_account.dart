@@ -29,14 +29,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
     final ProfileController controller = Get.find();
     final formKey = GlobalKey<FormState>();
     return Scaffold(
-      appBar: AppBar(
-        leading: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: AppBackButton(),
-        ),
-        title: HeaderText(text: "Delete Account"),
-        centerTitle: true,
-      ),
+      appBar: DefaultAppBar(title: "Delete Account"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(18.0),

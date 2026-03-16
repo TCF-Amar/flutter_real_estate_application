@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
       onRefresh: () async => controller.refreshData(),
       child: CustomScrollView(
         slivers: [
-          // ── AppBar with Sticky Top Search Bar ──────────────────────────
+          // ── DefaultAppBar with Sticky Top Search Bar ──────────────────────────
           SliverAppBar(
             pinned: true,
             expandedHeight: expandedHeight,

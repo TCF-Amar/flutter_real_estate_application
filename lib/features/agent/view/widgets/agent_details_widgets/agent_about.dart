@@ -17,9 +17,10 @@ class AgentAbout extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            AppText(
               'About ${agent.name}',
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
             ),
             Divider(),
             // const SizedBox(height: 8),
