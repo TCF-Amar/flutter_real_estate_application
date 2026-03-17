@@ -49,12 +49,7 @@ class _PriceAndDescriptionState extends State<PriceAndDescription> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HeaderText(
-                text: "Property Description",
-                // fontSize: 16,
-                // fontWeight: FontWeight.bold,
-                // color: AppColors.black.withValues(alpha: 0.5),
-              ),
+              AppText.large("Property Description"),
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.all(16),

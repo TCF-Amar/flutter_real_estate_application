@@ -15,10 +15,7 @@ class MyBookingScreen extends GetView<MyBookingController> {
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
-        appBar: AppBar(
-          title: HeaderText(text: "My Booking"),
-          centerTitle: true,
-        ),
+        appBar: AppBar(title: AppText.large("My Booking"), centerTitle: true),
         body: Column(
           children: [
             Padding(

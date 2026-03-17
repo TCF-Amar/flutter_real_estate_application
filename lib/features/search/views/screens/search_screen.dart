@@ -1,95 +1,125 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/features/search/controllers/search_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends GetView<AppSearchController> {
   const SearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(top: 50, left: 20, right: 20),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AppBackButton(),
-
-                AppText(
-                  "Search",
-                  fontSize: 18,
-                  color: AppColors.black.withValues(alpha: 0.8),
-                  fontWeight: FontWeight.w500,
-                ),
-                SizedBox(width: 40),
-              ],
-            ),
-            SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-
-              child: TextField(
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 10,
-                  ),
-                  hintText: "Search",
-                  hintStyle: TextStyle(
-                    color: AppColors.black.withValues(alpha: 0.6),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  suffixIcon: Icon(Icons.close, color: AppColors.grey),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(
-                    255,
-                    255,
-                    255,
-                    255,
-                  ).withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.grey.withValues(alpha: 0.3),
-                      blurRadius: 10,
-                      offset: Offset(0, -4),
+      appBar: DefaultAppBar(title: "Search"),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                pinned: true,
+                automaticallyImplyLeading: false,
+                // leading: const Padding(
+                //   padding: EdgeInsets.all(8.0),
+                //   child: AppBackButton(),
+                // ),
+                toolbarHeight: 80,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: SafeArea(
+                    child: AppContainer(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      child: AppTextFormField(
+                        controller: controller.searchController,
+                        hintText: "Search properties by name, location...",
+                        onFieldSubmitted: (value) => controller.search(),
+                        prefixIcon: AppSvg(path: Assets.icons.search),
+                        showContainerBorder: true,
+                        containerBorderRadius: BorderRadius.circular(12),
+                        // containerBorderSideType: BorderSideType.bottom,
+                        containerBorderWidth: 1,
+                        // containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
+                        suffixIcon: IconButton(
+                          onPressed: () => controller.setQuery(""),
+                          icon: const Icon(Icons.close, size: 20),
+                        ),
+                        onChanged: (value) => controller.setQuery(value),
+                      ),
                     ),
-                  ],
-                ),
-                child: ListView.separated(
-                  itemCount: 100,
-                  separatorBuilder: (context, index) {
-                    return SizedBox(height: 10);
-                  },
-                  itemBuilder: (context, index) {
-                    return ListTile(title: AppText("Search"));
-                  },
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+              SliverToBoxAdapter(
+                child: AppContainer(
+                  height: 5,
+                  color: AppColors.grey.withValues(alpha: 0.2),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: AppContainer(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const AppText(
+                    "Recent ",
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          // DraggableScrollableSheet(
+          //   initialChildSize: 0.5,
+          //   minChildSize: 0.5,
+          //   maxChildSize: 0.9,
+          //   snap: true,
+          //   builder: (context, scrollController) {
+          //     return Container(
+          //       decoration: BoxDecoration(
+          //         color: AppColors.white,
+          //         borderRadius: const BorderRadius.vertical(
+          //           top: Radius.circular(20),
+          //         ),
+          //         boxShadow: [
+          //           BoxShadow(
+          //             color: Colors.black.withValues(alpha: 0.1),
+          //             blurRadius: 10,
+          //             spreadRadius: 5,
+          //           ),
+          //         ],
+          //       ),
+          //       child: Column(
+          //         children: [
+          //           const SizedBox(height: 12),
+          //           Container(
+          //             width: 40,
+          //             height: 5,
+          //             decoration: BoxDecoration(
+          //               color: AppColors.grey.withValues(alpha: 0.3),
+          //               borderRadius: BorderRadius.circular(10),
+          //             ),
+          //           ),
+          //           const SizedBox(height: 12),
+          //           Expanded(
+          //             child: ListView.builder(
+          //               controller: scrollController,
+          //               itemCount: 20,
+          //               itemBuilder: (context, index) {
+          //                 return ListTile(
+          //                   title: AppText("Recent Search Item $index"),
+          //                   leading: const Icon(Icons.history),
+          //                   onTap: () {},
+          //                 );
+          //               },
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     );
+          //   },
+          // ),
+        ],
       ),
     );
   }

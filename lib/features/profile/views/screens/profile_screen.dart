@@ -48,8 +48,8 @@ class ProfileScreen extends GetView<ProfileController> {
               SliverAppBar(
                 expandedHeight: 230,
 
-                title: HeaderText(
-                  text: "Profile",
+                title: AppText.large(
+                  "Profile",
                   color: AppColors.white,
                   // shadow: true,
                   // shadowColor: AppColors.grey,

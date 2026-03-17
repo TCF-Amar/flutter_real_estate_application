@@ -20,8 +20,8 @@ Future<void> showLocationDialog(BuildContext context) {
             children: [
               Row(
                 children: [
-                  HeaderText(text: "Enable ", color: Colors.green),
-                  HeaderText(text: "Location Access"),
+                  AppText.large("Enable ", color: Colors.green),
+                  AppText.large("Location Access"),
                 ],
               ),
 

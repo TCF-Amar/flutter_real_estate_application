@@ -51,7 +51,7 @@ class _LatestUpdateState extends State<LatestUpdate> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeaderText(text: "Latest Update"),
+          AppText.large("Latest Update"),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(12),

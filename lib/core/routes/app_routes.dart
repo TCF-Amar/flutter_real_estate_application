@@ -1,6 +1,9 @@
 class AppRoutes {
   AppRoutes._();
 
+
+  static const String test = '/';
+
   /// Splash & Onboarding
   static const String splash = '/splash';
   static const String getStart = '/get-start';

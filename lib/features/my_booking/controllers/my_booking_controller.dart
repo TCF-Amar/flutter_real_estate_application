@@ -32,13 +32,6 @@ class MyBookingController extends GetxController {
 
     getVisitList();
 
-    scrollController.addListener(() {
-      if (scrollController.position.pixels >=
-          scrollController.position.maxScrollExtent - 200) {
-        loadMoreVisits();
-      }
-    });
-
     ever(visitList, (_) {
       filterVisitList();
     });
@@ -77,10 +70,11 @@ class MyBookingController extends GetxController {
         visitPagination.value = response.pagination;
 
         if (isRefresh) {
-          visitList.value = response.data;
+          visitList.assignAll(response.data);
         } else {
           visitList.addAll(response.data);
         }
+        filterVisitList();
       },
     );
 
@@ -113,24 +107,25 @@ class MyBookingController extends GetxController {
     completedVisitList.clear();
 
     for (final visit in visitList) {
-      switch (visit.statusLabel) {
-        case "Requested":
+      switch (visit.status.toLowerCase().trim()) {
+        case "requested":
+        case "pending":
           pendingVisitList.add(visit);
           break;
 
-        case "Canceled":
+        case "canceled":
+        case "cancelled":
           cancelledVisitList.add(visit);
           break;
 
-        case "Completed":
+        case "complete":
+        case "completed":
           completedVisitList.add(visit);
           break;
       }
     }
 
-    log.d("Pending : ${pendingVisitList.length}");
-    log.d("Cancelled : ${cancelledVisitList.length}");
-    log.d("Completed : ${completedVisitList.length}");
+    log.d("Filtered lists update - Pending: ${pendingVisitList.length}, Cancelled: ${cancelledVisitList.length}, Completed: ${completedVisitList.length}");
   }
 
   /// BOOK VISIT

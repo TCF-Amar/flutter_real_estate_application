@@ -52,11 +52,13 @@ class AgentDetailScreen extends GetView<AgentDetailsController> {
               ),
               expandedHeight: 370,
 
-              title: const HeaderText(
-                text: "Agent Details",
-                color: Colors.white,
-                shadow: true,
-                shadowColor: Colors.black45,
+              title: AppText.large(
+                "Agent Details",
+                color: Colors.grey.withValues(alpha: 0.7),
+
+                // showShadow: true,
+                fontWeight: .w600,
+                // shadowColor: AppColors.grey,
               ),
               centerTitle: true,
               pinned: true,

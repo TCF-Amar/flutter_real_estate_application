@@ -15,8 +15,8 @@ class VisitStatusSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const HeaderText(
-              text: "Visit Status",
+            AppText.large(
+              "Visit Status",
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,
@@ -33,10 +33,7 @@ class VisitStatusSection extends StatelessWidget {
                       Row(
                         children: [
                           if (data.status == "complete")
-                            const Icon(
-                              Icons.check_circle,
-                              color: Colors.green,
-                            ),
+                            const Icon(Icons.check_circle, color: Colors.green),
                           if (data.status == "canceled")
                             const Icon(Icons.cancel, color: Colors.red),
                           if (data.status == "requested")
@@ -47,8 +44,8 @@ class VisitStatusSection extends StatelessWidget {
                             color: data.status == "complete"
                                 ? Colors.green
                                 : data.status == "canceled"
-                                    ? Colors.red
-                                    : Colors.amber,
+                                ? Colors.red
+                                : Colors.amber,
                             fontWeight: FontWeight.bold,
                           ),
                         ],

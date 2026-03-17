@@ -34,7 +34,7 @@ class _ListedPropertyState extends State<ListedProperty> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const HeaderText(text: "Listed Properties"),
+             AppText.large("Listed Properties"),
             const SizedBox(height: 16),
             SizedBox(
               height: 38,

@@ -15,8 +15,8 @@ class VisitorDetailsSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const HeaderText(
-              text: "Visit Information",
+             AppText.large(
+              "Visit Information",
               color: AppColors.textSecondary,
               fontSize: 15,
               fontWeight: FontWeight.w600,

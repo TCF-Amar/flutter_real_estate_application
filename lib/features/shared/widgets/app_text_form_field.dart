@@ -2,60 +2,95 @@ import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
+import 'app_container.dart'; // our universal container
 
 enum BorderSideType { all, bottom, top, left, right }
 
+/// A fully customizable text form field wrapped in an [AppContainer].
+///
+/// All visual outer styling (border, shadow, background, padding, margin)
+/// is controlled via the container parameters. The inner [TextFormField]
+/// receives its own input‑related properties (controller, validator, etc.).
 class AppTextFormField extends StatefulWidget {
+  // ---------- TextFormField specific properties ----------
   final TextEditingController? controller;
   final String? labelText;
   final String? hintText;
   final String? Function(String?)? validator;
-
   final bool obscureText;
   final bool isPassword;
-
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final void Function(String)? onFieldSubmitted;
   final void Function(String)? onChanged;
-
   final bool enabled;
   final bool readOnly;
   final VoidCallback? onTap;
-
   final int? maxLines;
   final int? minLines;
   final int? maxLength;
-
-  final bool border;
-
-  final BorderRadius? borderRadius;
-  final BorderSideType borderSideType;
-  // final bool borderTop;
-  // final bool borderBottom;
-  // final bool borderLeft;
-  // final bool borderRight;
-
-  final Color? textColor;
-  final Color? hintColor;
-  final Color? iconColor;
-
-  final Color? fillColor;
-  final Color? borderColor;
-  
-  final Color? focusedBorderColor;
-  final Color? errorBorderColor;
-
-  final EdgeInsetsGeometry? contentPadding;
-
   final String? prefixText;
   final double? fontSize;
+  final Color? textColor; // text color inside the field
+  final Color? hintColor;
+  final Color? iconColor;
+  final Color? fillColor; // background color of the field itself
+  final EdgeInsetsGeometry? contentPadding; // padding inside the field
+
+  // ---------- Outer container properties (mirror AppContainer) ----------
+  // Layout
+  final EdgeInsetsGeometry? containerMargin;
+  final EdgeInsetsGeometry?
+  containerPadding; // overrides contentPadding? We'll keep separate.
+  final double? containerWidth;
+  final double? containerHeight;
+  final AlignmentGeometry? containerAlignment;
+  final BoxConstraints? containerConstraints;
+
+  // Decoration base
+  final Decoration? containerDecoration; // full override
+  final Color? containerColor; // background color of container
+  final Gradient? containerGradient;
+  final DecorationImage? containerImage;
+  final BoxBorder? containerBorder; // overrides simplified border
+  final List<BoxShadow>? containerBoxShadow;
+  final BlendMode? containerBackgroundBlendMode;
+  final BoxShape? containerShape;
+
+  // Simplified border (used if containerBorder == null)
+  final bool showContainerBorder;
+  final BorderSideType containerBorderSideType;
+  final Color containerBorderColor;
+  final double containerBorderWidth;
+  final BorderStyle containerBorderStyle;
+
+  // Simplified shadow (used if containerBoxShadow == null)
+  final bool showContainerShadow;
+  final Color? containerShadowColor;
+  final double? containerShadowBlurRadius;
+  final Offset? containerShadowOffset;
+  final double? containerShadowSpreadRadius;
+
+  // Elevation fallback
+  final double? containerElevation;
+
+  // Foreground decoration
+  final Decoration? containerForegroundDecoration;
+
+  // Clipping
+  final Clip containerClipBehavior;
+
+  // Expand helper
+  final bool containerExpand;
+
+  // ---------- Border radius for the container ----------
+  final BorderRadiusGeometry? containerBorderRadius;
 
   const AppTextFormField({
     super.key,
+    // TextFormField params
     this.controller,
     this.labelText,
     this.hintText,
@@ -74,19 +109,47 @@ class AppTextFormField extends StatefulWidget {
     this.maxLines = 1,
     this.minLines,
     this.maxLength,
-    this.border = true,
-    this.borderRadius,
+    this.prefixText,
+    this.fontSize,
     this.textColor,
     this.hintColor,
     this.iconColor,
     this.fillColor,
-    this.borderColor,
-    this.focusedBorderColor,
-    this.errorBorderColor,
-    this.contentPadding,
-    this.prefixText,
-    this.borderSideType = BorderSideType.all,
-    this.fontSize,
+    this.contentPadding = const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 14,
+    ),
+
+    // Container params
+    this.containerMargin,
+    this.containerPadding,
+    this.containerWidth,
+    this.containerHeight,
+    this.containerAlignment,
+    this.containerConstraints,
+    this.containerDecoration,
+    this.containerColor,
+    this.containerGradient,
+    this.containerImage,
+    this.containerBorder,
+    this.containerBorderRadius,
+    this.containerBoxShadow,
+    this.containerBackgroundBlendMode,
+    this.containerShape,
+    this.showContainerBorder = false,
+    this.containerBorderSideType = BorderSideType.all,
+    this.containerBorderColor = Colors.grey,
+    this.containerBorderWidth = 1.0,
+    this.containerBorderStyle = BorderStyle.solid,
+    this.showContainerShadow = true,
+    this.containerShadowColor,
+    this.containerShadowBlurRadius,
+    this.containerShadowOffset,
+    this.containerShadowSpreadRadius,
+    this.containerElevation,
+    this.containerForegroundDecoration,
+    this.containerClipBehavior = Clip.none,
+    this.containerExpand = false,
   });
 
   @override
@@ -108,41 +171,10 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
     });
   }
 
-  InputBorder _buildInputBorder(Color color, {double width = 1.0}) {
-    if (!widget.border) {
-      return InputBorder.none;
-    }
-
-    // Only apply border radius if the specified side type is "all".
-    // For specific sides (top, bottom, left, right), we use no border radius.
-    final radius = (widget.borderSideType == BorderSideType.all)
-        ? (widget.borderRadius ?? BorderRadius.circular(8))
-        : BorderRadius.zero;
-
-    switch (widget.borderSideType) {
-      case BorderSideType.bottom:
-        return UnderlineInputBorder(
-          borderSide: BorderSide(color: color, width: width),
-          borderRadius: radius,
-        );
-      case BorderSideType.top:
-      case BorderSideType.left:
-      case BorderSideType.right:
-      case BorderSideType.all:
-        return OutlineInputBorder(
-          borderSide: BorderSide(color: color, width: width),
-          borderRadius: radius,
-        );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final borderColor = widget.borderColor ?? AppColors.grey;
-    final focusedColor = widget.focusedBorderColor ?? AppColors.primary;
-    final errorColor = widget.errorBorderColor ?? AppColors.error;
-
-    return TextFormField(
+    // Build the inner TextFormField with NO border (container handles it)
+    final textField = TextFormField(
       controller: widget.controller,
       obscureText: widget.isPassword ? obscure : widget.obscureText,
       validator: widget.validator,
@@ -163,20 +195,19 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         labelText: widget.labelText,
         hintText: widget.hintText,
         prefixText: widget.prefixText,
-
         hintStyle: TextStyle(
           color: widget.hintColor ?? Colors.grey,
           fontSize: widget.fontSize ?? 16,
         ),
-        contentPadding:
-            widget.contentPadding ??
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        border: _buildInputBorder(borderColor),
-        enabledBorder: _buildInputBorder(borderColor),
-        focusedBorder: _buildInputBorder(focusedColor),
-        errorBorder: _buildInputBorder(errorColor),
-        focusedErrorBorder: _buildInputBorder(errorColor),
-        disabledBorder: _buildInputBorder(borderColor.withValues(alpha: 0.5)),
+        // No border – the container provides it
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+
+        contentPadding: widget.contentPadding,
 
         prefixIcon: widget.prefixIcon != null
             ? Padding(
@@ -188,12 +219,10 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
                 ),
               )
             : null,
-
         prefixIconConstraints: const BoxConstraints(
           minWidth: 40,
           minHeight: 40,
         ),
-
         suffixIcon: widget.isPassword
             ? InkWell(
                 onTap: togglePassword,
@@ -210,6 +239,50 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
         filled: true,
         fillColor: widget.fillColor ?? Colors.grey.withValues(alpha: 0.08),
       ),
+    );
+
+    // Wrap with AppContainer
+    return AppContainer(
+      // Layout
+      margin: widget.containerMargin,
+      padding: widget
+          .containerPadding, // outer padding, separate from contentPadding
+      width: widget.containerWidth,
+      height: widget.containerHeight,
+      alignment: widget.containerAlignment,
+      constraints: widget.containerConstraints,
+      // Decoration
+      decoration: widget.containerDecoration,
+      color: widget.containerColor,
+      gradient: widget.containerGradient,
+      image: widget.containerImage,
+      border: widget.containerBorder,
+      borderRadius: widget.containerBorderRadius,
+      boxShadow: widget.containerBoxShadow,
+      backgroundBlendMode: widget.containerBackgroundBlendMode,
+      shape: widget.containerShape,
+      // Simplified border
+      showBorder: widget.showContainerBorder,
+      borderSideType: widget.containerBorderSideType,
+      borderColor: widget.containerBorderColor,
+      borderWidth: widget.containerBorderWidth,
+      borderStyle: widget.containerBorderStyle,
+      // Simplified shadow
+      showShadow: widget.showContainerShadow,
+      shadowColor: widget.containerShadowColor,
+      shadowBlurRadius: widget.containerShadowBlurRadius,
+      shadowOffset: widget.containerShadowOffset,
+      shadowSpreadRadius: widget.containerShadowSpreadRadius,
+      // Elevation
+      elevation: widget.containerElevation,
+      // Foreground decoration
+      foregroundDecoration: widget.containerForegroundDecoration,
+      // Clipping
+      clipBehavior: widget.containerClipBehavior,
+      // Expand
+      expand: widget.containerExpand,
+      // Child
+      child: textField,
     );
   }
 }

@@ -4,7 +4,6 @@ import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
-
 class VideoPreview extends StatefulWidget {
   final List<MediaItem> videos;
 
@@ -46,7 +45,7 @@ class _VideoPreviewState extends State<VideoPreview> {
           // ── Header + counter ──────────────────────────────────
           Row(
             children: [
-              const HeaderText(text: "Videos"),
+              AppText.large("Videos"),
               const Spacer(),
               if (total > 1)
                 AppText(

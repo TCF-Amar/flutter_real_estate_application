@@ -10,7 +10,8 @@ class VisitPropertyInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (property == null) return const SliverToBoxAdapter(child: SizedBox.shrink());
+    if (property == null)
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -34,7 +35,7 @@ class VisitPropertyInfoSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 18),
-            HeaderText(text: property?.title ?? ""),
+            AppText.large(property?.title ?? ""),
             const SizedBox(height: 10),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,13 +43,16 @@ class VisitPropertyInfoSection extends StatelessWidget {
                 AppSvg(path: Assets.icons.location, height: 16),
                 const SizedBox(width: 10),
                 Flexible(
-                  child: AppText(property?.address ?? "", overflow: TextOverflow.clip),
+                  child: AppText(
+                    property?.address ?? "",
+                    overflow: TextOverflow.clip,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            HeaderText(
-              text: "\$ ${property?.price ?? 0}",
+            AppText.large(
+              "\$ ${property?.price ?? 0}",
               color: AppColors.primary,
               fontSize: 22,
               fontWeight: FontWeight.bold,

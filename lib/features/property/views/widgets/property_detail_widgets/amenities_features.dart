@@ -22,7 +22,7 @@ class _AmenitiesFeaturesState extends State<AmenitiesFeatures> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeaderText(text: "Amenities & Features"),
+          AppText.large("Amenities & Features"),
           widget.amenities.isEmpty
               ? Container(
                   margin: const EdgeInsets.only(top: 10),

@@ -4,7 +4,6 @@ import 'package:real_estate_app/features/property/controllers/property_details_c
 import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
-
 class VirtualTour extends StatelessWidget {
   const VirtualTour({super.key});
 
@@ -27,7 +26,7 @@ class VirtualTour extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeaderText(text: "360° Virtual Tour"),
+          AppText.large("360° Virtual Tour"),
           Container(
             margin: const EdgeInsets.only(top: 16),
             width: double.infinity,

@@ -18,7 +18,7 @@ class AgentInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const HeaderText(text: "Marked as Agent"),
+          AppText.large("Marked as Agent"),
           const SizedBox(height: 16),
 
           FutureBuilder(

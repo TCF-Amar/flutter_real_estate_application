@@ -40,148 +40,135 @@ class PropertyScreen extends GetView<PropertyController> {
           );
         }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: AnimatedSize(
-                clipBehavior: Clip.hardEdge,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-                alignment: Alignment.topCenter,
-                // reverseDuration: const Duration(milliseconds: 100),
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 250),
-                  child: controller.isHeaderVisible.value
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ExploreSearchFilter(
-                              controller: controller.searchController,
-                              hintText: 'Search by project, area, or keyword',
-                              onChanged: (val) =>
-                                  controller.searchQuery.value = val,
-                              onFilterTap: () =>
-                                  PropertyFilters.showFilters(context),
-                              handleSearch: () => controller.handleSearch(),
-                            ),
-                            const SizedBox(height: 16),
-                            const AppText(
-                              'Explore property',
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              height: 34,
-                              child: ListView.separated(
-                                clipBehavior: Clip.none,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: filters.length,
-                                itemBuilder: (context, i) {
-                                  final isSelected = selectedIndex == i;
-                                  return Padding(
-                                    padding: EdgeInsets.only(
-                                      right: i < filters.length - 1 ? 8 : 0,
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () =>
-                                          controller.changePropertyFilter(i),
-                                      child: AnimatedContainer(
-                                        duration: const Duration(
-                                          milliseconds: 200,
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 18,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: isSelected
-                                              ? AppColors.primary
-                                              : Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                          border: Border.all(
-                                            color: isSelected
-                                                ? AppColors.primary
-                                                : const Color(0xFFDDDDDD),
-                                          ),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: AppText(
-                                          filters[i],
-                                          fontSize: 13,
-                                          fontWeight: isSelected
-                                              ? FontWeight.w600
-                                              : FontWeight.w500,
-                                          color: isSelected
-                                              ? Colors.white
-                                              : AppColors.textSecondary,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                      return const SizedBox(width: 8);
-                                    },
+        return CustomScrollView(
+          controller: controller.scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            // Floating Header
+            SliverAppBar(
+              floating: true,
+              snap: true,
+              backgroundColor: AppColors.white,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              toolbarHeight: 0, // We use bottom for the actual header content
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(160),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ExploreSearchFilter(
+                        controller: controller.searchController,
+                        hintText: 'Search by project, area, or keyword',
+                        onChanged: (val) => controller.searchQuery.value = val,
+                        onFilterTap: () => PropertyFilters.showFilters(context),
+                        handleSearch: () => controller.handleSearch(),
+                      ),
+                      const SizedBox(height: 16),
+                      const AppText(
+                        'Explore property',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 34,
+                        child: ListView.separated(
+                          clipBehavior: Clip.none,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: filters.length,
+                          itemBuilder: (context, i) {
+                            final isSelected = selectedIndex == i;
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                right: i < filters.length - 1 ? 8 : 0,
                               ),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                              child: GestureDetector(
+                                onTap: () => controller.changePropertyFilter(i),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 18,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? AppColors.primary
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? AppColors.primary
+                                          : const Color(0xFFDDDDDD),
+                                    ),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: AppText(
+                                    filters[i],
+                                    fontSize: 13,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w600
+                                        : FontWeight.w500,
+                                    color: isSelected
+                                        ? Colors.white
+                                        : AppColors.textSecondary,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (_, __) => const SizedBox(width: 8),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
                 ),
               ),
             ),
-            
-            Expanded(
-              child: isLoading
-                  ? ListView.builder(
-                      itemCount: 5,
-                      itemBuilder: (_, i) => const Padding(
-                        padding: EdgeInsets.only(bottom: 16),
-                        child: PropertySkeleton(),
-                      ),
-                    )
-                  : properties.isEmpty
-                  ? _emptyState()
-                  : ListView.builder(
-                      controller: controller.scrollController,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.only(bottom: 20),
-                      itemCount: properties.length + (hasMore ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index == properties.length) {
-                          // Pagination footer
-                          return isMoreLoading
-                              ? const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 16),
-                                  child: Center(child: PropertySkeleton()),
-                                )
-                              : const SizedBox.shrink();
-                        }
-                        final property = properties[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: PropertyCard(
-                            property: property,
-                            onTap: () => Get.toNamed(
-                              AppRoutes.propertyDetails,
-                              arguments: {'id': property.id},
-                            ),
-                            onFavoriteTap: () =>
-                                controller.toggleFavoriteProperty(
-                                  propertyId: property.id,
-                                ),
-                          ),
-                        );
-                      },
+
+            // Property List
+            if (isLoading)
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 0),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (_, __) => const Padding(
+                      padding: EdgeInsets.only(bottom: 16),
+                      child: PropertySkeleton(),
                     ),
-            ),
+                    childCount: 5,
+                  ),
+                ),
+              )
+            else if (properties.isEmpty)
+              SliverFillRemaining(child: _emptyState())
+            else
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  if (index == properties.length) {
+                    return isMoreLoading
+                        ? const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Center(child: PropertySkeleton()),
+                          )
+                        : const SizedBox.shrink();
+                  }
+                  final property = properties[index];
+                  return PropertyCard(
+                    
+                    property: property,
+                    onTap: () => Get.toNamed(
+                      AppRoutes.propertyDetails,
+                      arguments: {'id': property.id},
+                    ),
+                    onFavoriteTap: () => controller.toggleFavoriteProperty(
+                      propertyId: property.id,
+                    ),
+                  );
+                }, childCount: properties.length + (hasMore ? 1 : 0)),
+              ),
           ],
         );
       }),
@@ -192,7 +179,7 @@ class PropertyScreen extends GetView<PropertyController> {
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       children: const [
-        SizedBox(height: 80),
+        SizedBox(height: 100),
         Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

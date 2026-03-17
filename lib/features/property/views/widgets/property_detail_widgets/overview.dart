@@ -21,8 +21,8 @@ class Overview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeaderText(
-            text: "Overview",
+          AppText.large(
+            "Overview",
             // fontSize: 16,
             // fontWeight: FontWeight.bold,
             // color: AppColors.black.withValues(alpha: 0.5),

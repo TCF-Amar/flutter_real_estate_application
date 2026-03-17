@@ -15,8 +15,8 @@ class VisitDetailsReviewSection extends GetView<VisitDetailsController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const HeaderText(
-              text: "Leave a Review",
+            AppText.large(
+              "Leave a Review",
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,
@@ -31,7 +31,7 @@ class VisitDetailsReviewSection extends GetView<VisitDetailsController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   const AppText(
+                  const AppText(
                     "Rating & Review",
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class VisitDetailsReviewSection extends GetView<VisitDetailsController> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                   TextField(
+                  TextField(
                     controller: controller.commentController,
                     maxLines: 4,
                     style: const TextStyle(fontSize: 14),

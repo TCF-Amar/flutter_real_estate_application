@@ -14,8 +14,8 @@ class Address extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeaderText(
-            text: "Address",
+          AppText.large(
+            "Address",
             // fontSize: 18,
             // fontWeight: FontWeight.bold,
           ),

@@ -13,10 +13,10 @@ class VisitDetailsAppBar extends StatelessWidget {
         padding: EdgeInsets.all(8.0),
         child: AppBackButton(),
       ),
-      title: const HeaderText(
-        text: "Site Visit Detail",
-        shadow: true,
+      title:  AppText.large(
+        "Site Visit Detail",
         color: Colors.white,
+        showShadow: true,
         shadowColor: Colors.black,
       ),
       centerTitle: true,

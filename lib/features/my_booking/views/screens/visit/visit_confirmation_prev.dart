@@ -60,10 +60,10 @@ class VisitConfirmationPrev extends StatelessWidget {
                       ),
                     ),
                   ),
-                  HeaderText(
-                    text: "Confirmation Preview",
+                  AppText.large(
+                    "Confirmation Preview",
                     color: AppColors.white,
-                    shadow: true,
+                    showShadow: true,
                     shadowColor: AppColors.black,
                   ),
                   const SizedBox(width: 20),
@@ -82,8 +82,8 @@ class VisitConfirmationPrev extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      HeaderText(
-                        text: property.title!,
+                      AppText.large(
+                        property.title!,
                         color: AppColors.textSecondary,
                       ),
                       Row(

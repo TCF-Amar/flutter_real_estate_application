@@ -13,8 +13,8 @@ class VisitDetailsMapSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const HeaderText(
-              text: "Map",
+             AppText.large(
+              "Map",
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.textSecondary,

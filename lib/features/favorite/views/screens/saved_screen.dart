@@ -19,9 +19,9 @@ class FavoriteScreen extends GetView<FavoriteController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: const Padding(
+              child:  Padding(
                 padding: EdgeInsets.fromLTRB(16, 20, 16, 12),
-                child: HeaderText(text: "Favorites"),
+                child: AppText.large("Favorites"),
               ),
             ),
 

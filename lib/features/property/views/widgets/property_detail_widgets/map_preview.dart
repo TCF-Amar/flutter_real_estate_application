@@ -4,7 +4,6 @@ import 'package:real_estate_app/core/constants/app_colors.dart';
 
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
-
 class MapPreview extends StatelessWidget {
   const MapPreview({super.key});
 
@@ -16,8 +15,8 @@ class MapPreview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeaderText(
-            text: "Map",
+          AppText.large(
+            "Map",
             color: AppColors.textSecondary,
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -37,8 +36,8 @@ class MapPreview extends StatelessWidget {
             child: Center(
               child: AppText(
                 "Place holder map use not actual map!",
-                shadow: true,
-                color: AppColors.white,
+                showShadow: true,
+                shadowColor: AppColors.white,
               ),
             ),
           ),

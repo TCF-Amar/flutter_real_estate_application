@@ -78,8 +78,8 @@ class _ADContactFormState extends State<ADContactForm> {
               AppTextFormField(
                 controller: TextEditingController(),
                 hintText: "Name",
-                border: true,
-                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                showContainerBorder: true,
+                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";
@@ -91,8 +91,8 @@ class _ADContactFormState extends State<ADContactForm> {
               AppTextFormField(
                 controller: TextEditingController(),
                 hintText: "Phone",
-                border: true,
-                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                showContainerBorder: true,
+                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a phone number";
@@ -104,8 +104,8 @@ class _ADContactFormState extends State<ADContactForm> {
               AppTextFormField(
                 controller: TextEditingController(),
                 hintText: "email",
-                border: true,
-                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                showContainerBorder: true,
+                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a emailAddress";
@@ -119,8 +119,8 @@ class _ADContactFormState extends State<ADContactForm> {
                 hintText: "Message",
                 keyboardType: TextInputType.text,
                 maxLines: 5,
-                border: true,
-                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                showContainerBorder: true,
+                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";

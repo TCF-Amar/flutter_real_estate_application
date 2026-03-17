@@ -80,4 +80,24 @@ class BookingServices {
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }
+
+  FutureResult<void> cancelVisit(int id, {String? reason}) async {
+    try {
+      await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.cancelVisit(id),
+          method: ApiMethod.post,
+          body: reason != null ? {'reason': reason} : null,
+        ),
+      );
+      log.i('Visit cancelled successfully');
+      return const Right(null);
+    } on AppException catch (e) {
+      log.e('Visit cancel failed (AppException): ${e.message}');
+      return Left(ApiException.map(e));
+    } catch (e) {
+      log.e('Visit cancel failed (Unknown): $e');
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
 }

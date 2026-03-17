@@ -20,7 +20,7 @@ class VisitCard extends StatelessWidget {
       onTap: () {
         Get.toNamed(AppRoutes.visitDetails, arguments: visit.id);
       },
-      radius: 20,
+      borderRadius: BorderRadius.all(Radius.circular(20)),
       child: Row(
         children: [
           // Image Section
@@ -28,11 +28,8 @@ class VisitCard extends StatelessWidget {
             width: 130,
             height: 130,
             padding: EdgeInsets.zero,
-            radius: 16,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: AppImage(path: visit.property.thumbnail),
-            ),
+            borderRadius: BorderRadius.circular(16),
+            child: AppImage(path: visit.property.thumbnail),
           ),
           const SizedBox(width: 12),
           // Info Section

@@ -10,9 +10,6 @@ class PropertyCard extends StatelessWidget {
   final bool featured;
   final VoidCallback? onFavoriteTap;
 
-  // BoxDecoration is const-cacheable since shadow/radius/color never change.
-  // The withValues alpha on black is computed at const-eval time via the
-  // literal RGBA: black @ 4% opacity = rgba(0,0,0,0.04).
   static const _cardDecoration = BoxDecoration(
     color: Colors.white,
     borderRadius: BorderRadius.all(Radius.circular(24)),
@@ -43,11 +40,12 @@ class PropertyCard extends StatelessWidget {
       splashColor: Colors.transparent,
       onTap: () => onTap?.call(),
       child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
         decoration: _cardDecoration,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image Section
+            /// IMAGE SECTION
             Stack(
               children: [
                 Container(
@@ -62,7 +60,6 @@ class PropertyCard extends StatelessWidget {
                       ? Image.network(
                           property.image!,
                           fit: BoxFit.cover,
-                          // Decode at display size — 170px height, full width
                           cacheHeight:
                               (170 * MediaQuery.of(context).devicePixelRatio)
                                   .toInt(),
@@ -71,39 +68,45 @@ class PropertyCard extends StatelessWidget {
                         )
                       : _PlaceholderImage(url: property.shareData.image),
                 ),
-                // Tags
+
+                /// TAGS
                 Positioned(
                   top: 20,
                   left: 20,
-                  child: Row(
-                    children: [
-                      featured
-                          ? AppTag(
-                              label: 'Featured',
-                              color: Colors.blueAccent,
-                              backgroundColor: Colors.white,
-                            )
-                          : AppTag(
-                              label: property.listingCategory ?? '',
-                              color: Colors.blueAccent,
-                              backgroundColor: Colors.white,
-                            ),
-                      const SizedBox(width: 6),
-                      AppTag(
-                        label: property.propertyMode,
-                        color: AppColors.grey,
-                        backgroundColor: Colors.white,
-                      ),
-                      const SizedBox(width: 6),
-                      AppTag(
-                        label: property.propertyType,
-                        color: Colors.green,
-                        backgroundColor: Colors.white,
-                      ),
-                    ],
+                  right: 60,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        featured
+                            ? const AppTag(
+                                label: 'Featured',
+                                color: Colors.blueAccent,
+                                backgroundColor: Colors.white,
+                              )
+                            : AppTag(
+                                label: property.listingCategory ?? '',
+                                color: Colors.blueAccent,
+                                backgroundColor: Colors.white,
+                              ),
+                        const SizedBox(width: 6),
+                        AppTag(
+                          label: property.propertyMode,
+                          color: AppColors.grey,
+                          backgroundColor: Colors.white,
+                        ),
+                        const SizedBox(width: 6),
+                        AppTag(
+                          label: property.propertyType,
+                          color: Colors.green,
+                          backgroundColor: Colors.white,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                // Favorite Button
+
+                /// FAVORITE BUTTON
                 Positioned(
                   top: 20,
                   right: 20,
@@ -124,21 +127,25 @@ class PropertyCard extends StatelessWidget {
               ],
             ),
 
-            // Details Section
+            /// DETAILS
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  /// TITLE
                   AppText(
                     property.title,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.black,
-                    // maxLines: 1,
-                    overflow: TextOverflow.visible,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
+
                   const SizedBox(height: 6),
+
+                  /// LOCATION
                   Row(
                     children: [
                       const Icon(
@@ -158,17 +165,24 @@ class PropertyCard extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 16),
+
+                  /// PRICE + SPECS
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AppText(
-                        "${property.formattedPrice}",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.primary,
+                      Expanded(
+                        child: AppText(
+                          property.formattedPrice.toString(),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primary,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           _SpecIcon(
                             icon: Assets.icons.bed,
@@ -205,6 +219,7 @@ class _SpecIcon extends StatelessWidget {
   final String icon;
   final String value;
   final bool isArea;
+
   const _SpecIcon({
     required this.icon,
     required this.value,
@@ -214,16 +229,19 @@ class _SpecIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         AppSvg(path: icon, height: 12, width: 12, color: AppColors.primary),
         const SizedBox(width: 4),
-        AppText(
-          isArea ? "$value sq.ft" : value,
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          color: AppColors.grey,
+        Flexible(
+          child: AppText(
+            isArea ? "$value sq.ft" : value,
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            color: AppColors.grey,
+          ),
         ),
       ],
     );
@@ -232,6 +250,7 @@ class _SpecIcon extends StatelessWidget {
 
 class _PlaceholderImage extends StatelessWidget {
   final String url;
+
   const _PlaceholderImage({required this.url});
 
   @override

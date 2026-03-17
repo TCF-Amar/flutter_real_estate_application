@@ -8,9 +8,15 @@ class BookedPropertiesTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {},
-      child: const AppEmptyState(
-        title: "No Bookings Found",
-        message: "You haven't made any property bookings yet.",
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: const [
+          SizedBox(height: 100),
+          AppEmptyState(
+            title: "No Bookings Found",
+            message: "You haven't made any property bookings yet.",
+          ),
+        ],
       ),
     );
   }

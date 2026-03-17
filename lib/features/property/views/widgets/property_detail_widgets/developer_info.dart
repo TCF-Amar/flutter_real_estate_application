@@ -10,8 +10,8 @@ class DeveloperInfo extends StatelessWidget {
       margin: const EdgeInsets.only(top: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          HeaderText(text: "Developer Info"),
+        children:  [
+          AppText.large("Developer Info"),
           SizedBox(height: 16),
           //? developer info goes here
           DeveloperCard(

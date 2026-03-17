@@ -22,13 +22,13 @@ class ConfigurationsUnitPlans extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeaderText(text: "Configurations & Unit Plans"),
+          AppText.large("Configurations & Unit Plans"),
           const SizedBox(height: 16),
           // Table-like view
           _buildTable(units),
 
           const SizedBox(height: 25),
-          HeaderText(text: "Floor plan"),
+          AppText.large("Floor plan"),
           const SizedBox(height: 16),
 
           SingleChildScrollView(

@@ -16,7 +16,7 @@ class ReviewsAndRatings extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HeaderText(text: "Reviews "),
+          AppText.large("Reviews "),
 
           Container(
             margin: const EdgeInsets.only(top: 8),
@@ -84,7 +84,7 @@ class ReviewsAndRatings extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                HeaderText(text: "Leave a Review"),
+                AppText.large("Leave a Review"),
                 Container(
                   margin: const EdgeInsets.only(top: 16),
                   padding: const EdgeInsets.all(16),

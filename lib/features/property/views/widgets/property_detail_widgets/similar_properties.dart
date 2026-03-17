@@ -30,7 +30,7 @@ class _SimilarPropertiesState extends State<SimilarProperties> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const HeaderText(text: "Similar Properties"),
+          AppText.large("Similar Properties"),
           const SizedBox(height: 16),
           Obx(() {
             if (controller.isLoadingSimilar) {

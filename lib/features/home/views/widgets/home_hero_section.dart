@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/app_image.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text.dart';
@@ -228,15 +229,20 @@ class _NotificationBell extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Container(
-          width: 42,
-          height: 42,
-          // FIX #8: Extract as const
-          decoration: _notificationDecoration,
-          child: Icon(
-            Icons.notifications_outlined,
-            color: AppColors.white.withValues(alpha: 0.5),
-            size: 30,
+        GestureDetector(
+          onTap: () {
+            Get.toNamed(AppRoutes.test);
+          },
+          child: Container(
+            width: 42,
+            height: 42,
+            // FIX #8: Extract as const
+            decoration: _notificationDecoration,
+            child: Icon(
+              Icons.notifications_outlined,
+              color: AppColors.white.withValues(alpha: 0.5),
+              size: 30,
+            ),
           ),
         ),
         Positioned(

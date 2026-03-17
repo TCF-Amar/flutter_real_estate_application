@@ -110,7 +110,7 @@ class SupportDetails extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: .start,
                     children: [
-                      HeaderText(text: "Admin Response", fontSize: 16),
+                      AppText.large("Admin Response", fontSize: 16),
                       SizedBox(height: 10),
                       Row(
                         children: [

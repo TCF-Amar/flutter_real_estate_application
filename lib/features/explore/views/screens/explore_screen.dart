@@ -21,7 +21,7 @@ class ExploreScreen extends GetView<ExploreController> {
         appBar: AppBar(
           toolbarHeight: 48,
           centerTitle: true,
-          title: HeaderText(text: "Explore"),
+          title: AppText.large("Explore"),
           backgroundColor: Colors.transparent,
           elevation: 0,
           surfaceTintColor: Colors.transparent,

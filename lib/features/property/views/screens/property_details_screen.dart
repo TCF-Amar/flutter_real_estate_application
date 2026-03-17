@@ -35,6 +35,8 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
         return CustomScrollView(
           slivers: [
             SliverAppBar(
+              // floating: true,
+              // snap: true,
               pinned: true,
               backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
@@ -43,12 +45,10 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                 padding: EdgeInsets.all(8.0),
                 child: AppBackButton(),
               ),
-              title: HeaderText(
-                text: "Property Details",
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+              title: AppText.large(
+                "Property Details",
                 color: AppColors.white,
-                shadow: true,
+                showShadow: true,
                 shadowColor: Colors.black.withValues(alpha: 0.5),
               ),
               centerTitle: true,

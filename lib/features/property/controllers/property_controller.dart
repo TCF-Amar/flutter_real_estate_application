@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:logger/logger.dart';
@@ -60,10 +59,6 @@ class PropertyController extends GetxController {
   final searchController = TextEditingController();
   final searchQuery = ''.obs;
 
-  // ─── Header Visibility ───────────────────────────────────────────────────────
-
-  final isHeaderVisible = true.obs;
-
   // ─── Filters ─────────────────────────────────────────────────────────────────
 
   final selectedPropertyFilterIndex = 0.obs;
@@ -111,13 +106,6 @@ class PropertyController extends GetxController {
   }
 
   void _onScroll() {
-    if (scrollController.position.userScrollDirection ==
-        ScrollDirection.reverse) {
-      if (isHeaderVisible.value) isHeaderVisible.value = false;
-    } else {
-      if (!isHeaderVisible.value) isHeaderVisible.value = true;
-    }
-
     if (scrollController.position.pixels >=
             scrollController.position.maxScrollExtent - 200 &&
         !isLoading &&

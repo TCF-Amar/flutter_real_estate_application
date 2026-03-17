@@ -32,8 +32,8 @@ class RegisterHeader extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        HeaderText(
-          text: 'Sign Up',
+        AppText.large(
+          'Sign Up',
           // fontSize: 24,
           fontWeight: FontWeight.w400,
           color: AppColors.white,

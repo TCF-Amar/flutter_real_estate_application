@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/services/booking_services.dart';
 import 'package:real_estate_app/core/services/property_services.dart';
+import 'package:real_estate_app/features/my_booking/controllers/my_booking_controller.dart';
 import 'package:real_estate_app/features/my_booking/models/visit_detail_response.dart';
+import 'package:real_estate_app/features/my_booking/views/widgets/visit_details/cancel_visit_dialog.dart';
 import 'package:real_estate_app/features/property/models/review_request_model.dart';
-import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class VisitDetailsController extends GetxController {
   final log = Logger();
@@ -73,10 +75,7 @@ class VisitDetailsController extends GetxController {
     _isSubmittingReview.value = true;
     final result = await propertyServices.addReview(
       propertyId,
-      ReviewRequestModel(
-        rating: rating,
-        comment: commentController.text,
-      ),
+      ReviewRequestModel(rating: rating, comment: commentController.text),
     );
 
     result.fold(
@@ -86,7 +85,12 @@ class VisitDetailsController extends GetxController {
       },
       (success) {
         _isSubmittingReview.value = false;
-        AppSnackbar.success("Review submitted successfully");
+        Get.dialog(
+          const AppSuccessDialog(
+            title: "Thank You!",
+            message: "Your feedback has been submitted\nsuccessfully.",
+          ),
+        );
         commentController.clear();
         _rating.value = 0;
       },
@@ -98,8 +102,67 @@ class VisitDetailsController extends GetxController {
     AppSnackbar.info("Buy Property feature coming soon!");
   }
 
-  void cancelVisit() {
-    log.i("Cancel Visit clicked");
-    AppSnackbar.info("Cancel Visit feature coming soon!");
+  void cancelVisit() async {
+    final reasonController = TextEditingController();
+
+    showDialog(
+      context: Get.context!,
+      builder: (context) {
+        return CancelVisitDialog(
+          reasonController: reasonController,
+          isCancelling: _isCancellingVisit.value,
+          onCancel: () async {
+            await _cancelVisit(reason: reasonController.text);
+            Get.back();
+          },
+        );
+      },
+    );
+    // Get.dialog(
+    //   CancelVisitDialog(
+    //     reasonController: reasonController,
+    //     isCancelling: _isCancellingVisit.value,
+    //     onCancel: () async {
+    //       await _cancelVisit(reason: reasonController.text);
+    //       Get.back();
+    //     },
+    //   ),
+    // );
+  }
+
+  final _isCancellingVisit = false.obs;
+  bool get isCancellingVisit => _isCancellingVisit.value;
+
+  Future<void> _cancelVisit({String? reason}) async {
+    _isCancellingVisit.value = true;
+
+    final result = await bookingServices.cancelVisit(
+      visitId.toInt(),
+      reason: reason?.trim().isEmpty ?? true ? null : reason,
+    );
+
+    result.fold(
+      (failure) {
+        _isCancellingVisit.value = false;
+        AppSnackbar.error(failure.message);
+      },
+      (success) {
+        _isCancellingVisit.value = false;
+        Get.dialog(
+          const AppSuccessDialog(
+            title: "Cancelled!",
+            message: "Your scheduled site visit has been\ncancelled successfully.",
+          ),
+        );
+        getVisitDetails();
+        // Refresh the main booking list
+        try {
+          final myBookingController = Get.find<MyBookingController>();
+          myBookingController.getVisitList();
+        } catch (e) {
+          log.w("MyBookingController not found, skipping list refresh: $e");
+        }
+      },
+    );
   }
 }

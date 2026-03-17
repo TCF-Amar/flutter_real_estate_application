@@ -22,6 +22,7 @@ import 'package:real_estate_app/features/main/views/screens/main_screen.dart';
 import 'package:real_estate_app/features/my_booking/bindings/visit_details_binding.dart';
 import 'package:real_estate_app/features/my_booking/views/screens/visit/booking_flow_screen.dart';
 import 'package:real_estate_app/features/my_booking/views/screens/visit/visit_details_screen.dart';
+import 'package:real_estate_app/features/search/bindings/search_binding.dart';
 
 // Search
 import 'package:real_estate_app/features/search/views/screens/search_result.dart';
@@ -46,10 +47,12 @@ import 'package:real_estate_app/features/profile/views/screens/setting_screen.da
 import 'package:real_estate_app/features/profile/views/screens/support/new_request.dart';
 import 'package:real_estate_app/features/profile/views/screens/support/support_details.dart';
 import 'package:real_estate_app/features/profile/views/screens/support/support_screen.dart';
+import 'package:real_estate_app/features/shared/screens/test.dart';
 
 class AppPages {
   static final pages = <GetPage>[
     // ─── Initial & Onboarding ──────────────────────────────────────────────
+    GetPage(name: AppRoutes.test, page: () => TestScreen()),
     GetPage(name: AppRoutes.splash, page: () => SplashScreen()),
     GetPage(name: AppRoutes.getStart, page: () => GetStartScreens()),
 
@@ -62,7 +65,8 @@ class AppPages {
     GetPage(
       name: AppRoutes.selectCountry,
       page: () {
-        final opPress = Get.arguments['onPress'];
+        final Map? args = Get.arguments is Map ? Get.arguments as Map : null;
+        final opPress = args?['onPress'];
         return SelectCountryScreen(onPress: opPress);
       },
     ),
@@ -75,10 +79,15 @@ class AppPages {
     ),
 
     // ─── Search ───────────────────────────────────────────────────────────
-    GetPage(name: AppRoutes.search, page: () => SearchScreen()),
+    GetPage(name: AppRoutes.search,
+    binding: SearchBinding(),
+     page: () => SearchScreen()),
     GetPage(
       name: AppRoutes.searchResult,
-      page: () => SearchResult(query: Get.arguments['query']),
+      page: () {
+        final Map? args = Get.arguments is Map ? Get.arguments as Map : null;
+        return SearchResult(query: args?['query'] ?? "");
+      },
     ),
 
     // ─── Property ─────────────────────────────────────────────────────────

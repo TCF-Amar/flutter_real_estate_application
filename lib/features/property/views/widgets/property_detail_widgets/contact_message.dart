@@ -67,8 +67,8 @@ class ContactMessage extends StatelessWidget {
               AppTextFormField(
                 controller: TextEditingController(),
                 hintText: "Name",
-                border: true,
-                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                showContainerBorder: true,
+                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";
@@ -81,8 +81,8 @@ class ContactMessage extends StatelessWidget {
                 controller: TextEditingController(),
                 hintText: "Phone",
                 keyboardType: TextInputType.phone,
-                border: true,
-                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                showContainerBorder: true,
+                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";
@@ -95,8 +95,8 @@ class ContactMessage extends StatelessWidget {
                 controller: TextEditingController(),
                 hintText: "Email",
                 keyboardType: TextInputType.emailAddress,
-                border: true,
-                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                showContainerBorder: true,
+                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";
@@ -110,8 +110,8 @@ class ContactMessage extends StatelessWidget {
                 hintText: "Message",
                 keyboardType: TextInputType.text,
                 maxLines: 5,
-                border: true,
-                borderColor: AppColors.grey.withValues(alpha: 0.2),
+                showContainerBorder: true,
+                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";
