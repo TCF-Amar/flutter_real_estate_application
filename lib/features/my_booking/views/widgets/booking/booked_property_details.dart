@@ -33,10 +33,16 @@ class BookedPropertyDetails extends StatelessWidget {
             AppText.large("${property.title}"),
             SizedBox(height: 8),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppSvg(path: Assets.icons.location),
                 SizedBox(width: 4),
-                AppText.small("${property.address}"),
+                Flexible(
+                  child: AppText.small(
+                    "${property.address}",
+                    overflow: TextOverflow.clip,
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 16),
