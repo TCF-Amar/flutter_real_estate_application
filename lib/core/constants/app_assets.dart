@@ -13,7 +13,7 @@ class _Icons {
   final search = "assets/icons/search.svg";
   final searchSelected = "assets/icons/search_selected.svg";
   final person = "assets/icons/person.svg";
-  final personSelected = "assets/icons/person_selected.svg";
+  final personSelected = "assets/icons/p_selected.svg";
   final heart = "assets/icons/heart.svg";
   final heartSelected = "assets/icons/heart_selected.svg";
   final booking = "assets/icons/booking.svg";
@@ -69,4 +69,5 @@ class _Images {
   final topImage = "assets/images/top_image.png";
   final emptyExplore = "assets/images/empty_explore.png";
   final map = "assets/images/placeholder_map.png";
+  final maintenance = "assets/images/maintenance.png";
 }

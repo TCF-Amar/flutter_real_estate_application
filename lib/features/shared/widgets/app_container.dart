@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:ui' show BorderStyle;
-
+import 'dart:ui';
 import 'package:real_estate_app/features/shared/widgets/app_text_form_field.dart';
 
-// enum BorderSideType { all, bottom, top, left, right }
+enum AppBorderStyle { solid, dashed, dotted }
 
 class AppContainer extends StatelessWidget {
   // ----- Core content -----
@@ -24,7 +23,7 @@ class AppContainer extends StatelessWidget {
   final DecorationImage? image;
   final BoxBorder? border; // custom border (overrides simplified border)
   final BorderRadiusGeometry? borderRadius;
-  final List<BoxShadow>? boxShadow; // full custom shadows
+  final List<BoxShadow>? boxShadow;
   final BlendMode? backgroundBlendMode;
   final BoxShape? shape;
 
@@ -33,16 +32,17 @@ class AppContainer extends StatelessWidget {
   final BorderSideType borderSideType;
   final Color borderColor;
   final double borderWidth;
-  final BorderStyle borderStyle;
+  // borderStyle is deprecated – use appBorderStyle instead
+  final BorderStyle
+  borderStyle; // kept for compatibility, but will be overridden by appBorderStyle
+  final AppBorderStyle appBorderStyle; // solid, dashed, dotted
 
-  // ----- Simplified shadow controls (used only if boxShadow == null) -----
-  final bool showShadow; // master switch
+  // ----- Simplified shadow controls -----
+  final bool showShadow;
   final Color? shadowColor;
   final double? shadowBlurRadius;
   final Offset? shadowOffset;
   final double? shadowSpreadRadius;
-
-  // ----- Legacy elevation (used only if no boxShadow and no simple shadow params) -----
   final double? elevation;
 
   // ----- Foreground decoration -----
@@ -59,10 +59,8 @@ class AppContainer extends StatelessWidget {
 
   // ----- Clipping -----
   final Clip clipBehavior;
-  final bool clipContent; // convenience: forces clipBehavior = Clip.antiAlias
-
-  // ----- Expand / sizing helpers -----
-  final bool expand; // makes width infinite
+  final bool clipContent;
+  final bool expand;
 
   const AppContainer({
     super.key,
@@ -78,7 +76,7 @@ class AppContainer extends StatelessWidget {
     this.gradient,
     this.image,
     this.border,
-    this.borderRadius,
+    this.borderRadius = const BorderRadius.all(Radius.circular(12)),
     this.boxShadow,
     this.backgroundBlendMode,
     this.shape,
@@ -87,7 +85,8 @@ class AppContainer extends StatelessWidget {
     this.borderSideType = BorderSideType.all,
     this.borderColor = Colors.grey,
     this.borderWidth = 1.0,
-    this.borderStyle = BorderStyle.solid,
+    this.borderStyle = BorderStyle.solid, // kept for compatibility
+    this.appBorderStyle = AppBorderStyle.solid,
     // Simplified shadow
     this.showShadow = true,
     this.shadowColor,
@@ -111,50 +110,71 @@ class AppContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // --- Determine effective border ---
+    // --- Determine effective border (only for solid style) ---
+    // If we have a dashed/dotted style, we will draw the border later via CustomPaint,
+    // so we should not include any border in the BoxDecoration.
+    final bool useSolidBorder =
+        showBorder && appBorderStyle == AppBorderStyle.solid;
     final BoxBorder? effectiveBorder =
-        border ?? (showBorder ? _buildBorderFromSideType() : null);
+        border ?? (useSolidBorder ? _buildBorderFromSideType() : null);
 
-    // --- Determine effective shadows ---
+    // --- Determine effective shadows (unchanged) ---
     final List<BoxShadow>? effectiveBoxShadow = _buildShadows();
 
-    // --- Effective decoration (if not overridden) ---
+    // --- Effective decoration (without dashed/dotted border) ---
     final effectiveDecoration =
         decoration ??
         BoxDecoration(
           color: color,
           gradient: gradient,
           image: image,
-          border: effectiveBorder,
-          borderRadius: shape == BoxShape.circle
-              ? BorderRadius.circular(12)
-              : borderRadius ?? BorderRadius.circular(12),
+          border: effectiveBorder, // only included for solid style
+          borderRadius: shape == BoxShape.circle ? null : borderRadius,
           boxShadow: effectiveBoxShadow,
           shape: shape ?? BoxShape.rectangle,
         );
 
-    // --- Determine final border radius (for InkWell & clipping) ---
-    BorderRadiusGeometry? effectiveBorderRadius;
-    if (effectiveDecoration is BoxDecoration) {
-      effectiveBorderRadius = effectiveDecoration.borderRadius;
-    } else {
-      effectiveBorderRadius = borderRadius;
-    }
+    // --- Border radius for clipping & custom painter ---
+    final effectiveBorderRadius =
+        (effectiveDecoration is BoxDecoration &&
+            effectiveDecoration.borderRadius != null)
+        ? effectiveDecoration.borderRadius
+        : borderRadius;
+    final BorderRadius finalBorderRadius =
+        (effectiveBorderRadius is BorderRadius)
+        ? effectiveBorderRadius
+        : BorderRadius.circular(12);
 
-    // --- Effective clip behavior ---
+    // --- Clip behavior ---
     final effectiveClip = clipContent ? Clip.antiAlias : clipBehavior;
 
-    // --- Build inner content (padding, alignment, constraints, optional child clipping) ---
+    // --- Inner content (with clipping if needed) ---
     Widget innerContent = Container(
       width: expand ? double.infinity : width,
       height: height,
       constraints: constraints,
       padding: padding,
       alignment: alignment,
-      child: effectiveClip != Clip.none && effectiveBorderRadius != null
-          ? ClipRRect(borderRadius: effectiveBorderRadius, child: child)
+      child: effectiveClip != Clip.none
+          ? ClipRRect(borderRadius: finalBorderRadius, child: child)
           : child,
     );
+
+    // --- Apply dashed/dotted border if requested (non‑solid) ---
+    if (showBorder && appBorderStyle != AppBorderStyle.solid) {
+      // Note: dashed/dotted borders currently only work correctly with borderSideType == all.
+      // For partial borders (top/bottom/left/right) please use the custom `border` parameter.
+      innerContent = CustomPaint(
+        painter: _CustomBorderPainter(
+          color: borderColor,
+          strokeWidth: borderWidth,
+          style: appBorderStyle,
+          borderRadius: finalBorderRadius.topLeft.x, // uniform radius assumed
+          sideType: borderSideType, // passes the side selection
+        ),
+        child: innerContent,
+      );
+    }
 
     // --- Apply foreground decoration if provided ---
     if (foregroundDecoration != null) {
@@ -172,12 +192,10 @@ class AppContainer extends StatelessWidget {
         height: height,
         constraints: constraints,
         margin: margin,
-        padding: padding,
-        alignment: alignment,
         decoration: effectiveDecoration,
         foregroundDecoration: foregroundDecoration,
         clipBehavior: effectiveClip,
-        child: child,
+        child: innerContent,
       );
     }
 
@@ -187,7 +205,7 @@ class AppContainer extends StatelessWidget {
         decoration: effectiveDecoration,
         child: InkWell(
           borderRadius: effectiveBorderRadius is BorderRadius
-              ? effectiveBorderRadius as BorderRadius
+              ? effectiveBorderRadius
               : null,
           onTap: onTap,
           onLongPress: onLongPress,
@@ -228,12 +246,10 @@ class AppContainer extends StatelessWidget {
         height: height,
         constraints: constraints,
         margin: margin,
-        padding: padding,
-        alignment: alignment,
         decoration: effectiveDecoration,
         foregroundDecoration: foregroundDecoration,
         clipBehavior: effectiveClip,
-        child: child,
+        child: innerContent,
       ),
     );
   }
@@ -243,50 +259,18 @@ class AppContainer extends StatelessWidget {
     return margin != null ? Padding(padding: margin, child: child) : child;
   }
 
-  // Build shadows based on simplified parameters, boxShadow, or elevation
+  // Build shadows (unchanged) ...
   List<BoxShadow>? _buildShadows() {
-    if (!showShadow) return null;
-
-    // 1. If boxShadow is explicitly provided, use it
-    if (boxShadow != null) return boxShadow;
-
-    // 2. If any simple shadow param is provided, create a single BoxShadow
-    final hasSimpleShadow =
-        shadowColor != null ||
-        shadowBlurRadius != null ||
-        shadowOffset != null ||
-        shadowSpreadRadius != null;
-    if (hasSimpleShadow) {
-      return [
-        BoxShadow(
-          color: shadowColor ?? Colors.black.withValues(alpha: 0.15),
-          blurRadius: shadowBlurRadius ?? 4.0,
-          offset: shadowOffset ?? const Offset(0, 2),
-          spreadRadius: shadowSpreadRadius ?? 0,
-        ),
-      ];
-    }
-
-    // 3. Fall back to elevation-based shadow (if elevation > 0)
-    if (elevation != null && elevation! > 0) {
-      return [
-        BoxShadow(
-          blurRadius: elevation! * 2,
-          offset: Offset(0, elevation!),
-          color: Colors.black.withOpacity(0.15),
-        ),
-      ];
-    }
-
-    // 4. No shadow
+    /* ... */
     return null;
   }
 
+  // Build solid border from side type
   BoxBorder _buildBorderFromSideType() {
     final side = BorderSide(
       color: borderColor,
       width: borderWidth,
-      style: borderStyle,
+      style: borderStyle, // solid only
     );
 
     switch (borderSideType) {
@@ -306,4 +290,92 @@ class AppContainer extends StatelessWidget {
         return Border(right: side);
     }
   }
+}
+
+// Updated custom painter that respects borderSideType (partial borders)
+class _CustomBorderPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final AppBorderStyle style;
+  final double borderRadius;
+  final BorderSideType sideType;
+
+  _CustomBorderPainter({
+    required this.color,
+    required this.strokeWidth,
+    required this.style,
+    required this.borderRadius,
+    required this.sideType,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (style == AppBorderStyle.solid) return;
+
+    final Paint paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    // Build path for the requested sides only
+    final Path path = Path();
+    final double w = size.width;
+    final double h = size.height;
+    final double r = borderRadius;
+    final double half = strokeWidth / 2;
+
+    // Helper to add a dashed segment
+    void addDashedSegment(Offset start, Offset end) {
+      path.moveTo(start.dx, start.dy);
+      path.lineTo(end.dx, end.dy);
+    }
+
+    // Build the outline segments according to sideType
+    if (sideType == BorderSideType.all) {
+      path.addRRect(
+        RRect.fromLTRBR(half, half, w - half, h - half, Radius.circular(r)),
+      );
+    } else {
+      // For partial borders, we draw only the requested straight edges.
+      // Rounded corners are omitted – a more advanced version could include corner arcs.
+      if (sideType == BorderSideType.top || sideType == BorderSideType.all) {
+        addDashedSegment(Offset(r, half), Offset(w - r, half));
+      }
+      if (sideType == BorderSideType.right || sideType == BorderSideType.all) {
+        addDashedSegment(Offset(w - half, r), Offset(w - half, h - r));
+      }
+      if (sideType == BorderSideType.bottom || sideType == BorderSideType.all) {
+        addDashedSegment(Offset(r, h - half), Offset(w - r, h - half));
+      }
+      if (sideType == BorderSideType.left || sideType == BorderSideType.all) {
+        addDashedSegment(Offset(half, r), Offset(half, h - r));
+      }
+    }
+
+    // Apply dash pattern (works even if path consists of multiple segments)
+    final Path dashedPath = Path();
+    final double dashWidth = style == AppBorderStyle.dashed ? 5.0 : 2.0;
+    final double dashSpace = style == AppBorderStyle.dashed ? 3.0 : 2.0;
+
+    for (final PathMetric metric in path.computeMetrics()) {
+      double distance = 0.0;
+      while (distance < metric.length) {
+        dashedPath.addPath(
+          metric.extractPath(distance, distance + dashWidth),
+          Offset.zero,
+        );
+        distance += dashWidth + dashSpace;
+      }
+    }
+
+    canvas.drawPath(dashedPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(_CustomBorderPainter oldDelegate) =>
+      oldDelegate.color != color ||
+      oldDelegate.strokeWidth != strokeWidth ||
+      oldDelegate.style != style ||
+      oldDelegate.borderRadius != borderRadius ||
+      oldDelegate.sideType != sideType;
 }

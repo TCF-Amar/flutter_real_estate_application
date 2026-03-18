@@ -108,8 +108,21 @@ class VisitResponse {
       }
     }
 
+    // Safer status check - could be String, bool, or Map
+    bool status = false;
+    final dynamic s = json['status'];
+    if (s is bool) {
+      status = s;
+    } else if (s is String) {
+      status = s.toLowerCase() == 'true';
+    } else if (s is Map && s.containsKey('status')) {
+      // Sometimes status is a map with a nested status field
+      final nested = s['status'];
+      if (nested is bool) status = nested;
+    }
+
     return VisitResponse(
-      status: json['status'] as bool? ?? false,
+      status: status,
       data: dataList,
       pagination: pagination ??
           PaginationModel.fromJson(
@@ -164,18 +177,18 @@ class VisitResponseData {
       VisitResponseData(
         id: toInt(json['id']) ?? 0,
         property: PProperty.fromJson(json['property'] as Map<String, dynamic>),
-        unit: json['unit'] as String? ?? '',
-        preferredDate: json['preferred_date'] as String?,
-        preferredDateFormatted: json['preferred_date_formatted'] as String?,
-        timeSlot: json['time_slot'] as String?,
-        timeSlotFormatted: json['time_slot_formatted'] as String?,
-        status: json['status'] as String? ?? '',
-        statusLabel: json['status_label'] as String? ?? '',
+        unit: toStr(json['unit']) ?? '',
+        preferredDate: toStr(json['preferred_date']),
+        preferredDateFormatted: toStr(json['preferred_date_formatted']),
+        timeSlot: toStr(json['time_slot']),
+        timeSlotFormatted: toStr(json['time_slot_formatted']),
+        status: toStr(json['status']) ?? '',
+        statusLabel: toStr(json['status_label']) ?? '',
         canCancel: json['can_cancel'] as bool? ?? false,
         canReschedule: json['can_reschedule'] as bool? ?? false,
         finalAmount: toDouble(json['final_amount']),
-        formattedFinalAmount: json['formatted_final_amount'] as String?,
-        createdAt: json['created_at'] as String?,
+        formattedFinalAmount: toStr(json['formatted_final_amount']),
+        createdAt: toStr(json['created_at']),
       );
 
   Map<String, dynamic> toJson() => {
@@ -221,14 +234,14 @@ class PProperty {
 
   factory PProperty.fromJson(Map<String, dynamic> json) => PProperty(
     id: toInt(json['id']) ?? 0,
-    title: json['title'] as String? ?? '',
-    location: json['location'] as String?,
-    address: json['address'] as String?,
-    thumbnail: json['thumbnail'] as String?,
-    status: json['status'] as String? ?? '',
-    statusLabel: json['status_label'] as String? ?? '',
-    propertyType: json['property_type'] as String? ?? '',
-    propertyTypeLabel: json['property_type_label'] as String? ?? '',
+    title: toStr(json['title']) ?? '',
+    location: toStr(json['location']),
+    address: toStr(json['address']),
+    thumbnail: toStr(json['thumbnail']),
+    status: toStr(json['status']) ?? '',
+    statusLabel: toStr(json['status_label']) ?? '',
+    propertyType: toStr(json['property_type']) ?? '',
+    propertyTypeLabel: toStr(json['property_type_label']) ?? '',
   );
 
   Map<String, dynamic> toJson() => {

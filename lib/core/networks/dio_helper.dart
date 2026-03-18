@@ -40,8 +40,12 @@ class DioHelper {
     final method = request.method.name.toUpperCase();
     log.i('→ $method ${request.url}');
 
-    if (request.queryParameters != null) {
-      log.d('  Query: ${request.queryParameters}');
+    if (request.queryParameters != null &&
+        request.queryParameters!.isNotEmpty) {
+      final query = request.queryParameters!.entries
+          .map((e) => '${e.key}=${e.value}')
+          .join('&');
+      log.d('  Query: ?$query');
     }
     if (request.body != null && request.body is! FormData) {
       log.d('  Body: ${request.body}');

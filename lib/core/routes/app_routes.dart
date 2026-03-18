@@ -1,7 +1,6 @@
 class AppRoutes {
   AppRoutes._();
 
-
   static const String test = '/';
 
   /// Splash & Onboarding
@@ -51,4 +50,6 @@ class AppRoutes {
   static const String accountDelete = '$profile/account/delete';
 
   static const String changePassword = "$profile/change-password";
+
+  static String bookingDetails = "$profile/$property/booking/details";
 }

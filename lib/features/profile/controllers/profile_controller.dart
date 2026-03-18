@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:real_estate_app/core/services/profile_services.dart';
-import 'package:real_estate_app/core/utils/image_picker_util.dart';
+import 'package:real_estate_app/core/utils/media_picker_util.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/profile/views/widgets/image_preview.dart';
 import 'package:real_estate_app/features/profile/views/widgets/otp_dialog.dart';
@@ -74,7 +74,8 @@ class ProfileController extends GetxController {
   // ─── Avatar ──────────────────────────────────────────────────────────────────
 
   Future<void> selectImage(BuildContext context) async {
-    final pickedImage = await ImagePickerUtil.pickImage(context);
+    final pickedMedia = await MediaPickerUtil.pickMedia(context, allowMultiple: false);
+    final pickedImage = pickedMedia.isNotEmpty ? pickedMedia.first : null;
     if (pickedImage == null) return;
 
     if (context.mounted) {

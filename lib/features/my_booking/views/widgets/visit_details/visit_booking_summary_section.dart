@@ -14,7 +14,7 @@ class VisitBookingSummarySection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             AppText.large(
+            AppText.large(
               "Booking Summary",
               fontSize: 16,
               fontWeight: FontWeight.w600,

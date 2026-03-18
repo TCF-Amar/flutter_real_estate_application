@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
@@ -32,26 +31,28 @@ class BottomNav extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
-    // Total bar height (base bar + overflow)
-    const baseHeight = 75.0;
-    const circleRadius = 32.0;
-
-    // Calculate the width of each item for positioning
+    const baseHeight = 80.0;
+    const circleRadius = 48.0;
     final itemWidth = size.width / items.length;
+
+    // Center of the selected item
+    final centerX = currentIndex * itemWidth + itemWidth / 2;
+    // Left position of the circle so its center aligns with item center
+    final indicatorLeft = (centerX - circleRadius / 2).roundToDouble();
 
     return Container(
       height: baseHeight + bottomPadding,
-      color: Colors.transparent, // Background through ClipPath or Stack
+      color: Colors.transparent,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          // The Main Bar Background
+          // Background bar
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: Container(
-              height: baseHeight + bottomPadding,
+              height: baseHeight + 20,
               decoration: BoxDecoration(
                 color: AppColors.background,
                 borderRadius: const BorderRadius.vertical(
@@ -68,15 +69,15 @@ class BottomNav extends StatelessWidget {
             ),
           ),
 
-          // The Raised Sliding Indicator
+          // Floating indicator circle – now correctly vertically aligned
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
-            // curve: Curves.easeOutBack,
-            left: (currentIndex * itemWidth) + (itemWidth / 2) - circleRadius,
-            top: -20, // Negative top for raised effect
+            curve: Curves.easeOutCubic,
+            left: indicatorLeft,
+            top: 0, // Adjusted to align center with selected icon
             child: Container(
-              width: circleRadius * 2,
-              height: circleRadius * 2,
+              width: circleRadius,
+              height: circleRadius,
               decoration: BoxDecoration(
                 color: AppColors.primary,
                 shape: BoxShape.circle,
@@ -92,13 +93,14 @@ class BottomNav extends StatelessWidget {
             ),
           ),
 
-          // Navigation Items (Icons and Labels)
+          // Navigation items (icons + labels) – aligned at bottom
           Positioned(
-            bottom: bottomPadding + 8,
+            bottom: bottomPadding + 6,
             left: 0,
             right: 0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: List.generate(items.length, (i) {
                 final selected = i == currentIndex;
                 return Expanded(
@@ -112,41 +114,40 @@ class BottomNav extends StatelessWidget {
                     behavior: HitTestBehavior.opaque,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        // Icon with animated scale and vertical lift
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 400),
-                          // curve: Curves.easeOutBack,
-                          margin: EdgeInsets.only(bottom: selected ? 32 : 6),
+                          curve: Curves.elasticOut,
+                          margin: EdgeInsets.only(bottom: selected ? 25 : 8),
                           child: AnimatedScale(
                             duration: const Duration(milliseconds: 400),
-                            scale: selected ? 1.25 : 1.0,
-                            curve: Curves.bounceOut,
+                            scale: selected ? 1.1 : 1.0,
+                            curve: Curves.elasticOut,
                             child: AppSvg(
                               path: selected
                                   ? items[i].iconSelected
                                   : items[i].icon,
-                              width: 22,
+                              width: 20,
                               color: selected
                                   ? AppColors.white
                                   : AppColors.white.withValues(alpha: 0.6),
                             ),
                           ),
                         ),
-
                         // Label
                         AnimatedDefaultTextStyle(
                           duration: const Duration(milliseconds: 200),
                           style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: selected
-                                ? FontWeight.bold
-                                : FontWeight.w600,
+                            fontSize: 12,
                             color: selected
                                 ? AppColors.white
                                 : AppColors.white.withValues(alpha: 0.6),
                           ),
                           child: Text(items[i].label),
                         ),
+                        if (selected) const SizedBox(height: 4),
                       ],
                     ),
                   ),

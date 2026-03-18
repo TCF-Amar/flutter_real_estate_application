@@ -19,7 +19,9 @@ import 'package:real_estate_app/features/auth/views/screens/verity_code.dart';
 // Main
 import 'package:real_estate_app/features/main/bindings/main_binding.dart';
 import 'package:real_estate_app/features/main/views/screens/main_screen.dart';
+import 'package:real_estate_app/features/my_booking/bindings/my_bokking_binding.dart';
 import 'package:real_estate_app/features/my_booking/bindings/visit_details_binding.dart';
+import 'package:real_estate_app/features/my_booking/views/screens/booking_details_screen.dart';
 import 'package:real_estate_app/features/my_booking/views/screens/visit/booking_flow_screen.dart';
 import 'package:real_estate_app/features/my_booking/views/screens/visit/visit_details_screen.dart';
 import 'package:real_estate_app/features/search/bindings/search_binding.dart';
@@ -79,14 +81,16 @@ class AppPages {
     ),
 
     // ─── Search ───────────────────────────────────────────────────────────
-    GetPage(name: AppRoutes.search,
-    binding: SearchBinding(),
-     page: () => SearchScreen()),
+    GetPage(
+      name: AppRoutes.search,
+      binding: SearchBinding(),
+      page: () => SearchScreen(),
+    ),
     GetPage(
       name: AppRoutes.searchResult,
       page: () {
-        final Map? args = Get.arguments is Map ? Get.arguments as Map : null;
-        return SearchResult(query: args?['query'] ?? "");
+        // final Map? args = Get.arguments is Map ? Get.arguments as Map : null;
+        return SearchResult();
       },
     ),
 
@@ -136,5 +140,12 @@ class AppPages {
     GetPage(name: AppRoutes.support, page: () => SupportScreen()),
     GetPage(name: AppRoutes.newRequest, page: () => NewRequest()),
     GetPage(name: AppRoutes.supportDetails, page: () => SupportDetails()),
+
+    // ─── Booking ──────────────────────────────────────────────────────────
+    GetPage(
+      name: AppRoutes.bookingDetails,
+      page: () => BookingDetailsScreen(),
+      binding: MyBookingBinding(),
+    ),
   ];
 }

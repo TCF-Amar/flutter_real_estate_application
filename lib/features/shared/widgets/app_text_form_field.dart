@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'app_container.dart'; // our universal container
@@ -33,17 +32,16 @@ class AppTextFormField extends StatefulWidget {
   final int? maxLength;
   final String? prefixText;
   final double? fontSize;
-  final Color? textColor; // text color inside the field
+  final Color? textColor;
   final Color? hintColor;
   final Color? iconColor;
-  final Color? fillColor; // background color of the field itself
-  final EdgeInsetsGeometry? contentPadding; // padding inside the field
+  final Color? fillColor;
+  final EdgeInsetsGeometry? contentPadding;
 
   // ---------- Outer container properties (mirror AppContainer) ----------
   // Layout
   final EdgeInsetsGeometry? containerMargin;
-  final EdgeInsetsGeometry?
-  containerPadding; // overrides contentPadding? We'll keep separate.
+  final EdgeInsetsGeometry? containerPadding;
   final double? containerWidth;
   final double? containerHeight;
   final AlignmentGeometry? containerAlignment;

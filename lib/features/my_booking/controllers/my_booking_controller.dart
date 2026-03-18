@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:logger/web.dart';
 import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:real_estate_app/core/services/booking_services.dart';
+import 'package:real_estate_app/features/my_booking/models/booking_detail_model.dart';
+import 'package:real_estate_app/features/my_booking/models/my_booking_model.dart';
 import 'package:real_estate_app/features/my_booking/models/visit_confirmation_model.dart';
 import 'package:real_estate_app/features/shared/models/pagination_model.dart';
 import 'package:real_estate_app/features/shared/widgets/app_snackbar.dart';
@@ -12,6 +14,7 @@ class MyBookingController extends GetxController {
   final BookingServices bookingServices = Get.find();
 
   final scrollController = ScrollController();
+  final bookingScrollController = ScrollController();
 
   final Rxn<Failure> failure = Rxn();
 
@@ -31,6 +34,23 @@ class MyBookingController extends GetxController {
     super.onInit();
 
     getVisitList();
+    getMyBookings();
+
+    // Site Visits Scroll Listener
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 200) {
+        loadMoreVisits();
+      }
+    });
+
+    // Bookings Scroll Listener
+    bookingScrollController.addListener(() {
+      if (bookingScrollController.position.pixels >=
+          bookingScrollController.position.maxScrollExtent - 200) {
+        loadMoreBookings();
+      }
+    });
 
     ever(visitList, (_) {
       filterVisitList();
@@ -40,6 +60,7 @@ class MyBookingController extends GetxController {
   @override
   void onClose() {
     scrollController.dispose();
+    bookingScrollController.dispose();
     super.onClose();
   }
 
@@ -93,9 +114,7 @@ class MyBookingController extends GetxController {
     if (visitLoadingMore.value) return;
 
     visitLoadingMore.value = true;
-
     await _getVisitList(isRefresh: false);
-
     visitLoadingMore.value = false;
   }
 
@@ -125,7 +144,9 @@ class MyBookingController extends GetxController {
       }
     }
 
-    log.d("Filtered lists update - Pending: ${pendingVisitList.length}, Cancelled: ${cancelledVisitList.length}, Completed: ${completedVisitList.length}");
+    log.d(
+      "Filtered lists update - Pending: ${pendingVisitList.length}, Cancelled: ${cancelledVisitList.length}, Completed: ${completedVisitList.length}",
+    );
   }
 
   /// BOOK VISIT
@@ -153,5 +174,80 @@ class MyBookingController extends GetxController {
     );
 
     return result.isRight();
+  }
+
+  final myBookings = <Booking>[].obs;
+  final bookingPagination = Rxn<PaginationModel>();
+  final bookingLoading = false.obs;
+  final bookingLoadingMore = false.obs;
+
+  Future<void> _getMyBookings({bool isRefresh = true}) async {
+    if (isRefresh) {
+      bookingLoading.value = true;
+    }
+    final page = isRefresh
+        ? 1
+        : (bookingPagination.value?.currentPage ?? 0) + 1;
+    final result = await bookingServices.getMyBookings(page: page);
+
+    result.fold(
+      (error) {
+        failure.value = error;
+        AppSnackbar.error(error.message);
+      },
+
+      (response) {
+        bookingPagination.value = response.data.pagination;
+        if (isRefresh) {
+          myBookings.assignAll(response.data.bookings);
+        } else {
+          myBookings.addAll(response.data.bookings);
+        }
+      },
+    );
+    bookingLoading.value = false;
+  }
+
+  Future<void> loadMoreBookings() async {
+    final pagination = bookingPagination.value;
+
+    if (pagination == null) return;
+
+    if (pagination.currentPage >= pagination.lastPage) return;
+
+    if (bookingLoadingMore.value) return;
+
+    bookingLoadingMore.value = true;
+
+    await _getMyBookings(isRefresh: false);
+
+    bookingLoadingMore.value = false;
+  }
+
+  void getMyBookings() async {
+    await _getMyBookings();
+  }
+
+  Future<void> refreshBooking() async {
+    await _getMyBookings();
+  }
+
+  final bookingDetails = Rxn<BookingDetailsData>();
+  final bookingDetailsLoading = false.obs;
+
+  Future<void> getBookingDetails(int id) async {
+    bookingDetailsLoading.value = true;
+    failure.value = null;
+    final result = await bookingServices.getBookingDetails(id);
+    result.fold(
+      (error) {
+        failure.value = error;
+        AppSnackbar.error(error.message);
+      },
+      (response) {
+        bookingDetails.value = response.data;
+      },
+    );
+    bookingDetailsLoading.value = false;
   }
 }

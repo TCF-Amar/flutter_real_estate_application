@@ -56,15 +56,72 @@ class SearchScreen extends GetView<AppSearchController> {
                   margin: const EdgeInsets.symmetric(vertical: 10),
                 ),
               ),
+
               SliverToBoxAdapter(
-                child: AppContainer(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const AppText(
-                    "Recent ",
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Obx(() {
+                  if (controller.recentSearchesRx.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        child: const AppText(
+                          "Recent Searches",
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.recentSearchesRx.length,
+                        separatorBuilder: (context, index) =>
+                            const Divider(height: 1),
+                        itemBuilder: (context, index) {
+                          final recent = controller.recentSearchesRx[index];
+                          return ListTile(
+                            onTap: () {
+                              controller.setQuery(recent.query);
+                              controller.search();
+                            },
+                            leading: Container(
+                              width: 50,
+                              height: 50,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: AppImage(path: recent.image),
+                            ),
+                            title: AppText(
+                              recent.title,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: AppText(
+                              recent.location,
+                              fontSize: 12,
+                              color: AppColors.grey,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing: const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 14,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                }),
               ),
             ],
           ),

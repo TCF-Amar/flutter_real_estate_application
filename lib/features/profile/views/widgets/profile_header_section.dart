@@ -72,6 +72,8 @@ class ProfileHeaderSection extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(50),
                     child: AppImage(
+                      width: 100,
+                      height: 100,
                       path: auth.user.value?.profileImage ?? "",
                       errorImagePath: Assets.icons.person,
                     ),

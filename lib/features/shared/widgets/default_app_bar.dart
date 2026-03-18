@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:real_estate_app/features/shared/widgets/back_button.dart';
-import 'package:real_estate_app/features/shared/widgets/header_text.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {

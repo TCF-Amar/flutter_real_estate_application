@@ -8,6 +8,7 @@ import 'package:real_estate_app/features/favorite/models/favorite_property.dart'
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/property/models/property_filter.model.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
+import 'package:real_estate_app/features/shared/models/property_search_params.dart';
 
 class PropertyController extends GetxController {
   // ─── Dependencies ────────────────────────────────────────────────────────────
@@ -19,6 +20,10 @@ class PropertyController extends GetxController {
 
   // Keep public getter for views that reference propertyServices directly
   PropertyServices get propertyServices => _propertyServices;
+
+  // ─── Search Params (single source of truth) ──────────────────────────────────
+
+  final searchParams = PropertySearchParams(perPage: 10, page: 1).obs;
 
   // ─── Loading State ───────────────────────────────────────────────────────────
 
@@ -118,22 +123,25 @@ class PropertyController extends GetxController {
   // ─── Search ──────────────────────────────────────────────────────────────────
 
   void handleSearch() {
-    _propertyServices.keywords.value = searchQuery.value;
-    _propertyServices.page.value = 1;
+    searchParams.value = searchParams.value.copyWith(
+      keywords: searchQuery.value,
+      page: 1,
+    );
     _fetchProperties();
   }
 
   // ─── Filters ─────────────────────────────────────────────────────────────────
 
   void initializeFilters() {
-    minPrice.value = _propertyServices.minPrice.value.toDouble();
-    maxPrice.value = _propertyServices.maxPrice.value.toDouble();
-    minArea.value = (_propertyServices.minArea.value ?? 0).toInt();
-    maxArea.value = (_propertyServices.maxArea.value ?? 10000).toInt();
-    selectedBhk.assignAll(_propertyServices.bhk);
-    selectedAmenities.value = _propertyServices.amenities.value;
+    final p = searchParams.value;
+    minPrice.value = (p.minPrice ?? 0).toDouble();
+    maxPrice.value = (p.maxPrice ?? 100000000).toDouble();
+    minArea.value = (p.minArea ?? 0).toInt();
+    maxArea.value = (p.maxArea ?? 10000).toInt();
+    selectedBhk.assignAll(p.bhk ?? const <int>[]);
+    selectedAmenities.value = p.amenities ?? '';
 
-    final currentSlug = _propertyServices.listingCategory.value;
+    final currentSlug = p.listingCategory ?? '';
     final categories = filterData.value?.data.listingCategories;
     if (categories != null && currentSlug.isNotEmpty) {
       selectedListingCategories.value = categories.entries
@@ -149,7 +157,7 @@ class PropertyController extends GetxController {
 
   void applySort(String? label) {
     selectedSort.value = label;
-    _propertyServices.page.value = 1;
+    searchParams.value = searchParams.value.copyWith(page: 1);
     _fetchProperties();
   }
 
@@ -157,32 +165,38 @@ class PropertyController extends GetxController {
     selectedIndex.value = index;
     await resetFilters(shouldFetch: false);
 
-    String type = '';
-    if (index == 1) type = 'ready_to_move';
-    if (index == 2) type = 'under_construction';
+    String status = '';
+    if (index == 1) status = 'ready_to_move';
+    if (index == 2) status = 'under_construction';
 
-    _propertyServices.propertyType.value = type;
+    searchParams.value = searchParams.value.copyWith(
+      propertyStatus: status.isEmpty ? null : status,
+      clearPropertyStatus: status.isEmpty,
+      page: 1,
+    );
     _fetchProperties();
   }
 
   void applyFilters({bool shouldFetch = true}) {
     final data = filterData.value?.data;
 
-    _propertyServices.minPrice.value = minPrice.value.toInt();
-    _propertyServices.maxPrice.value = maxPrice.value.toInt();
-    _propertyServices.minArea.value = minArea.value.toInt();
-    _propertyServices.maxArea.value = maxArea.value.toInt();
-    _propertyServices.bhk.assignAll(selectedBhk);
-    _propertyServices.amenities.value = selectedAmenities.value;
+    final listingSlug =
+        (data != null && selectedListingCategories.value.isNotEmpty)
+            ? (data.listingCategories?[selectedListingCategories.value] ?? '')
+            : '';
 
-    if (data != null && selectedListingCategories.value.isNotEmpty) {
-      _propertyServices.listingCategory.value =
-          data.listingCategories?[selectedListingCategories.value] ?? '';
-    } else {
-      _propertyServices.listingCategory.value = '';
-    }
-
-    _propertyServices.page.value = 1;
+    searchParams.value = searchParams.value.copyWith(
+      minPrice: minPrice.value.toInt(),
+      maxPrice: maxPrice.value.toInt(),
+      minArea: minArea.value,
+      maxArea: maxArea.value,
+      bhk: selectedBhk.toList(),
+      amenities: selectedAmenities.value.isEmpty ? null : selectedAmenities.value,
+      clearAmenities: selectedAmenities.value.isEmpty,
+      listingCategory: listingSlug.isEmpty ? null : listingSlug,
+      clearListingCategory: listingSlug.isEmpty,
+      page: 1,
+    );
     if (shouldFetch) _fetchProperties();
 
     Get.back();
@@ -202,19 +216,10 @@ class PropertyController extends GetxController {
     selectedSort.value = null;
     selectedPropertyType.value = null;
 
-    _propertyServices
-      ..keywords.value = ''
-      ..propertyStatus.value = ''
-      ..propertyType.value = ''
-      ..listingCategory.value = ''
-      ..amenities.value = ''
-      ..minPrice.value = 0
-      ..maxPrice.value = 100000000
-      ..minArea.value = null
-      ..maxArea.value = null
-      ..bhk.clear()
-      ..city.value = ''
-      ..page.value = 1;
+    searchParams.value = PropertySearchParams(
+      perPage: searchParams.value.perPage ?? 10,
+      page: 1,
+    );
 
     searchQuery.value = '';
     searchController.clear();
@@ -243,13 +248,15 @@ class PropertyController extends GetxController {
   }
 
   Future<void> _fetchProperties() async {
-    if (_propertyServices.page.value == 1) {
+    final p = searchParams.value;
+    final page = p.page ?? 1;
+    if (page == 1) {
       _isLoading.value = true;
     } else {
       _isMoreLoading.value = true;
     }
 
-    final result = await _propertyServices.searchProperties();
+    final result = await _propertyServices.searchProperties(params: p);
     result.fold(
       (l) {
         _error.value = l;
@@ -258,9 +265,9 @@ class PropertyController extends GetxController {
       (r) {
         _error.value = null;
         log.d(
-          'Fetched ${r.data.length} properties — page ${_propertyServices.page.value}',
+          'Fetched ${r.data.length} properties — page $page',
         );
-        if (_propertyServices.page.value == 1) {
+        if (page == 1) {
           _properties.assignAll(r.data);
           _filteredProperties.assignAll(r.data);
         } else {
@@ -308,14 +315,18 @@ class PropertyController extends GetxController {
 
   void _loadMoreProperties() {
     if (currentPage.value < lastPage.value && !isMoreLoading) {
-      _propertyServices.page.value = currentPage.value + 1;
+      searchParams.value = searchParams.value.copyWith(
+        page: currentPage.value + 1,
+      );
       _fetchProperties();
     }
   }
 
   Future<void> fetchMoreProperties() async {
     if (currentPage.value < lastPage.value && !isMoreLoading) {
-      _propertyServices.page.value = currentPage.value + 1;
+      searchParams.value = searchParams.value.copyWith(
+        page: currentPage.value + 1,
+      );
       await _fetchProperties();
     }
   }

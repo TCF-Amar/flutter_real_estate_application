@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/my_booking/controllers/my_booking_controller.dart';
-import 'package:real_estate_app/features/my_booking/views/widgets/booked_properties_tab.dart';
-import 'package:real_estate_app/features/my_booking/views/widgets/site_visits_tab.dart';
+import 'package:real_estate_app/features/my_booking/views/screens/booked_properties_tab.dart';
+import 'package:real_estate_app/features/my_booking/views/screens/visit/site_visits_screen.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class MyBookingScreen extends GetView<MyBookingController> {
@@ -45,7 +45,7 @@ class MyBookingScreen extends GetView<MyBookingController> {
                 ),
               ),
             ),
-            const Expanded(
+            Expanded(
               child: TabBarView(
                 children: [SiteVisitsTab(), BookedPropertiesTab()],
               ),

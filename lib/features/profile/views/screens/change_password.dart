@@ -24,7 +24,6 @@ class ChangePassword extends StatelessWidget {
                   AppTextFormField(
                     hintText: "Current Password",
                     labelText: "Current Password",
-                    
 
                     // borderSideType: BorderSideType.,
                     containerBorderColor: AppColors.grey.withValues(alpha: 0.5),

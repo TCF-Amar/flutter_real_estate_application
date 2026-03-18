@@ -10,8 +10,9 @@ class VisitPropertyInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (property == null)
+    if (property == null) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
 
     return SliverToBoxAdapter(
       child: Padding(

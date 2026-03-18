@@ -112,8 +112,8 @@ class VisitDetailsController extends GetxController {
           reasonController: reasonController,
           isCancelling: _isCancellingVisit.value,
           onCancel: () async {
-            await _cancelVisit(reason: reasonController.text);
             Get.back();
+            await _cancelVisit(reason: reasonController.text);
           },
         );
       },
@@ -151,7 +151,8 @@ class VisitDetailsController extends GetxController {
         Get.dialog(
           const AppSuccessDialog(
             title: "Cancelled!",
-            message: "Your scheduled site visit has been\ncancelled successfully.",
+            message:
+                "Your scheduled site visit has been\ncancelled successfully.",
           ),
         );
         getVisitDetails();

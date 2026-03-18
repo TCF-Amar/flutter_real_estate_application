@@ -4,6 +4,7 @@ import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/profile/controllers/profile_controller.dart';
+import 'package:real_estate_app/features/profile/views/screens/maintenance/maintenance_screen.dart';
 import 'package:real_estate_app/features/profile/views/widgets/account_delete_widget/delete.dart';
 import 'package:real_estate_app/features/profile/views/widgets/log_out_confirm.dart';
 import 'package:real_estate_app/features/profile/views/widgets/profile_tile.dart';
@@ -57,7 +58,9 @@ class ProfileOption extends StatelessWidget {
         label: "Property Maintenance",
         color: AppColors.primary,
         textColor: AppColors.textPrimary,
-        action: () {},
+        action: () {
+          Get.to(() => const MaintenanceScreen());
+        },
       ),
       ProfileOptionItem(
         icon: Assets.icons.icon4,

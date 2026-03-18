@@ -13,6 +13,7 @@ import 'package:real_estate_app/features/property/models/property_filter.model.d
 import 'package:real_estate_app/features/property/models/property_response_model.dart';
 import 'package:real_estate_app/features/property/models/review_request_model.dart';
 import 'package:real_estate_app/features/favorite/models/saved_response.dart';
+import 'package:real_estate_app/features/shared/models/property_search_params.dart';
 import 'package:real_estate_app/features/shared/models/review_response_model.dart';
 
 class PropertyServices extends GetxService {
@@ -57,42 +58,31 @@ class PropertyServices extends GetxService {
 
   // ── Search Properties ───────────────────────────────────────
 
-  FutureResult<PropertyResponseModel> searchProperties() async {
-    log.i('Searching properties (page: ${page.value})...');
-    try {
-      final queryParams = <String, dynamic>{
-        "per_page": perPage.value,
-        "page": page.value,
-      };
+  FutureResult<PropertyResponseModel> searchProperties({
+    PropertySearchParams? params,
+  }) async {
+    final effectiveParams =
+        params ??
+        PropertySearchParams(
+          city: city.value,
+          propertyCategory: propertyCategory,
+          bhk: bhk.toList(),
+          minPrice: minPrice.value,
+          maxPrice: maxPrice.value,
+          minArea: minArea.value,
+          maxArea: maxArea.value,
+          amenities: amenities.value,
+          listingCategory: listingCategory.value,
+          keywords: keywords.value,
+          propertyStatus: propertyStatus.value,
+          propertyType: propertyType.value,
+          perPage: perPage.value,
+          page: page.value,
+        );
 
-      if (keywords.value.isNotEmpty) queryParams["search"] = keywords.value;
-      if (city.value.isNotEmpty) queryParams["city"] = city.value;
-      if (propertyCategory.isNotEmpty) {
-        queryParams["property_category"] = propertyCategory;
-      }
-      if (bhk.isNotEmpty) queryParams["bhk"] = bhk.join(",");
-      if (minPrice.value > 0) queryParams["min_price"] = minPrice.value;
-      if (maxPrice.value < 100000000) {
-        queryParams["max_price"] = maxPrice.value;
-      }
-      if (minArea.value != null && minArea.value! > 0) {
-        queryParams["min_area"] = minArea.value;
-      }
-      if (maxArea.value != null && maxArea.value! < 10000) {
-        queryParams["max_area"] = maxArea.value;
-      }
-      if (amenities.value.isNotEmpty) {
-        queryParams["amenities[]"] = amenities.value;
-      }
-      if (listingCategory.value.isNotEmpty) {
-        queryParams["listing_category"] = listingCategory.value;
-      }
-      if (propertyStatus.value.isNotEmpty) {
-        queryParams["property_status"] = propertyStatus.value;
-      }
-      if (propertyType.value.isNotEmpty) {
-        queryParams["property_type"] = propertyType.value;
-      }
+    log.i('Searching properties (page: ${effectiveParams.page})...');
+    try {
+      final queryParams = effectiveParams.toJson();
 
       log.d('Search filters: $queryParams');
       final response = await dioHelper.request(
@@ -104,7 +94,9 @@ class PropertyServices extends GetxService {
       );
 
       final propertyResponse = PropertyResponseModel.fromJson(response.data);
-      log.i('Properties search returned ${propertyResponse.data.length} results');
+      log.i(
+        'Properties search returned ${propertyResponse.data.length} results',
+      );
       return Right(propertyResponse);
     } on AppException catch (e) {
       log.e('Search properties failed (AppException): ${e.message}');

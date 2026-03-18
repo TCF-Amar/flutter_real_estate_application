@@ -7,6 +7,8 @@ import 'package:real_estate_app/core/networks/dio_helper.dart';
 import 'package:real_estate_app/core/networks/exceptions/api_exceptions.dart';
 import 'package:real_estate_app/core/networks/exceptions/exceptions.dart';
 import 'package:real_estate_app/core/utils/typedef.dart';
+import 'package:real_estate_app/features/my_booking/models/booking_detail_model.dart';
+import 'package:real_estate_app/features/my_booking/models/my_booking_model.dart';
 import 'package:real_estate_app/features/my_booking/models/visit_confirmation_model.dart';
 import 'package:real_estate_app/features/my_booking/models/visit_detail_response.dart';
 
@@ -36,7 +38,7 @@ class BookingServices {
   }
 
   FutureResult<VisitResponse> getVisits({
-    int? parPage = 5,
+    int? parPage = 10,
     int? page = 1,
   }) async {
     try {
@@ -48,10 +50,10 @@ class BookingServices {
         ),
       );
       // log.d('Get visit confirm response: ${response.data}');0
+      // log.d(response.data);
       log.i('Visit confirm fetched successfully');
-      final res = VisitResponse.fromJson(response.data);
-      // log.d(res.toJson());
-      return Right(res);
+      log.d(VisitResponse.fromJson(response.data));
+      return Right(VisitResponse.fromJson(response.data));
     } on AppException catch (e) {
       log.e('Get visit confirm failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
@@ -97,6 +99,49 @@ class BookingServices {
       return Left(ApiException.map(e));
     } catch (e) {
       log.e('Visit cancel failed (Unknown): $e');
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
+
+  FutureResult<BookingResponse> getMyBookings({
+    int? parPage = 10,
+    int? page = 1,
+  }) async {
+    try {
+      final response = await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.getBookedProperties,
+          method: ApiMethod.get,
+          queryParameters: {'per_page': parPage, 'page': page},
+        ),
+      );
+
+      // log.d(response.data);
+
+      return Right(BookingResponse.fromJson(response.data));
+    } on AppException catch (e) {
+      return Left(ApiException.map(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
+
+  FutureResult<BookingDetailResponse> getBookingDetails(int id) async {
+    try {
+      final response = await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.getBookingDetails(id),
+          method: ApiMethod.get,
+        ),
+      );
+      log.i('Booking details fetched successfully');
+      final res = BookingDetailResponse.fromJson(response.data);
+      return Right(res);
+    } on AppException catch (e) {
+      log.e('Get booking details failed (AppException): ${e.message}');
+      return Left(ApiException.map(e));
+    } catch (e) {
+      log.e('Get booking details failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }

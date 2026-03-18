@@ -28,8 +28,11 @@ class VisitCard extends StatelessWidget {
             width: 130,
             height: 130,
             padding: EdgeInsets.zero,
-            borderRadius: BorderRadius.circular(16),
-            child: AppImage(path: visit.property.thumbnail),
+            // borderRadius: BorderRadius.circular(16),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: AppImage(path: visit.property.thumbnail),
+            ),
           ),
           const SizedBox(width: 12),
           // Info Section

@@ -32,6 +32,12 @@ class ApiEndpoints {
   static String getVisitDetails(int id) => "$_base/visits/$id";
   static String cancelVisit(int id) => "$_base/visits/$id/cancel";
 
+  // Booking
+
+  // static const String getBookingsP = "$_base/bookings";
+  static const String getBookedProperties = "$_base/bookings";
+  static String getBookingDetails(int id) => "$_base/bookings/$id";
+
   // ── Search & Filter ──────────────────────────────────────────────────────
   static const String filterData = "$_buyer/filter-options";
   static const String searchProperties = "$_buyer/search";
