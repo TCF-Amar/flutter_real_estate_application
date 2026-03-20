@@ -187,6 +187,7 @@ class ProfileServices {
         ApiRequest(
           url: ApiEndpoints.updateSettings,
           method: ApiMethod.post,
+          contentType: 'application/',
           body: {'country': country},
         ),
       );

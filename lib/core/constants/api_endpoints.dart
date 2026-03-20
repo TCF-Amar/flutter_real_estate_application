@@ -70,4 +70,6 @@ class ApiEndpoints {
   static const String changePassword = "$_profile/password";
 
   static const String getVisits = "$_base/visits";
+
+  static const String sendMaintenanceRequest = "$_base/maintenance/requests";
 }

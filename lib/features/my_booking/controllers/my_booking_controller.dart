@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:logger/web.dart';
 import 'package:real_estate_app/core/errors/failure.dart';
 import 'package:real_estate_app/core/services/booking_services.dart';
-import 'package:real_estate_app/features/my_booking/models/booking_detail_model.dart';
+import 'package:real_estate_app/features/my_booking/models/bkp.dart';
 import 'package:real_estate_app/features/my_booking/models/my_booking_model.dart';
 import 'package:real_estate_app/features/my_booking/models/visit_confirmation_model.dart';
 import 'package:real_estate_app/features/shared/models/pagination_model.dart';
@@ -177,6 +177,7 @@ class MyBookingController extends GetxController {
   }
 
   final myBookings = <Booking>[].obs;
+  final bkpl = <Bkp>[].obs;
   final bookingPagination = Rxn<PaginationModel>();
   final bookingLoading = false.obs;
   final bookingLoadingMore = false.obs;
@@ -200,8 +201,19 @@ class MyBookingController extends GetxController {
         bookingPagination.value = response.data.pagination;
         if (isRefresh) {
           myBookings.assignAll(response.data.bookings);
+          bkpl.assignAll(
+            response.data.bookings.map(
+              (e) =>
+                  Bkp(pid: e.property!.id, title: e.property!.title ?? "N/A"),
+            ),
+          );
         } else {
           myBookings.addAll(response.data.bookings);
+          bkpl.addAll(
+            response.data.bookings.map(
+              (e) => Bkp(pid: e.property!.id, title: e.property!.title ?? "N/A"),
+            ),
+          );
         }
       },
     );
@@ -230,24 +242,5 @@ class MyBookingController extends GetxController {
 
   Future<void> refreshBooking() async {
     await _getMyBookings();
-  }
-
-  final bookingDetails = Rxn<BookingDetailsData>();
-  final bookingDetailsLoading = false.obs;
-
-  Future<void> getBookingDetails(int id) async {
-    bookingDetailsLoading.value = true;
-    failure.value = null;
-    final result = await bookingServices.getBookingDetails(id);
-    result.fold(
-      (error) {
-        failure.value = error;
-        AppSnackbar.error(error.message);
-      },
-      (response) {
-        bookingDetails.value = response.data;
-      },
-    );
-    bookingDetailsLoading.value = false;
   }
 }

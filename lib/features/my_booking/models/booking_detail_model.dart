@@ -28,7 +28,7 @@ class BookingDetailsData {
   final UpdateItem? latestUpdate;
   final SiteVisitSummary? siteVisitSummary;
   final OwnerDetail? ownerDetail;
-  final PaymentTracker? paymentTracker;
+  final PaymentTrackerModel? paymentTracker;
 
   BookingDetailsData({
     required this.bookingSummary,
@@ -65,7 +65,7 @@ class BookingDetailsData {
           ? OwnerDetail.fromJson(json['owner_detail'] as Map<String, dynamic>)
           : null,
       paymentTracker: json['payment_tracker'] is Map<String, dynamic>
-          ? PaymentTracker.fromJson(
+          ? PaymentTrackerModel.fromJson(
               json['payment_tracker'] as Map<String, dynamic>,
             )
           : null,
@@ -91,7 +91,7 @@ class BookingDetails {
   final UpdateItem? latestUpdate;
   final SiteVisitSummary? siteVisitSummary;
   final OwnerDetail? ownerDetail;
-  final PaymentTracker? paymentTracker;
+  final PaymentTrackerModel? paymentTracker;
 
   BookingDetails({
     required this.bookingSummary,
@@ -133,7 +133,7 @@ class BookingDetails {
           ? OwnerDetail.fromJson(data['owner_detail'] as Map<String, dynamic>)
           : null,
       paymentTracker: data['payment_tracker'] is Map<String, dynamic>
-          ? PaymentTracker.fromJson(
+          ? PaymentTrackerModel.fromJson(
               data['payment_tracker'] as Map<String, dynamic>,
             )
           : null,
@@ -166,9 +166,16 @@ class BookingSummary {
   final String? nextPaymentLabel;
   final String? percentageComplete;
   final double? percentage;
-  final int? remainingLeasePayments;
+  final String? remainingLeasePayments;
   final String? downloadReceiptUrl;
   final String? viewDocumentUrl;
+  final num? monthlyRent;
+  final num? securityDeposit;
+  final String? leaseTerm;
+  final String? leaseStartDate;
+  final String? leaseEndDate;
+  final String? paymentStatus;
+  final RentPaymentStatus? rentPaymentStatus;
 
   BookingSummary({
     required this.bookingId,
@@ -186,6 +193,13 @@ class BookingSummary {
     this.remainingLeasePayments,
     this.downloadReceiptUrl,
     this.viewDocumentUrl,
+    this.monthlyRent,
+    this.securityDeposit,
+    this.leaseTerm,
+    this.leaseStartDate,
+    this.leaseEndDate,
+    this.paymentStatus,
+    this.rentPaymentStatus,
   });
 
   factory BookingSummary.fromJson(Map<String, dynamic> json) {
@@ -202,14 +216,26 @@ class BookingSummary {
       nextPaymentLabel: json['next_payment_label'] as String?,
       percentageComplete: json['percentage_complete'] as String?,
       percentage: toDouble(json['percentage']),
-      remainingLeasePayments: toInt(json['remaining_lease_payments']),
+      remainingLeasePayments: json['remaining_lease_payments'] as String?,
       downloadReceiptUrl: json['download_receipt_url'] as String?,
       viewDocumentUrl: json['view_document_url'] as String?,
+      monthlyRent: toNum(json['monthly_rent']),
+      securityDeposit: toNum(json['security_deposit']),
+      leaseTerm: json['lease_term'] as String?,
+      leaseStartDate: json['lease_start_date'] as String?,
+      leaseEndDate: json['lease_end_date'] as String?,
+      paymentStatus: json['payment_status'] as String?,
+      rentPaymentStatus: json['rent_payment_status'] != null
+          ? RentPaymentStatus.fromJson(
+              json['rent_payment_status'] as Map<String, dynamic>)
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
     'booking_id': bookingId,
+    if (rentPaymentStatus != null)
+      'rent_payment_status': rentPaymentStatus!.toJson(),
     if (bookedOn != null) 'booked_on': bookedOn,
     if (paymentType != null) 'payment_type': paymentType,
     if (bookingType != null) 'booking_type': bookingType,
@@ -225,6 +251,12 @@ class BookingSummary {
       'remaining_lease_payments': remainingLeasePayments,
     if (downloadReceiptUrl != null) 'download_receipt_url': downloadReceiptUrl,
     if (viewDocumentUrl != null) 'view_document_url': viewDocumentUrl,
+    if (monthlyRent != null) 'monthly_rent': monthlyRent,
+    if (securityDeposit != null) 'security_deposit': securityDeposit,
+    if (leaseTerm != null) 'lease_term': leaseTerm,
+    if (leaseStartDate != null) 'lease_start_date': leaseStartDate,
+    if (leaseEndDate != null) 'lease_end_date': leaseEndDate,
+    if (paymentStatus != null) 'payment_status': paymentStatus,
   };
 
   num get balance => (totalAmount ?? 0) - (paidAmount ?? 0);
@@ -573,16 +605,16 @@ class OwnerDetail {
   };
 }
 
-/* --- PaymentTracker --- */
-class PaymentTracker {
+/* --- PaymentTrackerModel --- */
+class PaymentTrackerModel {
   final String? type;
   final List<PaymentEvent> events;
 
-  PaymentTracker({this.type, List<PaymentEvent>? events})
+  PaymentTrackerModel({this.type, List<PaymentEvent>? events})
     : events = events ?? [];
 
-  factory PaymentTracker.fromJson(Map<String, dynamic> json) {
-    return PaymentTracker(
+  factory PaymentTrackerModel.fromJson(Map<String, dynamic> json) {
+    return PaymentTrackerModel(
       type: json['type'] as String?,
       events: (json['events'] is List)
           ? (json['events'] as List)
@@ -634,5 +666,48 @@ class PaymentEvent {
     if (date != null) 'date': date,
     if (status != null) 'status': status,
     if (receiptUrl != null) 'receipt_url': receiptUrl,
+  };
+}
+
+/* --- RentPaymentStatus --- */
+class RentPaymentStatus {
+  final bool isPaidThisMonth;
+  final String? currentMonth;
+  final num? paymentAmount;
+  final String? paymentLabel;
+  final String? nextPaymentDue;
+  final String? currency;
+  final String? currencySymbol;
+
+  RentPaymentStatus({
+    this.isPaidThisMonth = false,
+    this.currentMonth,
+    this.paymentAmount,
+    this.paymentLabel,
+    this.nextPaymentDue,
+    this.currency,
+    this.currencySymbol,
+  });
+
+  factory RentPaymentStatus.fromJson(Map<String, dynamic> json) {
+    return RentPaymentStatus(
+      isPaidThisMonth: json['is_paid_this_month'] as bool? ?? false,
+      currentMonth: json['current_month'] as String?,
+      paymentAmount: toNum(json['payment_amount']),
+      paymentLabel: json['payment_label'] as String?,
+      nextPaymentDue: json['next_payment_due'] as String?,
+      currency: json['currency'] as String?,
+      currencySymbol: json['currency_symbol'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'is_paid_this_month': isPaidThisMonth,
+    if (currentMonth != null) 'current_month': currentMonth,
+    if (paymentAmount != null) 'payment_amount': paymentAmount,
+    if (paymentLabel != null) 'payment_label': paymentLabel,
+    if (nextPaymentDue != null) 'next_payment_due': nextPaymentDue,
+    if (currency != null) 'currency': currency,
+    if (currencySymbol != null) 'currency_symbol': currencySymbol,
   };
 }

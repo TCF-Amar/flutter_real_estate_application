@@ -67,7 +67,7 @@ class DioHelper {
         queryParameters: request.queryParameters,
         data: request.body,
       );
-
+      log.d(request.body);
       log.i('← ${response.statusCode} $method ${request.url}');
       return response;
     } on DioException catch (e) {

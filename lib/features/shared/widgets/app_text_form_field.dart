@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
-import 'app_container.dart'; // our universal container
+import 'app_container.dart';
 
 enum BorderSideType { all, bottom, top, left, right }
 
-/// A fully customizable text form field wrapped in an [AppContainer].
-///
-/// All visual outer styling (border, shadow, background, padding, margin)
-/// is controlled via the container parameters. The inner [TextFormField]
-/// receives its own input‑related properties (controller, validator, etc.).
 class AppTextFormField extends StatefulWidget {
   // ---------- TextFormField specific properties ----------
   final TextEditingController? controller;
@@ -39,15 +34,12 @@ class AppTextFormField extends StatefulWidget {
   final EdgeInsetsGeometry? contentPadding;
 
   // ---------- Outer container properties (mirror AppContainer) ----------
-  // Layout
   final EdgeInsetsGeometry? containerMargin;
   final EdgeInsetsGeometry? containerPadding;
   final double? containerWidth;
   final double? containerHeight;
   final AlignmentGeometry? containerAlignment;
   final BoxConstraints? containerConstraints;
-
-  // Decoration base
   final Decoration? containerDecoration; // full override
   final Color? containerColor; // background color of container
   final Gradient? containerGradient;
@@ -118,7 +110,7 @@ class AppTextFormField extends StatefulWidget {
       vertical: 14,
     ),
 
-    // Container params
+    // Container params with improved defaults
     this.containerMargin,
     this.containerPadding,
     this.containerWidth,
@@ -126,17 +118,17 @@ class AppTextFormField extends StatefulWidget {
     this.containerAlignment,
     this.containerConstraints,
     this.containerDecoration,
-    this.containerColor,
+    this.containerColor, // will default to white in build
     this.containerGradient,
     this.containerImage,
     this.containerBorder,
-    this.containerBorderRadius,
+    this.containerBorderRadius, // user explicit override
     this.containerBoxShadow,
     this.containerBackgroundBlendMode,
     this.containerShape,
-    this.showContainerBorder = false,
+    this.showContainerBorder = true, // default to true
     this.containerBorderSideType = BorderSideType.all,
-    this.containerBorderColor = Colors.grey,
+    this.containerBorderColor = Colors.grey, // you can change to a softer grey
     this.containerBorderWidth = 1.0,
     this.containerBorderStyle = BorderStyle.solid,
     this.showContainerShadow = true,
@@ -171,6 +163,20 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    // ----- Determine effective borderRadius -----
+    // If user explicitly provided borderRadius, use it
+    // Otherwise, apply a default radius ONLY if border is on all sides
+    final effectiveBorderRadius =
+        widget.containerBorderRadius ??
+        (widget.showContainerBorder &&
+                widget.containerBorderSideType == BorderSideType.all
+            ? BorderRadius.circular(8) // default radius
+            : null);
+
+    // ----- Default container color (if not set) -----
+    // Use white, but you could also use Theme.of(context).cardColor
+    final effectiveContainerColor = widget.containerColor ?? Colors.white;
+
     // Build the inner TextFormField with NO border (container handles it)
     final textField = TextFormField(
       controller: widget.controller,
@@ -243,19 +249,18 @@ class _AppTextFormFieldState extends State<AppTextFormField> {
     return AppContainer(
       // Layout
       margin: widget.containerMargin,
-      padding: widget
-          .containerPadding, // outer padding, separate from contentPadding
+      padding: widget.containerPadding,
       width: widget.containerWidth,
       height: widget.containerHeight,
       alignment: widget.containerAlignment,
       constraints: widget.containerConstraints,
       // Decoration
       decoration: widget.containerDecoration,
-      color: widget.containerColor,
+      color: effectiveContainerColor,
       gradient: widget.containerGradient,
       image: widget.containerImage,
       border: widget.containerBorder,
-      borderRadius: widget.containerBorderRadius,
+      borderRadius: effectiveBorderRadius, // use our computed value
       boxShadow: widget.containerBoxShadow,
       backgroundBlendMode: widget.containerBackgroundBlendMode,
       shape: widget.containerShape,

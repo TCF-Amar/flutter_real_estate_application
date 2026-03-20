@@ -33,7 +33,7 @@ class AgentModel {
 
   factory AgentModel.fromJson(Map<String, dynamic> json) {
     return AgentModel(
-      id: toInt(json['id']) ?? 0,
+      id: toInt(json['id']) ?? toInt(json['agent_id']) ?? 0,
       name: toStr(json['name']) ?? '',
       image: "${Environments.baseUrl}${toStr(json['image'])}",
       agencyName: toStr(json['agency_name']) ?? '',
@@ -41,7 +41,7 @@ class AgentModel {
       experience: toStr(json['experience']) ?? '',
       roleType: toStr(json['role_type']) ?? '',
       rating: toDouble(json['rating']) ?? 0.0,
-      reviewCount: toInt(json['review_count']) ?? 0,
+      reviewCount: toInt(json['review_count']) ?? toInt(json['reviews_count']) ?? 0,
       propertiesCount: toInt(json['properties_count']) ?? 0,
       description: toStr(json['description']) ?? '',
       isFavorited: json['is_favorited'] ?? false,

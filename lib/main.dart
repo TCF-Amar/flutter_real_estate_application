@@ -42,9 +42,6 @@ class MainApp extends StatelessWidget {
       translations: translations,
       locale: const Locale('en'),
       fallbackLocale: const Locale('en'),
-      // builder: (context, child) {
-      //   return Directionality(textDirection: TextDirection., child: child!);
-      // },
     );
   }
 }

@@ -18,12 +18,14 @@ class BookingHeaderSection extends StatelessWidget {
             bottomLeft: Radius.circular(12),
             bottomRight: Radius.circular(12),
           ),
-          child: Obx(
-            () => AppImage(
-              path: property.images[controller.currentImageIndex].url,
-              fit: BoxFit.cover,
-            ),
-          ),
+          child: property.images.isEmpty
+              ? AppImage(path: "", fit: BoxFit.cover)
+              : Obx(() {
+                  return AppImage(
+                    path: property.images[controller.currentImageIndex].url,
+                    fit: BoxFit.cover,
+                  );
+                }),
         ),
       ),
     );

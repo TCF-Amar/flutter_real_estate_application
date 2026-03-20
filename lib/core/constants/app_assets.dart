@@ -60,6 +60,7 @@ class _Icons {
   final wallet = "assets/icons/wallet.svg";
   final watch = "assets/icons/watch.svg";
   final boxTimer = "assets/icons/box_timer.svg";
+  final maintenance = "assets/icons/maintenance.svg";
 }
 
 class _Images {

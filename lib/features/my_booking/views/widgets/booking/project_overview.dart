@@ -53,6 +53,7 @@ class ProjectOverviewSection extends StatelessWidget {
 
                       return Expanded(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
                               height: 6,
@@ -67,8 +68,8 @@ class ProjectOverviewSection extends StatelessWidget {
                               stage.name ?? '',
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: _getStageColor(stage.status),
-                              textAlign: TextAlign.center,
+                              color: _getStageText(stage.status),
+                              textAlign: TextAlign.start,
                             ),
                           ],
                         ),
@@ -118,9 +119,21 @@ class ProjectOverviewSection extends StatelessWidget {
   Color _getStageColor(String? status) {
     switch (status?.toLowerCase()) {
       case 'completed':
-        return Colors.green;
+        return AppColors.primary;
       case 'in_progress':
         return Colors.orange;
+      case 'pending':
+      default:
+        return Colors.grey.shade300;
+    }
+  }
+
+  Color _getStageText(String? status) {
+    switch (status?.toLowerCase()) {
+      case 'completed':
+        return AppColors.success;
+      case 'in_progress':
+        return AppColors.grey;
       case 'pending':
       default:
         return Colors.grey.shade300;

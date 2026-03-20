@@ -4,23 +4,27 @@ import 'package:get/get.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/core/constants/app_constants.dart';
+import 'package:real_estate_app/features/my_booking/controllers/my_booking_controller.dart';
 import 'package:real_estate_app/features/profile/controllers/maintenance_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class MaintenanceRequestScreen extends GetView<MaintenanceController> {
-  const MaintenanceRequestScreen({super.key});
+  final int? propertyId;
+  final String? propertyTitle;
+  final bool? isEnable;
+  const MaintenanceRequestScreen({
+    super.key,
+    this.propertyId,
+    this.propertyTitle,
+    this.isEnable = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final dropItem = [
-      "Plumbing",
-      "Electrical",
-      "Cleaning",
-      "Furniture",
-      "Other",
-    ];
-
+    final bookingController = Get.find<MyBookingController>();
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: DefaultAppBar(title: "Report an Issue", actions: []),
       body: SafeArea(
         child: Form(
@@ -30,45 +34,98 @@ class MaintenanceRequestScreen extends GetView<MaintenanceController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppText("Property Name"),
+                  AppText(
+                    "Property Name",
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  const SizedBox(height: 10),
+
+                  Obx(
+                    () => DropdownFlutter.search(
+                      enabled: propertyId == null,
+                      hintText: propertyTitle ?? "Select Property",
+                      items: [...bookingController.bkpl.map((e) => e.title)],
+                      onChanged: (value) {
+                        controller.pid.value = bookingController.bkpl
+                            .firstWhere((e) => e.title == value)
+                            .pid;
+                      },
+                      decoration: CustomDropdownDecoration(
+                        closedBorder: Border.all(
+                          color: AppColors.grey.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                        closedBorderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  AppText(
+                    "Title",
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                   const SizedBox(height: 10),
                   AppTextFormField(
-                    showContainerBorder: true,
-                    hintText: "Property Name",
+                    onChanged: (value) => controller.title.value = value,
+                    hintText: "Title",
+                    containerColor: Colors.transparent,
+
+                    containerBorderColor: AppColors.grey.withValues(alpha: 0.3),
                   ),
-                  const SizedBox(height: 5),
-                  AppText("Subject/Issue"),
+                  const SizedBox(height: 15),
+                  AppText(
+                    "Subject/issue",
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                   const SizedBox(height: 10),
                   DropdownFlutter.search(
-                    items: [...dropItem],
-                    onChanged: (value) {},
-
+                    items: AppConstants.maintenanceCategories
+                        .map((e) => e.values.first)
+                        .toList(),
+                    hintText: "Select",
+                    onChanged: (value) {
+                      controller.category.value = AppConstants
+                          .maintenanceCategories
+                          .firstWhere((e) => e.values.first == value)
+                          .keys
+                          .first
+                          .toLowerCase();
+                    },
                     decoration: CustomDropdownDecoration(
-                      closedBorder: Border.all(color: AppColors.grey, width: 1),
+                      closedBorder: Border.all(
+                        color: AppColors.grey.withValues(alpha: 0.3),
+                        width: 1,
+                      ),
+                      closedBorderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   const SizedBox(height: 15),
-                  AppText("Description"),
+                  AppText(
+                    "Message",
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
                   const SizedBox(height: 10),
                   AppTextFormField(
-                    showContainerBorder: true,
-                    hintText: "Description",
-                    maxLines: 3,
+                    hintText: "Please describe your Issue in detail",
+                    maxLines: 5,
+                    containerColor: Colors.transparent,
+                    containerBorderColor: AppColors.grey.withValues(alpha: 0.3),
+                    onChanged: (value) => controller.message.value = value,
                   ),
                   const SizedBox(height: 15),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Upload Image/Videos",
-                          style: TextStyle(color: AppColors.textPrimary),
-                        ),
-                        TextSpan(
-                          text: " (Optional)",
-                          style: TextStyle(color: AppColors.grey, fontSize: 10),
-                        ),
-                      ],
-                    ),
+                  AppText(
+                    "Upload Image/Videos (Optional)",
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                   const SizedBox(height: 10),
                   Obx(() {
@@ -78,7 +135,12 @@ class MaintenanceRequestScreen extends GetView<MaintenanceController> {
                     return _buildMediaList();
                   }),
                   const SizedBox(height: 20),
-                  AppButton(text: "Submit Request", onPressed: () {}),
+                  AppButton(
+                    text: "Send request",
+                    onPressed: () {
+                      controller.sendMaintenanceRequest();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -114,7 +176,11 @@ class MaintenanceRequestScreen extends GetView<MaintenanceController> {
             ),
             const SizedBox(height: 8),
             AppText.small(
-              "Supported: .jpg, .jpeg, .png, .mp4",
+              "Supported Image: .jpg, .jpeg, .png",
+              color: AppColors.textTertiary,
+            ),
+            AppText.small(
+              "Supported Video: .mp4",
               color: AppColors.textTertiary,
             ),
           ],
