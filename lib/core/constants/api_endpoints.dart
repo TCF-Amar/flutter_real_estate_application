@@ -31,6 +31,7 @@ class ApiEndpoints {
   static String visitBook = "$_base/visits";
   static String getVisitDetails(int id) => "$_base/visits/$id";
   static String cancelVisit(int id) => "$_base/visits/$id/cancel";
+  static String propertyInquiry(int id) => "$_buyer/properties/$id/enquiry";
 
   // Booking
 
@@ -72,4 +73,6 @@ class ApiEndpoints {
   static const String getVisits = "$_base/visits";
 
   static const String sendMaintenanceRequest = "$_base/maintenance/requests";
+  static String getMaintenanceDetails(int id) =>
+      "$_base/maintenance/requests/$id";
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/my_booking/models/booking_detail_model.dart';
-import 'package:real_estate_app/features/shared/widgets/app_container.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 import 'package:real_estate_app/features/my_booking/views/screens/payment_tracker_screen.dart';
 
@@ -10,7 +9,7 @@ class PaymentTracker extends StatelessWidget {
   final PaymentTrackerModel tracker;
   final BookingDetailsData bookingDetailsData;
   const PaymentTracker({
-    super.key, 
+    super.key,
     required this.tracker,
     required this.bookingDetailsData,
   });
@@ -98,10 +97,12 @@ class PaymentTracker extends StatelessWidget {
                 isBorder: true,
                 borderColor: AppColors.textSecondary,
                 onPressed: () {
-                Get.to(() => PaymentTrackerScreen(
-                  bookingDetailsData: bookingDetailsData,
-                ));
-              },
+                  Get.to(
+                    () => PaymentTrackerScreen(
+                      bookingDetailsData: bookingDetailsData,
+                    ),
+                  );
+                },
               ),
             ],
           ],

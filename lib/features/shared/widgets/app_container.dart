@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:ui';
+
+import 'package:flutter/material.dart';
 import 'package:real_estate_app/features/shared/widgets/app_text_form_field.dart';
 
 enum AppBorderStyle { solid, dashed, dotted }
@@ -17,25 +18,22 @@ class AppContainer extends StatelessWidget {
   final BoxConstraints? constraints;
 
   // ----- Decoration (base) -----
-  final Decoration? decoration; // full override
+  final Decoration? decoration;
   final Color? color;
   final Gradient? gradient;
   final DecorationImage? image;
-  final BoxBorder? border; // custom border (overrides simplified border)
+  final BoxBorder? border;
   final BorderRadiusGeometry? borderRadius;
   final List<BoxShadow>? boxShadow;
-  final BlendMode? backgroundBlendMode;
+  final BlendMode? backgroundBlendMode; // ✅ now actually used
   final BoxShape? shape;
 
-  // ----- Simplified border controls (used only if border == null) -----
+  // ----- Simplified border controls -----
   final bool showBorder;
   final BorderSideType borderSideType;
   final Color borderColor;
   final double borderWidth;
-  // borderStyle is deprecated – use appBorderStyle instead
-  final BorderStyle
-  borderStyle; // kept for compatibility, but will be overridden by appBorderStyle
-  final AppBorderStyle appBorderStyle; // solid, dashed, dotted
+  final AppBorderStyle appBorderStyle;
 
   // ----- Simplified shadow controls -----
   final bool showShadow;
@@ -43,7 +41,7 @@ class AppContainer extends StatelessWidget {
   final double? shadowBlurRadius;
   final Offset? shadowOffset;
   final double? shadowSpreadRadius;
-  final double? elevation;
+  final double? elevation; // ✅ now fed into shadow builder
 
   // ----- Foreground decoration -----
   final Decoration? foregroundDecoration;
@@ -80,20 +78,16 @@ class AppContainer extends StatelessWidget {
     this.boxShadow,
     this.backgroundBlendMode,
     this.shape,
-    // Simplified border
     this.showBorder = false,
     this.borderSideType = BorderSideType.all,
     this.borderColor = Colors.grey,
     this.borderWidth = 1.0,
-    this.borderStyle = BorderStyle.solid, // kept for compatibility
     this.appBorderStyle = AppBorderStyle.solid,
-    // Simplified shadow
     this.showShadow = true,
     this.shadowColor,
     this.shadowBlurRadius,
     this.shadowOffset,
     this.shadowSpreadRadius,
-    // Legacy elevation
     this.elevation,
     this.foregroundDecoration,
     this.onTap,
@@ -108,178 +102,42 @@ class AppContainer extends StatelessWidget {
     this.expand = false,
   });
 
-  @override
-  Widget build(BuildContext context) {
-    // --- Determine effective border (only for solid style) ---
-    // If we have a dashed/dotted style, we will draw the border later via CustomPaint,
-    // so we should not include any border in the BoxDecoration.
-    final bool useSolidBorder =
-        showBorder && appBorderStyle == AppBorderStyle.solid;
-    final BoxBorder? effectiveBorder =
-        border ?? (useSolidBorder ? _buildBorderFromSideType() : null);
+  // ── Helpers ──────────────────────────────────────────────────────────────
 
-    // --- Determine effective shadows (unchanged) ---
-    final List<BoxShadow>? effectiveBoxShadow = _buildShadows();
-
-    // --- Effective decoration (without dashed/dotted border) ---
-    final effectiveDecoration =
-        decoration ??
-        BoxDecoration(
-          color: color,
-          gradient: gradient,
-          image: image,
-          border: effectiveBorder, // only included for solid style
-          borderRadius: shape == BoxShape.circle ? null : borderRadius,
-          boxShadow: effectiveBoxShadow,
-          shape: shape ?? BoxShape.rectangle,
-        );
-
-    // --- Border radius for clipping & custom painter ---
-    final effectiveBorderRadius =
-        (effectiveDecoration is BoxDecoration &&
-            effectiveDecoration.borderRadius != null)
-        ? effectiveDecoration.borderRadius
-        : borderRadius;
-    final BorderRadius finalBorderRadius =
-        (effectiveBorderRadius is BorderRadius)
-        ? effectiveBorderRadius
-        : BorderRadius.circular(12);
-
-    // --- Clip behavior ---
-    final effectiveClip = clipContent ? Clip.antiAlias : clipBehavior;
-
-    // --- Inner content (with clipping if needed) ---
-    Widget innerContent = Container(
-      width: expand ? double.infinity : width,
-      height: height,
-      constraints: constraints,
-      padding: padding,
-      alignment: alignment,
-      child: effectiveClip != Clip.none
-          ? ClipRRect(borderRadius: finalBorderRadius, child: child)
-          : child,
-    );
-
-    // --- Apply dashed/dotted border if requested (non‑solid) ---
-    if (showBorder && appBorderStyle != AppBorderStyle.solid) {
-      // Note: dashed/dotted borders currently only work correctly with borderSideType == all.
-      // For partial borders (top/bottom/left/right) please use the custom `border` parameter.
-      innerContent = CustomPaint(
-        painter: _CustomBorderPainter(
-          color: borderColor,
-          strokeWidth: borderWidth,
-          style: appBorderStyle,
-          borderRadius: finalBorderRadius.topLeft.x, // uniform radius assumed
-          sideType: borderSideType, // passes the side selection
-        ),
-        child: innerContent,
-      );
-    }
-
-    // --- Apply foreground decoration if provided ---
-    if (foregroundDecoration != null) {
-      innerContent = DecoratedBox(
-        decoration: foregroundDecoration!,
-        position: DecorationPosition.foreground,
-        child: innerContent,
-      );
-    }
-
-    // --- No interaction ---
-    if (onTap == null && onLongPress == null && onDoubleTap == null) {
-      return Container(
-        width: expand ? double.infinity : width,
-        height: height,
-        constraints: constraints,
-        margin: margin,
-        decoration: effectiveDecoration,
-        foregroundDecoration: foregroundDecoration,
-        clipBehavior: effectiveClip,
-        child: innerContent,
-      );
-    }
-
-    // --- Interactive with ripple ---
-    if (enableRipple) {
-      Widget materialChild = Ink(
-        decoration: effectiveDecoration,
-        child: InkWell(
-          borderRadius: effectiveBorderRadius is BorderRadius
-              ? effectiveBorderRadius
-              : null,
-          onTap: onTap,
-          onLongPress: onLongPress,
-          onDoubleTap: onDoubleTap,
-          splashColor: splashColor,
-          highlightColor: highlightColor,
-          splashFactory: splashFactory,
-          child: innerContent,
-        ),
-      );
-
-      if (foregroundDecoration != null) {
-        materialChild = DecoratedBox(
-          decoration: foregroundDecoration!,
-          position: DecorationPosition.foreground,
-          child: materialChild,
-        );
-      }
-
-      return _wrapWithMargin(
-        margin,
-        Material(
-          color: Colors.transparent,
-          clipBehavior: effectiveClip,
-          type: MaterialType.transparency,
-          child: materialChild,
-        ),
-      );
-    }
-
-    // --- Interactive without ripple (GestureDetector) ---
-    return GestureDetector(
-      onTap: onTap,
-      onLongPress: onLongPress,
-      onDoubleTap: onDoubleTap,
-      child: Container(
-        width: expand ? double.infinity : width,
-        height: height,
-        constraints: constraints,
-        margin: margin,
-        decoration: effectiveDecoration,
-        foregroundDecoration: foregroundDecoration,
-        clipBehavior: effectiveClip,
-        child: innerContent,
-      ),
-    );
+  BorderRadius get _finalBorderRadius {
+    if (borderRadius is BorderRadius) return borderRadius as BorderRadius;
+    return BorderRadius.circular(12);
   }
 
-  // Helper to apply margin
-  Widget _wrapWithMargin(EdgeInsetsGeometry? margin, Widget child) {
-    return margin != null ? Padding(padding: margin, child: child) : child;
-  }
+  double? get _effectiveWidth => expand ? double.infinity : width;
 
-  // Build shadows (unchanged) ...
+  // ✅ Fixed: actually reads all shadow properties including elevation
   List<BoxShadow>? _buildShadows() {
-    /* ... */
-    return null;
+    // Caller supplied explicit list — use it as-is
+    if (boxShadow != null) return boxShadow;
+
+    if (!showShadow) return null;
+
+    // elevation acts as a quick shorthand blur
+    final double blur =
+        shadowBlurRadius ?? (elevation != null ? elevation! * 2 : 0);
+    if (blur <= 0 && shadowSpreadRadius == null) return null;
+
+    return [
+      BoxShadow(
+        color: shadowColor ?? Colors.black.withValues(alpha: 0.12),
+        blurRadius: blur,
+        offset: shadowOffset ?? const Offset(0, 2),
+        spreadRadius: shadowSpreadRadius ?? 0,
+      ),
+    ];
   }
 
-  // Build solid border from side type
   BoxBorder _buildBorderFromSideType() {
-    final side = BorderSide(
-      color: borderColor,
-      width: borderWidth,
-      style: borderStyle, // solid only
-    );
-
+    final side = BorderSide(color: borderColor, width: borderWidth);
     switch (borderSideType) {
       case BorderSideType.all:
-        return Border.all(
-          color: borderColor,
-          width: borderWidth,
-          style: borderStyle,
-        );
+        return Border.fromBorderSide(side);
       case BorderSideType.bottom:
         return Border(bottom: side);
       case BorderSideType.top:
@@ -290,9 +148,129 @@ class AppContainer extends StatelessWidget {
         return Border(right: side);
     }
   }
+
+  Decoration _buildDecoration() {
+    if (decoration != null) return decoration!;
+
+    final bool useSolidBorder =
+        showBorder && appBorderStyle == AppBorderStyle.solid;
+
+    return BoxDecoration(
+      color: color,
+      gradient: gradient,
+      image: image,
+      backgroundBlendMode: backgroundBlendMode, // ✅ applied
+      border: border ?? (useSolidBorder ? _buildBorderFromSideType() : null),
+      borderRadius: shape == BoxShape.circle ? null : borderRadius,
+      boxShadow: _buildShadows(),
+      shape: shape ?? BoxShape.rectangle,
+    );
+  }
+
+  // ✅ Fixed: inner widget only handles padding + alignment + clipping,
+  //           NOT width/height/constraints (those belong on the outer container)
+  Widget _buildInner() {
+    Widget content = child ?? const SizedBox.shrink();
+
+    if (clipContent) {
+      content = ClipRRect(borderRadius: _finalBorderRadius, child: content);
+    }
+
+    // Wrap with dashed/dotted painter if needed
+    if (showBorder && appBorderStyle != AppBorderStyle.solid) {
+      content = CustomPaint(
+        painter: _CustomBorderPainter(
+          color: borderColor,
+          strokeWidth: borderWidth,
+          style: appBorderStyle,
+          borderRadius: _finalBorderRadius.topLeft.x,
+          sideType: borderSideType,
+        ),
+        child: content,
+      );
+    }
+
+    return Padding(
+      padding: padding ?? EdgeInsets.zero,
+      child: alignment != null
+          ? Align(alignment: alignment!, child: content)
+          : content,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveDecoration = _buildDecoration();
+    final effectiveClip = clipContent ? Clip.antiAlias : clipBehavior;
+    final bool isInteractive =
+        onTap != null || onLongPress != null || onDoubleTap != null;
+
+    // ── Static (no interaction) ───────────────────────────────────────────
+    if (!isInteractive) {
+      return Container(
+        width: _effectiveWidth,
+        height: height,
+        constraints: constraints,
+        margin: margin,
+        decoration: effectiveDecoration,
+        foregroundDecoration: foregroundDecoration, // applied once here only ✅
+        clipBehavior: effectiveClip,
+        child: _buildInner(),
+      );
+    }
+
+    // ── Interactive with ripple ───────────────────────────────────────────
+    if (enableRipple) {
+      return _wrapWithMargin(
+        margin,
+        SizedBox(
+          width: _effectiveWidth, // ✅ expand respected on ripple path
+          height: height,
+          child: Material(
+            color: Colors.transparent,
+            clipBehavior: effectiveClip,
+            borderRadius: _finalBorderRadius,
+            child: Ink(
+              decoration: effectiveDecoration,
+              child: InkWell(
+                borderRadius: _finalBorderRadius,
+                onTap: onTap,
+                onLongPress: onLongPress,
+                onDoubleTap: onDoubleTap,
+                splashColor: splashColor,
+                highlightColor: highlightColor,
+                splashFactory: splashFactory,
+                child: _buildInner(),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // ── Interactive without ripple ────────────────────────────────────────
+    return GestureDetector(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      onDoubleTap: onDoubleTap,
+      child: Container(
+        width: _effectiveWidth,
+        height: height,
+        constraints: constraints,
+        margin: margin,
+        decoration: effectiveDecoration,
+        foregroundDecoration: foregroundDecoration,
+        clipBehavior: effectiveClip,
+        child: _buildInner(),
+      ),
+    );
+  }
+
+  Widget _wrapWithMargin(EdgeInsetsGeometry? margin, Widget child) =>
+      margin != null ? Padding(padding: margin, child: child) : child;
 }
 
-// Updated custom painter that respects borderSideType (partial borders)
+// ── Custom dashed/dotted border painter ──────────────────────────────────────
 class _CustomBorderPainter extends CustomPainter {
   final Color color;
   final double strokeWidth;
@@ -300,7 +278,7 @@ class _CustomBorderPainter extends CustomPainter {
   final double borderRadius;
   final BorderSideType sideType;
 
-  _CustomBorderPainter({
+  const _CustomBorderPainter({
     required this.color,
     required this.strokeWidth,
     required this.style,
@@ -312,70 +290,72 @@ class _CustomBorderPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (style == AppBorderStyle.solid) return;
 
-    final Paint paint = Paint()
+    final paint = Paint()
       ..color = color
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke;
 
-    // Build path for the requested sides only
+    final path = _buildPath(size);
+    final dashedPath = _applyDash(path);
+    canvas.drawPath(dashedPath, paint);
+  }
+
+  Path _buildPath(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
     final double r = borderRadius;
     final double half = strokeWidth / 2;
 
-    // Helper to add a dashed segment
-    void addDashedSegment(Offset start, Offset end) {
-      path.moveTo(start.dx, start.dy);
-      path.lineTo(end.dx, end.dy);
-    }
-
-    // Build the outline segments according to sideType
     if (sideType == BorderSideType.all) {
       path.addRRect(
         RRect.fromLTRBR(half, half, w - half, h - half, Radius.circular(r)),
       );
     } else {
-      // For partial borders, we draw only the requested straight edges.
-      // Rounded corners are omitted – a more advanced version could include corner arcs.
-      if (sideType == BorderSideType.top || sideType == BorderSideType.all) {
-        addDashedSegment(Offset(r, half), Offset(w - r, half));
+      // ✅ Fixed: no redundant `|| sideType == BorderSideType.all` inside else
+      if (sideType == BorderSideType.top) {
+        path.moveTo(r, half);
+        path.lineTo(w - r, half);
       }
-      if (sideType == BorderSideType.right || sideType == BorderSideType.all) {
-        addDashedSegment(Offset(w - half, r), Offset(w - half, h - r));
+      if (sideType == BorderSideType.right) {
+        path.moveTo(w - half, r);
+        path.lineTo(w - half, h - r);
       }
-      if (sideType == BorderSideType.bottom || sideType == BorderSideType.all) {
-        addDashedSegment(Offset(r, h - half), Offset(w - r, h - half));
+      if (sideType == BorderSideType.bottom) {
+        path.moveTo(r, h - half);
+        path.lineTo(w - r, h - half);
       }
-      if (sideType == BorderSideType.left || sideType == BorderSideType.all) {
-        addDashedSegment(Offset(half, r), Offset(half, h - r));
+      if (sideType == BorderSideType.left) {
+        path.moveTo(half, r);
+        path.lineTo(half, h - r);
       }
     }
+    return path;
+  }
 
-    // Apply dash pattern (works even if path consists of multiple segments)
-    final Path dashedPath = Path();
+  Path _applyDash(Path source) {
     final double dashWidth = style == AppBorderStyle.dashed ? 5.0 : 2.0;
     final double dashSpace = style == AppBorderStyle.dashed ? 3.0 : 2.0;
+    final Path result = Path();
 
-    for (final PathMetric metric in path.computeMetrics()) {
+    for (final PathMetric metric in source.computeMetrics()) {
       double distance = 0.0;
       while (distance < metric.length) {
-        dashedPath.addPath(
+        result.addPath(
           metric.extractPath(distance, distance + dashWidth),
           Offset.zero,
         );
         distance += dashWidth + dashSpace;
       }
     }
-
-    canvas.drawPath(dashedPath, paint);
+    return result;
   }
 
   @override
-  bool shouldRepaint(_CustomBorderPainter oldDelegate) =>
-      oldDelegate.color != color ||
-      oldDelegate.strokeWidth != strokeWidth ||
-      oldDelegate.style != style ||
-      oldDelegate.borderRadius != borderRadius ||
-      oldDelegate.sideType != sideType;
+  bool shouldRepaint(_CustomBorderPainter old) =>
+      old.color != color ||
+      old.strokeWidth != strokeWidth ||
+      old.style != style ||
+      old.borderRadius != borderRadius ||
+      old.sideType != sideType;
 }

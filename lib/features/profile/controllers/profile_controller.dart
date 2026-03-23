@@ -74,7 +74,11 @@ class ProfileController extends GetxController {
   // ─── Avatar ──────────────────────────────────────────────────────────────────
 
   Future<void> selectImage(BuildContext context) async {
-    final pickedMedia = await MediaPickerUtil.pickMedia(context, allowMultiple: false);
+    final pickedMedia = await MediaPickerUtil.pickMedia(
+      context,
+      allowMultiple: false,
+      mediaType: MediaType.image,
+    );
     final pickedImage = pickedMedia.isNotEmpty ? pickedMedia.first : null;
     if (pickedImage == null) return;
 

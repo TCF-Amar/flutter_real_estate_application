@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/auth/controllers/validator/auth_validators.dart';
-import 'package:real_estate_app/features/auth/views/widgets/auth_text_field.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 
@@ -67,10 +66,10 @@ class RegisterFormFields extends StatelessWidget {
     return Column(
       children: [
         // Full Name
-        AuthTextField(
-          label: "Full Name",
+        AppTextFormField(
+          labelText: "Full Name",
           hintText: "Enter your full name",
-          prefixIcon: Icons.person_outline,
+          prefixIcon: const Icon(Icons.person_outline),
           controller: nameController,
           keyboardType: TextInputType.name,
           textInputAction: TextInputAction.next,
@@ -80,10 +79,10 @@ class RegisterFormFields extends StatelessWidget {
         SizedBox(height: Get.height * 0.02),
 
         // Email
-        AuthTextField(
-          label: "Email",
+        AppTextFormField(
+          labelText: "Email",
           hintText: "Enter your email",
-          prefixIcon: Icons.email_outlined,
+          prefixIcon: const Icon(Icons.email_outlined),
           controller: emailController,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
@@ -93,10 +92,10 @@ class RegisterFormFields extends StatelessWidget {
         SizedBox(height: Get.height * 0.02),
 
         // Phone
-        AuthTextField(
-          label: "Phone Number",
+        AppTextFormField(
+          labelText: "Phone Number",
           hintText: "Enter your phone number",
-          prefixIcon: Icons.phone_outlined,
+          prefixIcon: const Icon(Icons.phone_outlined),
           controller: phoneController,
           keyboardType: TextInputType.phone,
           textInputAction: TextInputAction.next,
@@ -106,10 +105,10 @@ class RegisterFormFields extends StatelessWidget {
         SizedBox(height: Get.height * 0.02),
 
         // Password
-        AuthTextField(
-          label: "Password",
+        AppTextFormField(
+          labelText: "Password",
           hintText: "Create a password",
-          prefixIcon: Icons.lock_outline,
+          prefixIcon: const Icon(Icons.lock_outline),
           controller: passwordController,
           isPassword: true,
           textInputAction: TextInputAction.next,
@@ -119,10 +118,10 @@ class RegisterFormFields extends StatelessWidget {
         SizedBox(height: Get.height * 0.02),
 
         // Confirm Password
-        AuthTextField(
-          label: "Confirm Password",
+        AppTextFormField(
+          labelText: "Confirm Password",
           hintText: "Re-enter your password",
-          prefixIcon: Icons.lock_outline,
+          prefixIcon: const Icon(Icons.lock_outline),
           controller: confirmPasswordController,
           isPassword: true,
           textInputAction: TextInputAction.done,

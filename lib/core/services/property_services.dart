@@ -10,6 +10,7 @@ import 'package:real_estate_app/core/utils/typedef.dart';
 import 'package:real_estate_app/features/favorite/models/favorite_response_model.dart';
 import 'package:real_estate_app/features/property/models/property_detail_response_model.dart';
 import 'package:real_estate_app/features/property/models/property_filter.model.dart';
+import 'package:real_estate_app/features/property/models/property_inquiry_req_model.dart';
 import 'package:real_estate_app/features/property/models/property_response_model.dart';
 import 'package:real_estate_app/features/property/models/review_request_model.dart';
 import 'package:real_estate_app/features/favorite/models/saved_response.dart';
@@ -250,6 +251,27 @@ class PropertyServices extends GetxService {
       return Left(ApiException.map(e));
     } catch (e) {
       log.e('Fetch similar properties failed (Unknown): $e');
+      return Left(Failure(message: e.toString(), type: FailureType.network));
+    }
+  }
+
+  FutureResult<bool> addInquiry(PropertyInquiryReqModel reqModel) async {
+    log.i('Adding enquiry for property: ${reqModel.pId}');
+    try {
+      await dioHelper.request(
+        ApiRequest(
+          url: ApiEndpoints.propertyInquiry(reqModel.pId),
+          method: ApiMethod.post,
+          body: reqModel.toJson(),
+        ),
+      );
+      log.i('Property enquiry added successfully');
+      return Right(true);
+    } on AppException catch (e) {
+      log.e('Add property enquiry failed (AppException): ${e.message}');
+      return Left(ApiException.map(e));
+    } catch (e) {
+      log.e('Add property review failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.network));
     }
   }

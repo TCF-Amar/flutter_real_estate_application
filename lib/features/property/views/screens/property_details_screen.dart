@@ -123,7 +123,7 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                     SimilarProperties(),
 
                     //! Location Map
-                    ContactMessage(),
+                    PropertyInquiry(),
                   ],
                 ),
               ),
@@ -179,7 +179,7 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                               fontWeight: FontWeight.bold,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            AppText(
+                            AppText( 
                               "${property.address?.city ?? ''} ${property.address?.country ?? ''}",
                               fontSize: 10,
                               color: AppColors.grey,

@@ -7,56 +7,69 @@ class AppSvg extends StatelessWidget {
   final double? width;
   final BoxFit fit;
   final Color? color;
+  final String? semanticsLabel;
+  final Widget? placeholder;
+  final Widget? errorWidget;
 
   const AppSvg({
     super.key,
-    required this.path,
+    this.path,
     this.height,
     this.width,
     this.fit = BoxFit.contain,
     this.color,
+    this.semanticsLabel,
+    this.placeholder,
+    this.errorWidget,
   });
 
-  String get svgUrl {
-    if (path == null || path!.isEmpty) return '';
+  bool get _isNetwork => path != null && path!.startsWith('http');
 
-    if (path!.startsWith('http')) {
-      return path!;
-    }
-
-    return path!;
-  }
-
-  bool get isNetwork => svgUrl.startsWith("http");
+  ColorFilter? _colorFilter(Color? c) =>
+      c != null ? ColorFilter.mode(c, BlendMode.srcIn) : null;
 
   @override
   Widget build(BuildContext context) {
-    if (path == null || path!.isEmpty) {
-      return const SizedBox();
-    }
+    if (path == null || path!.isEmpty) return const SizedBox.shrink();
 
-    if (isNetwork) {
+    final effectiveW = width;
+    final effectiveH = height;
+    final effectiveC = color;
+
+    if (_isNetwork) {
       return SvgPicture.network(
-        svgUrl,
-        height: height,
-        width: width,
+        path!,
+        height: effectiveH,
+        width: effectiveW,
         fit: fit,
-        colorFilter: color != null
-            ? ColorFilter.mode(color!, BlendMode.srcIn)
-            : null,
-        placeholderBuilder: (context) =>
-            const Center(child: CircularProgressIndicator()),
+        colorFilter: _colorFilter(effectiveC),
+        semanticsLabel: semanticsLabel,
+        placeholderBuilder: (_) =>
+            placeholder ??
+            SizedBox(
+              height: effectiveH ?? 16,
+              width: effectiveW ?? 16,
+              child: const CircularProgressIndicator(strokeWidth: 2),
+            ),
       );
     }
 
-    return SvgPicture.asset(
-      path!,
-      height: height,
-      width: width,
-      fit: fit,
-      colorFilter: color != null
-          ? ColorFilter.mode(color!, BlendMode.srcIn)
-          : null,
+    return Builder(
+      builder: (context) {
+        try {
+          return SvgPicture.asset(
+            path!,
+            height: effectiveH,
+            width: effectiveW,
+            fit: fit,
+            colorFilter: _colorFilter(effectiveC),
+            semanticsLabel: semanticsLabel,
+          );
+        } catch (_) {
+          return errorWidget ??
+              SizedBox(height: effectiveH ?? 24, width: effectiveW ?? 24);
+        }
+      },
     );
   }
 }

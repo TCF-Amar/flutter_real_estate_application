@@ -7,7 +7,6 @@ import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/auth/views/widgets/sign_in_with_others.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
-import 'package:real_estate_app/features/auth/views/widgets/auth_text_field.dart';
 import 'package:real_estate_app/features/auth/views/widgets/auth_button.dart';
 import 'package:real_estate_app/features/auth/views/widgets/auth_divider.dart';
 import 'package:real_estate_app/features/auth/controllers/validator/auth_validators.dart';
@@ -90,28 +89,48 @@ class SignInScreen extends GetView<AuthController> {
                     SizedBox(height: Get.height * 0.05),
 
                     // Email/Phone Field
-                    AuthTextField(
-                      label: "Email/Phone",
+                    // AuthTextField(
+                    //   label: "Email/Phone",
+                    //   hintText: "Enter Email / Phone Number",
+                    //   prefixIcon: Icons.email_outlined,
+                    //   controller: controller.signInEmailController,
+                    //   keyboardType: TextInputType.emailAddress,
+                    //   textInputAction: TextInputAction.next,
+                    //   validator: AuthValidators.validateEmailOrPhone,
+                    // ),
+                    AppTextFormField(
+                      // labelText: "Email/Phone",
                       hintText: "Enter Email / Phone Number",
-                      prefixIcon: Icons.email_outlined,
+                      prefixIcon: const Icon(Icons.email_outlined),
+                      textColor: AppColors.white,
                       controller: controller.signInEmailController,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: AuthValidators.validateEmailOrPhone,
+                      borderSideType: BorderSideType.bottom,
+                      labelTop: "Email/Phone",
+                      showBorder: true,
+                      // height: 50,
+                      // showBorder: false,
                     ),
-
                     SizedBox(height: Get.height * 0.02),
 
                     // Password Field
-                    AuthTextField(
-                      label: "Password",
+                    AppTextFormField(
+                      // labelText: "Email/Phone",
                       hintText: "Enter Password",
-                      prefixIcon: Icons.lock_outline,
+                      prefixIcon: const Icon(Icons.lock_outline),
                       controller: controller.signInPasswordController,
-                      isPassword: true,
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) => controller.handleSignIn(),
+                      textColor: AppColors.white,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
                       validator: AuthValidators.validatePassword,
+                      borderSideType: BorderSideType.bottom,
+                      labelTop: "Password",
+                      showBorder: true,
+                      isPassword: true,
+                      // height: 50,
+                      // showBorder: false,
                     ),
 
                     SizedBox(height: Get.height * 0.02),

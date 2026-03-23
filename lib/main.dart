@@ -8,9 +8,11 @@ import 'package:real_estate_app/core/theme/app_theme.dart';
 import 'package:real_estate_app/features/auth/bindings/auth_binding.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:real_estate_app/core/localization/app_translations.dart';
+import 'package:real_estate_app/core/utils/deep_link_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DeepLinkHandler().init();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

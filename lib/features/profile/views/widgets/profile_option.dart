@@ -67,7 +67,9 @@ class ProfileOption extends StatelessWidget {
         label: "Transactions",
         color: AppColors.primary,
         textColor: AppColors.textPrimary,
-        action: () {},
+        action: () {
+          Get.toNamed(AppRoutes.transactionHistory);
+        },
       ),
       ProfileOptionItem(
         icon: Assets.icons.icon5,

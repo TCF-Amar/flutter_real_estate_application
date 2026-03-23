@@ -77,27 +77,53 @@ class MaintenanceServices {
     }
   }
 
-  FutureResult<List<MaintenanceRequestModel>> getMaintenanceRequests() async {
-    log.i('Fetching maintenance requests...');
+  FutureResult<MaintenanceResponse> getMaintenanceRequests({
+    int page = 1,
+    int perPage = 10,
+  }) async {
+    log.i('Fetching maintenance requests (page: $page)...');
     try {
       final response = await dio.request(
         ApiRequest(
           url: ApiEndpoints.sendMaintenanceRequest,
           method: ApiMethod.get,
+          queryParameters: {
+            'page': page,
+            'per_page': perPage,
+          },
         ),
       );
       log.d('Fetch maintenance requests response: ${response.data}');
-      final List<dynamic> requestsJson = response.data['data']['requests'] ?? [];
-      final List<MaintenanceRequestModel> list = requestsJson
-          .map((json) => MaintenanceRequestModel.fromJson(json))
-          .toList();
+      final res = MaintenanceResponse.fromJson(response.data);
       log.i('Maintenance requests fetched successfully');
-      return Right(list);
+      return Right(res);
     } on AppException catch (e) {
       log.e('Fetch maintenance requests failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
     } catch (e) {
       log.e('Fetch maintenance requests failed (Unknown): $e');
+      return Left(Failure(message: e.toString(), type: FailureType.unknown));
+    }
+  }
+
+  FutureResult<MaintenanceDetailResponse> getMaintenanceDetails(int id) async {
+    log.i('Fetching maintenance details (id: $id)...');
+    try {
+      final response = await dio.request(
+        ApiRequest(
+          url: ApiEndpoints.getMaintenanceDetails(id),
+          method: ApiMethod.get,
+        ),
+      );
+      log.d('Fetch maintenance details response: ${response.data}');
+      final res = MaintenanceDetailResponse.fromJson(response.data);
+      log.i('Maintenance details fetched successfully');
+      return Right(res);
+    } on AppException catch (e) {
+      log.e('Fetch maintenance details failed (AppException): ${e.message}');
+      return Left(ApiException.map(e));
+    } catch (e) {
+      log.e('Fetch maintenance details failed (Unknown): $e');
       return Left(Failure(message: e.toString(), type: FailureType.unknown));
     }
   }

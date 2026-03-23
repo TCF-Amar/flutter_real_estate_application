@@ -50,7 +50,7 @@ class BookedSummary extends StatelessWidget {
                 children: [
                   _buildSummaryRow("Booking ID:", "#${summary.bookingId}"),
                   _buildDivider(),
-                  _buildSummaryRow("Booked on:", "${summary.bookedOn ?? ''}"),
+                  _buildSummaryRow("Booked on:", summary.bookedOn ?? ''),
                   _buildDivider(),
                   if (isRental) ...[
                     _buildSummaryRow(
@@ -67,7 +67,7 @@ class BookedSummary extends StatelessWidget {
                     _buildDivider(),
                     _buildSummaryRow(
                       "Next Rent Due:",
-                      "${summary.nextPaymentDue ?? ''}",
+                      summary.nextPaymentDue ?? '',
                     ),
                     _buildDivider(),
                     _buildSummaryRow(

@@ -32,38 +32,28 @@ class TestScreen extends StatelessWidget {
                 // Te,
                 AppTextFormField(
                   labelText: 'Username',
-                  showContainerBorder: true,
-                  containerBorderRadius: BorderRadius.circular(8),
+                  showBorder: true,
+                  borderRadius: BorderRadius.circular(8),
                 ),
 
                 AppTextFormField(
                   labelText: 'Email',
                   isPassword: false,
-                  containerGradient: LinearGradient(
-                    colors: [Colors.blue.shade50, Colors.white],
-                  ),
 
-                  showContainerBorder: true,
-                  containerBorderRadius: BorderRadius.zero,
-                  containerBorderSideType: BorderSideType.bottom,
-                  containerBorderColor: Colors.blue,
-                  containerBorderWidth: 2,
-                  containerElevation: 4,
-                  containerMargin: EdgeInsets.all(8),
-                  containerPadding: EdgeInsets.symmetric(horizontal: 12),
+                  showBorder: true,
+                  borderRadius: BorderRadius.zero,
+                  borderSideType: BorderSideType.bottom,
+                  borderColor: Colors.blue,
+                  borderWidth: 2,
+
+                  margin: EdgeInsets.all(8),
+                  padding: EdgeInsets.symmetric(horizontal: 12),
                 ),
 
                 AppTextFormField(
                   labelText: 'Password',
                   isPassword: true,
-                  containerDecoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.red, width: 3),
-                    boxShadow: [
-                      BoxShadow(blurRadius: 10, color: Colors.black26),
-                    ],
-                  ),
+                  borderSideType: BorderSideType.bottom,
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 20,
                     vertical: 16,

@@ -25,89 +25,80 @@ class _SimilarPropertiesState extends State<SimilarProperties> {
   Widget build(BuildContext context) {
     final controller = Get.find<PropertyDetailsController>();
 
-    return Container(
-      margin: const EdgeInsets.only(top: 25, bottom: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AppText.large("Similar Properties"),
-          const SizedBox(height: 16),
-          Obx(() {
-            if (controller.isLoadingSimilar) {
-              return const SizedBox(
-                height: 200,
+    return Obx(() {
+      if (controller.similarProperties.isEmpty) {
+        return const SizedBox.shrink();
+      }
+      return Container(
+        margin: const EdgeInsets.only(top: 25, bottom: 30),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppText.large("Similar Properties"),
+            const SizedBox(height: 16),
+            Obx(() {
+              if (controller.isLoadingSimilar) {
+                return const SizedBox(
+                  height: 200,
 
-                child: Center(
-                  child: CircularProgressIndicator(color: AppColors.primary),
-                ),
-              );
-            }
-
-            if (controller.similarProperties.isEmpty) {
-              return AppContainer(
-                height: 200,
-                showBorder: true,
-                child: Center(
-                  child: AppText(
-                    "No similar properties found",
-                    color: AppColors.textSecondary,
-                    fontSize: 14,
-                  ),
-                ),
-              );
-            }
-
-            return SizedBox(
-              height: 200,
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: controller.similarProperties.length,
-                onPageChanged: (i) => setState(() => _currentPage = i),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 14),
-                    child: Obx(
-                      () => ModernPropertyCard(
-                        isSimilar: true,
-                        property: controller.similarProperties[index],
-                        onToggleFavorite: () {
-                          controller.updateSimilarFavorite(
-                            controller.similarProperties[index].id,
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
-          }),
-
-          // ── Page-indicator dots ──────────────────────────────
-          Obx(() {
-            final count = controller.similarProperties.length;
-            if (count == 0) return const SizedBox.shrink();
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(count, (i) {
-                final active = i == _currentPage;
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  margin: const EdgeInsets.only(top: 8, right: 4),
-                  height: 7,
-                  width: active ? 18 : 7,
-                  decoration: BoxDecoration(
-                    color: active
-                        ? AppColors.primary
-                        : AppColors.primary.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(10),
+                  child: Center(
+                    child: CircularProgressIndicator(color: AppColors.primary),
                   ),
                 );
-              }),
-            );
-          }),
-        ],
-      ),
-    );
+              }
+
+              return SizedBox(
+                height: 200,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: controller.similarProperties.length,
+                  onPageChanged: (i) => setState(() => _currentPage = i),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 14),
+                      child: Obx(
+                        () => ModernPropertyCard(
+                          isSimilar: true,
+                          property: controller.similarProperties[index],
+                          onToggleFavorite: () {
+                            controller.updateSimilarFavorite(
+                              controller.similarProperties[index].id,
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            }),
+
+            // ── Page-indicator dots ──────────────────────────────
+            Obx(() {
+              final count = controller.similarProperties.length;
+              if (count == 0) return const SizedBox.shrink();
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(count, (i) {
+                  final active = i == _currentPage;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    margin: const EdgeInsets.only(top: 8, right: 4),
+                    height: 7,
+                    width: active ? 18 : 7,
+                    decoration: BoxDecoration(
+                      color: active
+                          ? AppColors.primary
+                          : AppColors.primary.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  );
+                }),
+              );
+            }),
+          ],
+        ),
+      );
+    });
   }
 }

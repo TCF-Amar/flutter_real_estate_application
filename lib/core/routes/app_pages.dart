@@ -50,6 +50,8 @@ import 'package:real_estate_app/features/profile/views/screens/support/new_reque
 import 'package:real_estate_app/features/profile/views/screens/support/support_details.dart';
 import 'package:real_estate_app/features/profile/views/screens/support/support_screen.dart';
 import 'package:real_estate_app/features/shared/screens/test.dart';
+import 'package:real_estate_app/features/transactions/bindings/transaction_binding.dart';
+import 'package:real_estate_app/features/transactions/views/screens/transaction_history.dart';
 
 class AppPages {
   static final pages = <GetPage>[
@@ -146,6 +148,11 @@ class AppPages {
       name: AppRoutes.bookingDetails,
       page: () => BookingDetailsScreen(),
       binding: MyBookingBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.transactionHistory,
+      page: () => const TransactionHistory(),
+      binding: TransactionBinding(),
     ),
   ];
 }

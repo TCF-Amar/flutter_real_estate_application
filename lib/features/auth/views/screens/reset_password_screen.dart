@@ -7,7 +7,6 @@ import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/auth/controllers/validator/auth_validators.dart';
 import 'package:real_estate_app/features/auth/views/widgets/auth_button.dart';
-import 'package:real_estate_app/features/auth/views/widgets/auth_text_field.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
@@ -132,10 +131,10 @@ class ResetPasswordScreen extends StatelessWidget {
                   SizedBox(height: Get.height * 0.05),
 
                   // New Password Field
-                  AuthTextField(
-                    label: "New Password",
+                  AppTextFormField(
+                    labelText: "New Password",
                     hintText: "Enter new password",
-                    prefixIcon: Icons.lock_outline,
+                    prefixIcon: const Icon(Icons.lock_outline),
                     controller: _passwordController,
                     isPassword: true,
                     textInputAction: TextInputAction.next,
@@ -145,10 +144,10 @@ class ResetPasswordScreen extends StatelessWidget {
                   SizedBox(height: Get.height * 0.02),
 
                   // Confirm Password Field
-                  AuthTextField(
-                    label: "Confirm Password",
+                  AppTextFormField(
+                    labelText: "Confirm Password",
                     hintText: "Enter Confirm password",
-                    prefixIcon: Icons.lock_outline,
+                    prefixIcon: const Icon(Icons.lock_outline),
                     controller: _confirmPasswordController,
                     isPassword: true,
                     textInputAction: TextInputAction.done,

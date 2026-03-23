@@ -53,9 +53,9 @@ class ContactSupportSection extends StatelessWidget {
             const SizedBox(height: 10),
             AppTextFormField(
               maxLines: 5,
-              showContainerBorder: false,
+              showBorder: false,
               fillColor: const Color(0xFFF7F7F9),
-              containerBorderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(16),
               hintText: "Please describe your Issue in detail",
             ),
             const SizedBox(height: 24),

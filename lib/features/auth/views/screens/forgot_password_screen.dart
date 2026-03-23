@@ -7,7 +7,6 @@ import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/auth/controllers/auth_controller.dart';
 import 'package:real_estate_app/features/auth/controllers/validator/auth_validators.dart';
 import 'package:real_estate_app/features/auth/views/widgets/auth_button.dart';
-import 'package:real_estate_app/features/auth/views/widgets/auth_text_field.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -135,10 +134,10 @@ class ForgotPasswordScreen extends StatelessWidget {
                   SizedBox(height: Get.height * 0.05),
 
                   // Email/Phone Field
-                  AuthTextField(
-                    label: "Email / Phone",
+                  AppTextFormField(
+                    labelText: "Email / Phone",
                     hintText: "Enter Email / phone number",
-                    prefixIcon: Icons.email_outlined,
+                    prefixIcon: const Icon(Icons.email_outlined),
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.done,

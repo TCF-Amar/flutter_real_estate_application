@@ -1,33 +1,23 @@
-import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
-class ContactMessage extends StatelessWidget {
-  const ContactMessage({super.key});
+class PropertyInquiry extends StatelessWidget {
+  const PropertyInquiry({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<PropertyDetailsController>();
     final contact = controller.propertyDetail?.contact;
+    final formKey = GlobalKey<FormState>();
     return AppContainer(
       margin: const EdgeInsets.only(top: 25, bottom: 25),
-      // height: 300,
-      // decoration: BoxDecoration(
-      //   color: AppColors.white,
-      //   borderRadius: BorderRadius.circular(12),
-      //   boxShadow: [
-      //     BoxShadow(
-      //       color: Colors.black.withValues(alpha: 0.09),
-      //       blurRadius: 5,
-      //       offset: const Offset(0, 2),
-      //     ),
-      //   ],
-      // ),
+
       showShadow: true,
       child: Form(
+        key: formKey,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -65,10 +55,10 @@ class ContactMessage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               AppTextFormField(
-                controller: TextEditingController(),
+                controller: controller.nameController,
                 hintText: "Name",
-                showContainerBorder: true,
-                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
+                showBorder: true,
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter a name";
@@ -78,60 +68,53 @@ class ContactMessage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               AppTextFormField(
-                controller: TextEditingController(),
+                controller: controller.phoneController,
                 hintText: "Phone",
                 keyboardType: TextInputType.phone,
-                showContainerBorder: true,
-                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
+                showBorder: true,
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Please enter a name";
+                    return "Please enter phone number";
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
               AppTextFormField(
-                controller: TextEditingController(),
+                controller: controller.emailController,
                 hintText: "Email",
                 keyboardType: TextInputType.emailAddress,
-                showContainerBorder: true,
-                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
+                showBorder: true,
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Please enter a name";
+                    return "Please enter an email";
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
               AppTextFormField(
-                controller: TextEditingController(),
-                hintText: "Message",
+                controller: controller.messageController,
+                hintText: "Message(optional)",
                 keyboardType: TextInputType.text,
                 maxLines: 5,
-                showContainerBorder: true,
-                containerBorderColor: AppColors.grey.withValues(alpha: 0.2),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter a name";
-                  }
-                  return null;
-                },
+                showBorder: true,
+                borderColor: AppColors.grey.withValues(alpha: 0.2),
               ),
               const SizedBox(height: 16),
-
-              AppContainer(
-                child: DropdownButtonHideUnderline(
-                  child: DropdownFlutter(
-                    items: ["1", "2", "3", "4", "5"],
-                    onChanged: (value) {},
-                    hintText: "Select",
-                  ),
+              Obx(
+                () => AppButton(
+                  text: "Send Message",
+                  isLoading: controller.isLoadingInquiry,
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      controller.addInquiry();
+                    }
+                  },
                 ),
               ),
-              const SizedBox(height: 16),
-              AppButton(text: "Send Message", onPressed: () {}),
             ],
           ),
         ),

@@ -61,6 +61,9 @@ class _Icons {
   final watch = "assets/icons/watch.svg";
   final boxTimer = "assets/icons/box_timer.svg";
   final maintenance = "assets/icons/maintenance.svg";
+  final workingStart = "assets/icons/working_start.svg";
+  final workingComplete = "assets/icons/working_complete.svg";
+  final taskAssigned = "assets/icons/task_assigned.svg";
 }
 
 class _Images {

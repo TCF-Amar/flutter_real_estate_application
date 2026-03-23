@@ -26,7 +26,7 @@ class ChangePassword extends StatelessWidget {
                     labelText: "Current Password",
 
                     // borderSideType: BorderSideType.,
-                    containerBorderColor: AppColors.grey.withValues(alpha: 0.5),
+                    borderColor: AppColors.grey.withValues(alpha: 0.5),
                     onChanged: (value) {
                       controller.currentPassword.value = value;
                     },
@@ -42,10 +42,14 @@ class ChangePassword extends StatelessWidget {
                     hintText: "New Password",
                     labelText: "New Password",
                     // borderSideType: BorderSideType.bottom,
-                    containerBorderColor: AppColors.grey.withValues(alpha: 0.5),
+                    borderColor: AppColors.grey.withValues(alpha: 0.5),
                     onChanged: (value) {
                       controller.newPassword.value = value;
                     },
+                    hintColor: AppColors.grey.withValues(alpha: 0.5),
+                    isPassword: true,
+                    // prefixIcon: AppSvg(path: Assets.icons.person),
+                    iconSize: 8,
                     validator: (v) {
                       if (v == null || v.isEmpty) {
                         return "Please enter new password";
@@ -57,8 +61,9 @@ class ChangePassword extends StatelessWidget {
                   AppTextFormField(
                     hintText: "Confirm New Password",
                     labelText: "Confirm New Password",
+
                     // borderSideType: BorderSideType.bottom,
-                    containerBorderColor: AppColors.grey.withValues(alpha: 0.5),
+                    // borderColor: AppColors.grey.withValues(alpha: 0.5),
                     onChanged: (value) {
                       controller.confirmPassword.value = value;
                     },

@@ -34,8 +34,8 @@ class NewRequest extends StatelessWidget {
               const SizedBox(height: 10),
               AppTextFormField(
                 maxLines: 5,
-                showContainerBorder: true,
-                containerBorderColor: AppColors.grey,
+                showBorder: true,
+                borderColor: AppColors.grey,
                 hintText: "Please describe your issue in detail",
               ),
               Spacer(),

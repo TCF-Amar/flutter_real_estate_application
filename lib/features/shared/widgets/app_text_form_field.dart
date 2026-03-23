@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
 import 'package:real_estate_app/core/constants/app_assets.dart';
-import 'app_container.dart';
 
 enum BorderSideType { all, bottom, top, left, right }
 
 class AppTextFormField extends StatefulWidget {
-  // ---------- TextFormField specific properties ----------
+  // TextFormField properties
   final TextEditingController? controller;
   final String? labelText;
   final String? hintText;
@@ -29,58 +28,48 @@ class AppTextFormField extends StatefulWidget {
   final double? fontSize;
   final Color? textColor;
   final Color? hintColor;
+  final Color? labelColor;
   final Color? iconColor;
   final Color? fillColor;
   final EdgeInsetsGeometry? contentPadding;
+  final bool autoValidateMode;
+  final FocusNode? focusNode;
+  final double iconSize;
 
-  // ---------- Outer container properties (mirror AppContainer) ----------
-  final EdgeInsetsGeometry? containerMargin;
-  final EdgeInsetsGeometry? containerPadding;
-  final double? containerWidth;
-  final double? containerHeight;
-  final AlignmentGeometry? containerAlignment;
-  final BoxConstraints? containerConstraints;
-  final Decoration? containerDecoration; // full override
-  final Color? containerColor; // background color of container
-  final Gradient? containerGradient;
-  final DecorationImage? containerImage;
-  final BoxBorder? containerBorder; // overrides simplified border
-  final List<BoxShadow>? containerBoxShadow;
-  final BlendMode? containerBackgroundBlendMode;
-  final BoxShape? containerShape;
+  // Border properties
+  final bool showBorder;
+  final BorderSideType borderSideType;
+  final Color borderColor;
+  final double borderWidth;
+  final BorderStyle borderStyle;
 
-  // Simplified border (used if containerBorder == null)
-  final bool showContainerBorder;
-  final BorderSideType containerBorderSideType;
-  final Color containerBorderColor;
-  final double containerBorderWidth;
-  final BorderStyle containerBorderStyle;
+  /// Extra width added to [borderWidth] when the field is focused.
+  final double focusedBorderWidthDelta;
 
-  // Simplified shadow (used if containerBoxShadow == null)
-  final bool showContainerShadow;
-  final Color? containerShadowColor;
-  final double? containerShadowBlurRadius;
-  final Offset? containerShadowOffset;
-  final double? containerShadowSpreadRadius;
+  // Container properties
+  final EdgeInsetsGeometry? margin;
+  final EdgeInsetsGeometry? padding;
+  final double? width;
+  final double? height;
+  final AlignmentGeometry? alignment;
+  final BoxConstraints? constraints;
+  final Color? backgroundColor;
+  final Gradient? gradient;
+  final List<BoxShadow>? boxShadow;
+  final BorderRadius? borderRadius;
 
-  // Elevation fallback
-  final double? containerElevation;
+  /// Material elevation applied via a [Material] wrapper when > 0.
+  final double? elevation;
+  final Clip clipBehavior;
+  final String? labelTop;
 
-  // Foreground decoration
-  final Decoration? containerForegroundDecoration;
-
-  // Clipping
-  final Clip containerClipBehavior;
-
-  // Expand helper
-  final bool containerExpand;
-
-  // ---------- Border radius for the container ----------
-  final BorderRadiusGeometry? containerBorderRadius;
+  /// Vertical gap between [labelTop] and the field.
+  final double labelTopSpacing;
+  final CrossAxisAlignment? crossAxisAlignment;
+  final Color? labelTopTextColor;
 
   const AppTextFormField({
     super.key,
-    // TextFormField params
     this.controller,
     this.labelText,
     this.hintText,
@@ -103,43 +92,37 @@ class AppTextFormField extends StatefulWidget {
     this.fontSize,
     this.textColor,
     this.hintColor,
+    this.labelColor,
     this.iconColor,
     this.fillColor,
-    this.contentPadding = const EdgeInsets.symmetric(
-      horizontal: 16,
-      vertical: 14,
-    ),
-
-    // Container params with improved defaults
-    this.containerMargin,
-    this.containerPadding,
-    this.containerWidth,
-    this.containerHeight,
-    this.containerAlignment,
-    this.containerConstraints,
-    this.containerDecoration,
-    this.containerColor, // will default to white in build
-    this.containerGradient,
-    this.containerImage,
-    this.containerBorder,
-    this.containerBorderRadius, // user explicit override
-    this.containerBoxShadow,
-    this.containerBackgroundBlendMode,
-    this.containerShape,
-    this.showContainerBorder = true, // default to true
-    this.containerBorderSideType = BorderSideType.all,
-    this.containerBorderColor = Colors.grey, // you can change to a softer grey
-    this.containerBorderWidth = 1.0,
-    this.containerBorderStyle = BorderStyle.solid,
-    this.showContainerShadow = true,
-    this.containerShadowColor,
-    this.containerShadowBlurRadius,
-    this.containerShadowOffset,
-    this.containerShadowSpreadRadius,
-    this.containerElevation,
-    this.containerForegroundDecoration,
-    this.containerClipBehavior = Clip.none,
-    this.containerExpand = false,
+    this.contentPadding,
+    this.autoValidateMode = false,
+    this.focusNode,
+    this.iconSize = 20.0,
+    // Border props
+    this.showBorder = true,
+    this.borderSideType = BorderSideType.all,
+    this.borderColor = Colors.grey,
+    this.borderWidth = 1.0,
+    this.borderStyle = BorderStyle.solid,
+    this.focusedBorderWidthDelta = 0.5,
+    // Container props
+    this.margin,
+    this.padding,
+    this.width,
+    this.height,
+    this.alignment,
+    this.constraints,
+    this.backgroundColor,
+    this.gradient,
+    this.boxShadow,
+    this.borderRadius,
+    this.elevation,
+    this.clipBehavior = Clip.none,
+    this.labelTop,
+    this.labelTopSpacing = 6.0,
+    this.crossAxisAlignment,
+    this.labelTopTextColor,
   });
 
   @override
@@ -147,145 +130,258 @@ class AppTextFormField extends StatefulWidget {
 }
 
 class _AppTextFormFieldState extends State<AppTextFormField> {
-  late bool obscure;
+  late bool _obscureText;
 
   @override
   void initState() {
     super.initState();
-    obscure = widget.isPassword;
+    _obscureText = widget.isPassword || widget.obscureText;
   }
 
-  void togglePassword() {
-    setState(() {
-      obscure = !obscure;
-    });
+  void _togglePasswordVisibility() {
+    setState(() => _obscureText = !_obscureText);
   }
+
+  // ---------------------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------------------
+
+  BorderRadius get _effectiveBorderRadius =>
+      widget.borderRadius ??
+      (widget.borderSideType == BorderSideType.all
+          ? BorderRadius.circular(12)
+          : BorderRadius.zero);
+
+  InputBorder _buildBorder({Color? color, double? width}) {
+    if (!widget.showBorder) return InputBorder.none;
+
+    final side = BorderSide(
+      color: color ?? widget.borderColor,
+      width: width ?? widget.borderWidth,
+      style: widget.borderStyle,
+    );
+
+    switch (widget.borderSideType) {
+      case BorderSideType.all:
+        return OutlineInputBorder(
+          borderSide: side,
+          borderRadius: _effectiveBorderRadius,
+        );
+      case BorderSideType.bottom:
+        return UnderlineInputBorder(
+          borderSide: side,
+          borderRadius: _effectiveBorderRadius,
+        );
+      // Flutter's built-in InputBorder doesn't support top / left / right,
+      // so we use a lightweight custom painter for those cases.
+      case BorderSideType.top:
+        return _SidedBorder(side: side, sides: _VisibleSides.top);
+      case BorderSideType.left:
+        return _SidedBorder(side: side, sides: _VisibleSides.left);
+      case BorderSideType.right:
+        return _SidedBorder(side: side, sides: _VisibleSides.right);
+    }
+  }
+
+  Widget _buildPrefixIcon(Color iconColor) {
+    // Size the wrapper dynamically from iconSize + padding so it never clips.
+    return Container(
+      padding: EdgeInsets.all(8),
+      width: widget.iconSize + 12,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 12.0),
+        child: IconTheme(
+          data: IconThemeData(size: widget.iconSize, color: iconColor),
+          child: SizedBox.square(
+            dimension: widget.iconSize,
+            child: widget.prefixIcon,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordToggle(Color iconColor) {
+    return InkWell(
+      onTap: _togglePasswordVisibility,
+      borderRadius: BorderRadius.circular(50),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: IconTheme(
+          data: IconThemeData(size: widget.iconSize, color: iconColor),
+          child: AppSvg(
+            path: _obscureText ? Assets.icons.eyeOff : Assets.icons.eyeOn,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Build
+  // ---------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
-    // ----- Determine effective borderRadius -----
-    // If user explicitly provided borderRadius, use it
-    // Otherwise, apply a default radius ONLY if border is on all sides
-    final effectiveBorderRadius =
-        widget.containerBorderRadius ??
-        (widget.showContainerBorder &&
-                widget.containerBorderSideType == BorderSideType.all
-            ? BorderRadius.circular(8) // default radius
-            : null);
+    final textStyle = TextStyle(
+      fontSize: widget.fontSize ?? 16,
+      color: widget.textColor,
+    );
 
-    // ----- Default container color (if not set) -----
-    // Use white, but you could also use Theme.of(context).cardColor
-    final effectiveContainerColor = widget.containerColor ?? Colors.white;
+    final effectiveHintColor =
+        widget.hintColor ?? Colors.grey.withValues(alpha: 0.7);
+    final effectiveLabelColor = widget.labelColor ?? effectiveHintColor;
+    final effectiveIconColor = widget.iconColor ?? Colors.grey;
+    final effectiveFillColor = widget.fillColor ?? Colors.transparent;
+    final effectiveBgColor = widget.backgroundColor ?? Colors.transparent;
 
-    // Build the inner TextFormField with NO border (container handles it)
-    final textField = TextFormField(
+    final prefixIconWidget = widget.prefixIcon != null
+        ? _buildPrefixIcon(effectiveIconColor)
+        : null;
+
+    final suffixIconWidget = widget.isPassword
+        ? _buildPasswordToggle(effectiveIconColor)
+        : widget.suffixIcon;
+
+    Widget field = TextFormField(
       controller: widget.controller,
-      obscureText: widget.isPassword ? obscure : widget.obscureText,
+      focusNode: widget.focusNode,
+      obscureText: _obscureText,
       validator: widget.validator,
+      autovalidateMode: widget.autoValidateMode
+          ? AutovalidateMode.onUserInteraction
+          : AutovalidateMode.disabled,
       keyboardType: widget.keyboardType,
-      onChanged: widget.onChanged,
-      readOnly: widget.readOnly,
-      onTap: widget.onTap,
       textInputAction: widget.textInputAction,
       onFieldSubmitted: widget.onFieldSubmitted,
-      maxLines: widget.isPassword ? 1 : widget.maxLines,
+      onChanged: widget.onChanged,
+      enabled: widget.enabled,
+      readOnly: widget.readOnly,
+      onTap: widget.onTap,
+      maxLines: widget.maxLines,
       minLines: widget.minLines,
       maxLength: widget.maxLength,
-      enabled: widget.enabled,
-      style: (widget.textColor != null || widget.fontSize != null)
-          ? TextStyle(color: widget.textColor, fontSize: widget.fontSize ?? 16)
-          : null,
+      style: textStyle,
       decoration: InputDecoration(
         labelText: widget.labelText,
         hintText: widget.hintText,
         prefixText: widget.prefixText,
-        hintStyle: TextStyle(
-          color: widget.hintColor ?? Colors.grey,
-          fontSize: widget.fontSize ?? 16,
+        prefixIcon: prefixIconWidget,
+        suffixIcon: suffixIconWidget,
+        labelStyle: textStyle.copyWith(color: effectiveLabelColor),
+        hintStyle: textStyle.copyWith(color: effectiveHintColor),
+        border: _buildBorder(),
+        enabledBorder: _buildBorder(),
+        focusedBorder: _buildBorder(
+          width: widget.borderWidth + widget.focusedBorderWidthDelta,
         ),
-        // No border – the container provides it
-        border: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        focusedErrorBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-
-        contentPadding: widget.contentPadding,
-
-        prefixIcon: widget.prefixIcon != null
-            ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: Center(child: widget.prefixIcon),
-                ),
-              )
-            : null,
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: 40,
-          minHeight: 40,
-        ),
-        suffixIcon: widget.isPassword
-            ? InkWell(
-                onTap: togglePassword,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: AppSvg(
-                    path: obscure ? Assets.icons.eyeOff : Assets.icons.eyeOn,
-                    color:
-                        widget.iconColor ?? Theme.of(context).iconTheme.color,
-                  ),
-                ),
-              )
-            : widget.suffixIcon,
+        errorBorder: _buildBorder(color: Colors.red),
+        focusedErrorBorder: _buildBorder(color: Colors.red, width: 2),
+        contentPadding:
+            widget.contentPadding ??
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         filled: true,
-        fillColor: widget.fillColor ?? Colors.grey.withValues(alpha: 0.08),
+        fillColor: effectiveFillColor,
+        isDense: true,
+        alignLabelWithHint: true,
       ),
     );
 
-    // Wrap with AppContainer
-    return AppContainer(
-      // Layout
-      margin: widget.containerMargin,
-      padding: widget.containerPadding,
-      width: widget.containerWidth,
-      height: widget.containerHeight,
-      alignment: widget.containerAlignment,
-      constraints: widget.containerConstraints,
-      // Decoration
-      decoration: widget.containerDecoration,
-      color: effectiveContainerColor,
-      gradient: widget.containerGradient,
-      image: widget.containerImage,
-      border: widget.containerBorder,
-      borderRadius: effectiveBorderRadius, // use our computed value
-      boxShadow: widget.containerBoxShadow,
-      backgroundBlendMode: widget.containerBackgroundBlendMode,
-      shape: widget.containerShape,
-      // Simplified border
-      showBorder: widget.showContainerBorder,
-      borderSideType: widget.containerBorderSideType,
-      borderColor: widget.containerBorderColor,
-      borderWidth: widget.containerBorderWidth,
-      borderStyle: widget.containerBorderStyle,
-      // Simplified shadow
-      showShadow: widget.showContainerShadow,
-      shadowColor: widget.containerShadowColor,
-      shadowBlurRadius: widget.containerShadowBlurRadius,
-      shadowOffset: widget.containerShadowOffset,
-      shadowSpreadRadius: widget.containerShadowSpreadRadius,
-      // Elevation
-      elevation: widget.containerElevation,
-      // Foreground decoration
-      foregroundDecoration: widget.containerForegroundDecoration,
-      // Clipping
-      clipBehavior: widget.containerClipBehavior,
-      // Expand
-      expand: widget.containerExpand,
-      // Child
-      child: textField,
+    // Apply Material elevation when requested.
+    if ((widget.elevation ?? 0) > 0) {
+      field = Material(
+        elevation: widget.elevation!,
+        borderRadius: _effectiveBorderRadius,
+        color: Colors.transparent,
+        child: field,
+      );
+    }
+
+    return Container(
+      margin: widget.margin,
+      padding: widget.padding,
+      width: widget.width,
+      height: widget.height,
+      alignment: widget.alignment,
+      constraints: widget.constraints,
+      clipBehavior: widget.clipBehavior,
+      decoration: BoxDecoration(
+        color: effectiveBgColor,
+        gradient: widget.gradient,
+        borderRadius: _effectiveBorderRadius,
+        boxShadow: widget.boxShadow,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // ✅ don't expand vertically
+        crossAxisAlignment:
+            widget.crossAxisAlignment ?? CrossAxisAlignment.start,
+        children: [
+          if (widget.labelTop != null) ...[
+            Text(
+              widget.labelTop!,
+              style: textStyle.copyWith(color: widget.labelTopTextColor),
+            ),
+            SizedBox(height: widget.labelTopSpacing), // ✅ configurable gap
+          ],
+          field,
+        ],
+      ),
     );
   }
+}
+
+// ---------------------------------------------------------------------------
+// Custom InputBorder — draws only one side (top / left / right).
+// ---------------------------------------------------------------------------
+
+enum _VisibleSides { top, left, right }
+
+class _SidedBorder extends InputBorder {
+  final _VisibleSides sides;
+
+  const _SidedBorder({required BorderSide side, required this.sides})
+    : super(borderSide: side);
+
+  @override
+  InputBorder copyWith({BorderSide? borderSide}) =>
+      _SidedBorder(side: borderSide ?? this.borderSide, sides: sides);
+
+  @override
+  bool get isOutline => false;
+
+  @override
+  EdgeInsetsGeometry get dimensions =>
+      EdgeInsets.only(bottom: borderSide.width);
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
+      Path()..addRect(rect);
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) =>
+      Path()..addRect(rect);
+
+  @override
+  void paint(
+    Canvas canvas,
+    Rect rect, {
+    double? gapStart,
+    double gapExtent = 0.0,
+    double gapPercentage = 0.0,
+    TextDirection? textDirection,
+  }) {
+    final paint = borderSide.toPaint();
+    switch (sides) {
+      case _VisibleSides.top:
+        canvas.drawLine(rect.topLeft, rect.topRight, paint);
+      case _VisibleSides.left:
+        canvas.drawLine(rect.topLeft, rect.bottomLeft, paint);
+      case _VisibleSides.right:
+        canvas.drawLine(rect.topRight, rect.bottomRight, paint);
+    }
+  }
+
+  @override
+  ShapeBorder scale(double t) =>
+      _SidedBorder(side: borderSide.scale(t), sides: sides);
 }

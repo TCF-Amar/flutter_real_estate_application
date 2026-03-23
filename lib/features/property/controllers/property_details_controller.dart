@@ -10,6 +10,7 @@ import 'package:real_estate_app/features/favorite/models/favorite_property.dart'
 import 'package:real_estate_app/features/home/controllers/home_controller.dart';
 import 'package:real_estate_app/features/property/controllers/property_controller.dart';
 import 'package:real_estate_app/features/property/models/property_detail_model.dart';
+import 'package:real_estate_app/features/property/models/property_inquiry_req_model.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:real_estate_app/features/property/models/review_request_model.dart';
 import 'package:real_estate_app/features/shared/models/pagination_model.dart';
@@ -169,7 +170,7 @@ class PropertyDetailsController extends GetxController {
     );
     result.fold((l) {
       log.e('Error adding review: ${l.message}');
-      AppSnackbar.info(l.message);
+      AppSnackbar.error(l.message, title: "");
     }, (r) => log.d('Review added successfully'));
     fetchReviews(id);
     commentController.clear();
@@ -267,5 +268,49 @@ class PropertyDetailsController extends GetxController {
   void onClose() {
     commentController.dispose();
     super.onClose();
+  }
+
+  final _isLoadingInquiry = false.obs;
+  bool get isLoadingInquiry => _isLoadingInquiry.value;
+
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final messageController = TextEditingController();
+
+  Future<void> _addInquiry() async {
+    _isLoadingInquiry.value = true;
+    final result = await _propertyServices.addInquiry(
+      PropertyInquiryReqModel(
+        pId: propertyId.value,
+        name: nameController.text,
+        email: emailController.text,
+        phone: phoneController.text,
+        message: messageController.text,
+      ),
+    );
+    result.fold(
+      (l) {
+        log.e('Error adding enquiry: ${l.message}');
+        AppSnackbar.error(l.message);
+      },
+      (r) {
+        log.d('Enquiry added successfully');
+        AppSnackbar.success('Enquiry added successfully');
+      },
+    );
+    _isLoadingInquiry.value = false;
+  }
+
+  void addInquiry() {
+    _addInquiry();
+    clearInquiry();
+  }
+
+  void clearInquiry() {
+    nameController.clear();
+    emailController.clear();
+    phoneController.clear();
+    messageController.clear();
   }
 }
