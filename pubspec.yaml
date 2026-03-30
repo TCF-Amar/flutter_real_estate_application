@@ -53,3 +53,8 @@ flutter:
     - assets/icons/ 
     - assets/translations/ 
     - .env.development
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
