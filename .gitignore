@@ -47,4 +47,4 @@ app.*.map.json
 
 .fvm
 
-/DEEPLINK_SETUP.md
+DEEPLINK_SETUP.md
