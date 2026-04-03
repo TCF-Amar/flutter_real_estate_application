@@ -231,7 +231,7 @@ class _NotificationBell extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            Get.toNamed(AppRoutes.test);
+            // Get.toNamed(AppRoutes.test);
           },
           child: Container(
             width: 42,

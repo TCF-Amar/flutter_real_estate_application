@@ -1,39 +1,11 @@
-import 'package:app_links/app_links.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:real_estate_app/core/routes/app_routes.dart';
+// This file is kept for backward compatibility.
+// All routing logic has been consolidated into DeepLinkRouter inside
+// deep_link_service.dart. Delegate here to avoid breaking any existing callers.
+
+import 'package:real_estate_app/core/services/deep_link_service.dart';
 
 class DeepLinkHandler {
-  final _appLinks = AppLinks();
+  DeepLinkHandler._();
 
-  Future<void> init() async {
-    // Check initial link
-    final initialUri = await _appLinks.getInitialLink();
-    debugPrint("initialUri: $initialUri");
-    if (initialUri != null) {
-      _handleLink(initialUri.toString());
-    }
-
-    // Subscribe to all upcoming links
-    _appLinks.uriLinkStream.listen((uri) {
-      _handleLink(uri.toString());
-    });
-  }
-
-  void _handleLink(String? link) {
-    if (link == null) return;
-
-    final uri = Uri.parse(link);
-    final path = uri.path;
-    debugPrint("path: $path");
-
-    if (path.contains("/property")) {
-      final segments = path.split("/");
-      // Path format: /property/:id
-      if (segments.length >= 3) {
-        final id = segments[2];
-        Get.toNamed(AppRoutes.propertyDetails, arguments: {"id": id});
-      }
-    }
-  }
+  static void handle(Uri uri) => DeepLinkRouter.handle(uri);
 }

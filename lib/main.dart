@@ -8,19 +8,23 @@ import 'package:real_estate_app/core/theme/app_theme.dart';
 import 'package:real_estate_app/features/auth/bindings/auth_binding.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:real_estate_app/core/localization/app_translations.dart';
-import 'package:real_estate_app/core/utils/deep_link_handler.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DeepLinkHandler().init();
 
-  SystemChrome.setPreferredOrientations([
+  // Lock to portrait
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  await dotenv.load(fileName: ".env.development");
-  InitialDi.init();
 
+  // Load env vars
+  await dotenv.load(fileName: '.env.development');
+
+  // Register all services (DeepLinkService is registered first inside init())
+  await InitialDi.init();
+
+  // Load translations
   final translations = await AppTranslations.load();
 
   runApp(MainApp(translations: translations));

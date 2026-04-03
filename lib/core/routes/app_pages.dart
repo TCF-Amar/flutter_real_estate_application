@@ -56,7 +56,7 @@ import 'package:real_estate_app/features/transactions/views/screens/transaction_
 class AppPages {
   static final pages = <GetPage>[
     // ─── Initial & Onboarding ──────────────────────────────────────────────
-    GetPage(name: AppRoutes.test, page: () => TestScreen()),
+    // GetPage(name: AppRoutes.test, page: () => TestScreen()),
     GetPage(name: AppRoutes.splash, page: () => SplashScreen()),
     GetPage(name: AppRoutes.getStart, page: () => GetStartScreens()),
 

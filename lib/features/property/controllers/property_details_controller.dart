@@ -22,9 +22,10 @@ class PropertyDetailsController extends GetxController {
   // ─── Dependencies ────────────────────────────────────────────────────────────
 
   final log = Logger();
-  late final PropertyServices _propertyServices;
-  late final FavoriteController _favoriteController;
-  late final AgentController _agentController;
+
+  final PropertyServices _propertyServices = Get.find<PropertyServices>();
+  final FavoriteController _favoriteController = Get.find<FavoriteController>();
+  final AgentController _agentController = Get.find<AgentController>();
 
   // ─── Property Detail ─────────────────────────────────────────────────────────
 
@@ -42,14 +43,28 @@ class PropertyDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _propertyServices = Get.find<PropertyServices>();
-    _favoriteController = Get.find<FavoriteController>();
-    _agentController = Get.find<AgentController>();
 
-    final id = Get.arguments['id'];
+    // Support two argument shapes:
+    //   • Deep link  → Get.arguments is a raw String id (e.g. "55")
+    //   • Normal nav → Get.arguments is a Map with key 'id' (e.g. {'id': 55})
+    final args = Get.arguments;
+    int? id;
+    if (args is String) {
+      id = int.tryParse(args);
+    } else if (args is int) {
+      id = args;
+    } else if (args is Map) {
+      final raw = args['id'];
+      id = raw is int ? raw : int.tryParse(raw?.toString() ?? '');
+    }
+
     if (id != null) {
       propertyId.value = id;
       _loadAll(id);
+    } else {
+      log.w(
+        'PropertyDetailsController: missing or invalid id in arguments: $args',
+      );
     }
 
     ever(propertyId, _loadAll);
