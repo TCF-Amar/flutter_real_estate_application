@@ -29,7 +29,7 @@ class StatusTimeline extends StatelessWidget {
                 title: detail.updatedAt,
                 icon: AppSvg(path: Assets.icons.workingStart),
                 isCompleted:
-                    detail.status == MaintenanceStatus.in_progress ||
+                    detail.status == MaintenanceStatus.inProgress ||
                     detail.status == MaintenanceStatus.completed,
               ),
             ),

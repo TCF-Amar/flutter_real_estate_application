@@ -77,7 +77,7 @@ Color getStatusColor(MaintenanceStatus status) {
     case MaintenanceStatus.open:
     case MaintenanceStatus.assigned:
       return Colors.orange.shade300;
-    case MaintenanceStatus.in_progress:
+    case MaintenanceStatus.inProgress:
       return Colors.blue.shade300;
     case MaintenanceStatus.completed:
       return Colors.green.shade300;

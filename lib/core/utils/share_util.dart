@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -13,7 +14,7 @@ class ShareUtil {
 
       await SharePlus.instance.share(params);
     } catch (e) {
-      print("Share Error: $e");
+      debugPrint("Share Error: $e");
     }
   }
 

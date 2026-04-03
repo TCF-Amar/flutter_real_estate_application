@@ -49,7 +49,6 @@ import 'package:real_estate_app/features/profile/views/screens/setting_screen.da
 import 'package:real_estate_app/features/profile/views/screens/support/new_request.dart';
 import 'package:real_estate_app/features/profile/views/screens/support/support_details.dart';
 import 'package:real_estate_app/features/profile/views/screens/support/support_screen.dart';
-import 'package:real_estate_app/features/shared/screens/test.dart';
 import 'package:real_estate_app/features/transactions/bindings/transaction_binding.dart';
 import 'package:real_estate_app/features/transactions/views/screens/transaction_history.dart';
 

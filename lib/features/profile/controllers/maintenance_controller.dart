@@ -32,7 +32,7 @@ class MaintenanceController extends GetxController {
       .where(
         (e) =>
             e.status == MaintenanceStatus.open ||
-            e.status == MaintenanceStatus.in_progress,
+            e.status == MaintenanceStatus.inProgress,
       )
       .toList();
 

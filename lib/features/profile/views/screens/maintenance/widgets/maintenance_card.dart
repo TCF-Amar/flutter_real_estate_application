@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/features/profile/models/maintenance_request_model.dart';
-import 'package:real_estate_app/features/profile/views/screens/maintenance/maintenace_details_screen.dart';
+import 'package:real_estate_app/features/profile/views/screens/maintenance/maintenance_details_screen.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class MaintenanceCard extends StatelessWidget {
@@ -118,7 +118,7 @@ class MaintenanceCard extends StatelessWidget {
       case MaintenanceStatus.open:
       case MaintenanceStatus.assigned:
         return Colors.orange.shade300;
-      case MaintenanceStatus.in_progress:
+      case MaintenanceStatus.inProgress:
         return Colors.blue.shade300;
       case MaintenanceStatus.completed:
         return Colors.green.shade300;

@@ -3,7 +3,7 @@ import 'package:real_estate_app/features/shared/models/pagination_model.dart';
 enum MaintenanceStatus {
   open,
   assigned,
-  in_progress,
+  inProgress,
   completed,
   closed;
 
@@ -13,7 +13,7 @@ enum MaintenanceStatus {
         return "Open";
       case MaintenanceStatus.assigned:
         return "Assigned";
-      case MaintenanceStatus.in_progress:
+      case MaintenanceStatus.inProgress:
         return "In Progress";
       case MaintenanceStatus.completed:
         return "Completed";
