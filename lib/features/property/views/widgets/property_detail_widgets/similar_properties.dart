@@ -29,7 +29,9 @@ class _SimilarPropertiesState extends State<SimilarProperties> {
       if (controller.similarProperties.isEmpty) {
         return const SizedBox.shrink();
       }
-      return Container(
+      return AppContainer(
+        // borderRadius: BorderRadius.,
+        // color: AppColors.error,
         margin: const EdgeInsets.only(top: 25, bottom: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

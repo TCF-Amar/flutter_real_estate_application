@@ -10,6 +10,7 @@ import 'package:real_estate_app/core/networks/exceptions/api_exceptions.dart';
 import 'package:real_estate_app/core/networks/exceptions/exceptions.dart';
 import 'package:real_estate_app/core/utils/typedef.dart';
 import 'package:real_estate_app/features/profile/models/maintenance_request_model.dart';
+import 'package:real_estate_app/features/shared/models/success_response_model.dart';
 
 class MaintenanceServices {
   final Logger log = Logger();
@@ -77,7 +78,7 @@ class MaintenanceServices {
     }
   }
 
-  FutureResult<MaintenanceResponse> getMaintenanceRequests({
+  FutureResult<SuccessResponseModel<MaintenanceData>> getMaintenanceRequests({
     int page = 1,
     int perPage = 10,
   }) async {
@@ -87,14 +88,14 @@ class MaintenanceServices {
         ApiRequest(
           url: ApiEndpoints.sendMaintenanceRequest,
           method: ApiMethod.get,
-          queryParameters: {
-            'page': page,
-            'per_page': perPage,
-          },
+          queryParameters: {'page': page, 'per_page': perPage},
         ),
       );
       log.d('Fetch maintenance requests response: ${response.data}');
-      final res = MaintenanceResponse.fromJson(response.data);
+      final res = SuccessResponseModel<MaintenanceData>.fromJson(
+        response.data,
+        (data) => MaintenanceData.fromJson(data as Map<String, dynamic>? ?? {}),
+      );
       log.i('Maintenance requests fetched successfully');
       return Right(res);
     } on AppException catch (e) {

@@ -6,10 +6,18 @@ class PropertyFilterModel {
 
   PropertyFilterModel({required this.status, required this.data});
 
-  factory PropertyFilterModel.fromJson(Map<String, dynamic> json) {
+  factory PropertyFilterModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return PropertyFilterModel(
+        status: false,
+        data: PropertyFilterData.empty(),
+      );
+    }
     return PropertyFilterModel(
-      status: json['status'],
-      data: PropertyFilterData.fromJson(json['data']),
+      status: json['status'] is bool ? json['status'] : true,
+      data: json['data'] != null
+          ? PropertyFilterData.fromJson(json['data'] as Map<String, dynamic>)
+          : PropertyFilterData.empty(),
     );
   }
 
@@ -57,6 +65,24 @@ class PropertyFilterData {
           .map((e) => PriceRangeOption.fromJson(e))
           .toList(),
       sortOptions: Map<String, String>.from(json['sort_options']),
+    );
+  }
+
+  factory PropertyFilterData.empty() {
+    return PropertyFilterData(
+      cities: [],
+      propertyCategories: {},
+      propertyTypes: {},
+      listingCategories: {
+        "For Buy": "for_buy",
+        "For Sale": "for_sale",
+        "For Rent": "for_rent",
+        "For Tenants": "for_tenants",
+      },
+      bhkOptions: [],
+      amenities: [],
+      priceRanges: [],
+      sortOptions: {},
     );
   }
 

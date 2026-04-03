@@ -29,23 +29,21 @@ class BookingDetailsScreen extends StatelessWidget {
         if (controller.failure.value != null) {
           return Center(child: Text(controller.failure.value!.message));
         }
-        if (bookingDetailsData == null) {
-          return Center(child: Text("No booking details found"));
-        }
-        if (controller.bookingDetailsLoading.value) {
-          return Center(child: CircularProgressIndicator());
-        }
-        final summary = bookingDetailsData.bookingSummary;
-        final propertyDetail = bookingDetailsData.propertyDetail;
-        final projectOverview = bookingDetailsData.projectOverview;
-        final latestUpdate = bookingDetailsData.latestUpdate;
-        final siteVisitSummary = bookingDetailsData.siteVisitSummary;
-        final ownerDetail = bookingDetailsData.ownerDetail;
-        final paymentTracker = bookingDetailsData.paymentTracker;
 
-        if (controller.bookingDetailsLoading.value) {
+        if (controller.bookingDetailsLoading) {
           return Center(child: CircularProgressIndicator());
         }
+        // if (bookingDetailsData == null) {
+        //   return Center(child: Text("No booking details found"));
+        // }
+        final summary = bookingDetailsData?.bookingSummary;
+        final propertyDetail = bookingDetailsData?.propertyDetail;
+        final projectOverview = bookingDetailsData?.projectOverview;
+        final latestUpdate = bookingDetailsData?.latestUpdate;
+        final siteVisitSummary = bookingDetailsData?.siteVisitSummary;
+        final ownerDetail = bookingDetailsData?.ownerDetail;
+        final paymentTracker = bookingDetailsData?.paymentTracker;
+
         return Scaffold(
           body: CustomScrollView(
             slivers: [
@@ -60,7 +58,7 @@ class BookingDetailsScreen extends StatelessWidget {
                 // snap: true,
                 pinned: true,
                 expandedHeight: 280,
-                flexibleSpace: BookingHeaderSection(property: propertyDetail),
+                flexibleSpace: BookingHeaderSection(property: propertyDetail!),
               ),
 
               // gallery
@@ -75,12 +73,12 @@ class BookingDetailsScreen extends StatelessWidget {
               // latest update
               if (latestUpdate != null && propertyDetail.isUnderConstruction)
                 LatestUpdateSection(update: latestUpdate),
-              BookedSummary(summary: summary, property: propertyDetail),
+              BookedSummary(summary: summary!, property: propertyDetail),
 
               if (paymentTracker != null && paymentTracker.events.isNotEmpty)
                 PaymentTracker(
                   tracker: paymentTracker,
-                  bookingDetailsData: bookingDetailsData,
+                  bookingDetailsData: bookingDetailsData!,
                 ),
 
               if (siteVisitSummary != null)

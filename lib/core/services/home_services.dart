@@ -7,7 +7,8 @@ import 'package:real_estate_app/core/networks/dio_helper.dart';
 import 'package:real_estate_app/core/networks/exceptions/api_exceptions.dart';
 import 'package:real_estate_app/core/networks/exceptions/exceptions.dart';
 import 'package:real_estate_app/core/utils/typedef.dart';
-import 'package:real_estate_app/features/home/models/home_response.dart';
+import 'package:real_estate_app/features/home/models/home_data_model.dart';
+import 'package:real_estate_app/features/shared/models/success_response_model.dart';
 
 class HomeServices extends GetxService {
   final Logger log = Logger();
@@ -15,7 +16,7 @@ class HomeServices extends GetxService {
 
   // ── Homepage Data ───────────────────────────────────────────
 
-  FutureResult<HomepageResponse> getHomepageData() async {
+  FutureResult<SuccessResponseModel<HomepageData>> getHomepageData() async {
     log.i('Fetching homepage data...');
     try {
       final response = await _dioHelper.request(
@@ -23,7 +24,10 @@ class HomeServices extends GetxService {
       );
       log.i('Homepage data fetched successfully');
       return Right(
-        HomepageResponse.fromJson(response.data as Map<String, dynamic>),
+        SuccessResponseModel.fromJson(
+          response.data,
+          (data) => HomepageData.fromJson(data as Map<String, dynamic>),
+        ),
       );
     } on AppException catch (e) {
       log.e('Fetch homepage data failed (AppException): ${e.message}');

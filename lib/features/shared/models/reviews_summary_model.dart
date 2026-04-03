@@ -38,6 +38,10 @@ class ReviewSummaryModel {
     'average_rating': averageRating,
     'rating_breakdown': ratingBreakdown?.toJson(),
   };
+  ReviewSummaryModel.empty()
+    : totalReviews = null,
+      averageRating = null,
+      ratingBreakdown = null;
 }
 
 class RatingBreakdown {

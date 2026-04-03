@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/features/shared/widgets/app_svg.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class AppImage extends StatelessWidget {
   final String? path;
@@ -50,7 +51,7 @@ class AppImage extends StatelessWidget {
             backgroundImage: NetworkImage(url),
           )
         : ClipRRect(
-            borderRadius: radius ?? BorderRadius.zero,
+            borderRadius: radius ?? BorderRadius.circular(16),
             child: CachedNetworkImage(
               imageUrl: url,
               height: height,
@@ -58,11 +59,7 @@ class AppImage extends StatelessWidget {
               fit: fit,
               errorWidget: (_, __, ___) => _errorPlaceholder(),
               progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  Center(
-                    child: CircularProgressIndicator(
-                      value: downloadProgress.progress,
-                    ),
-                  ),
+                  _buildSkeletonLoader(),
             ),
           );
   }
@@ -85,14 +82,41 @@ class AppImage extends StatelessWidget {
       if (errorImagePath!.endsWith('.svg')) {
         return AppSvg(path: errorImagePath!);
       }
-      return Icon(
-        Icons.image_not_supported,
-        color: Colors.grey.shade400,
-      );
+      return Icon(Icons.image_not_supported, color: Colors.grey.shade400);
     }
     return Icon(
       errorIcon ?? Icons.image_not_supported,
       color: Colors.grey.shade400,
+    );
+  }
+
+  Widget _buildSkeletonLoader() {
+    return Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        borderRadius: radius ?? BorderRadius.zero,
+        color: Colors.grey.shade300,
+      ),
+      child: _shimmer(),
+    );
+  }
+
+  Widget _shimmer() {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 800),
+      decoration: BoxDecoration(
+        borderRadius: radius ?? BorderRadius.zero,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.grey.shade300,
+            Colors.grey.shade200,
+            Colors.grey.shade300,
+          ],
+        ),
+      ),
     );
   }
 }

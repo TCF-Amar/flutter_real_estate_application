@@ -114,9 +114,9 @@ class AppSearchController extends GetxController {
           log.e(l.message);
         },
         (r) {
-          if (r.data.isNotEmpty) {
+          if (r.data.properties.isNotEmpty) {
             // Save as recent search
-            final firstProperty = r.data.first;
+            final firstProperty = r.data.properties.first;
             final newRecent = RecentSearchModel(
               query: query,
               image: firstProperty.image ?? firstProperty.shareData.image,
@@ -138,14 +138,14 @@ class AppSearchController extends GetxController {
             if (Get.currentRoute != AppRoutes.searchResult) {}
           }
           if (searchMore) {
-            _properties.addAll(r.data);
+            _properties.addAll(r.data.properties);
           } else {
-            _properties.assignAll(r.data);
+            _properties.assignAll(r.data.properties);
           }
 
           // Update hasNextPage
           _hasNextPage.value =
-              r.data.length >= (searchParams.value.perPage ?? 10);
+              r.data.properties.length >= (searchParams.value.perPage ?? 10);
         },
       );
     } finally {

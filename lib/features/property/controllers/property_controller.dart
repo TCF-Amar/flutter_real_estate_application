@@ -182,8 +182,8 @@ class PropertyController extends GetxController {
 
     final listingSlug =
         (data != null && selectedListingCategories.value.isNotEmpty)
-            ? (data.listingCategories?[selectedListingCategories.value] ?? '')
-            : '';
+        ? (data.listingCategories?[selectedListingCategories.value] ?? '')
+        : '';
 
     searchParams.value = searchParams.value.copyWith(
       minPrice: minPrice.value.toInt(),
@@ -191,7 +191,9 @@ class PropertyController extends GetxController {
       minArea: minArea.value,
       maxArea: maxArea.value,
       bhk: selectedBhk.toList(),
-      amenities: selectedAmenities.value.isEmpty ? null : selectedAmenities.value,
+      amenities: selectedAmenities.value.isEmpty
+          ? null
+          : selectedAmenities.value,
       clearAmenities: selectedAmenities.value.isEmpty,
       listingCategory: listingSlug.isEmpty ? null : listingSlug,
       clearListingCategory: listingSlug.isEmpty,
@@ -241,7 +243,7 @@ class PropertyController extends GetxController {
       },
       (r) {
         _error.value = null;
-        filterData.value = r;
+        filterData.value = r.data;
       },
     );
     _isFilterLoading.value = false;
@@ -264,21 +266,20 @@ class PropertyController extends GetxController {
       },
       (r) {
         _error.value = null;
-        log.d(
-          'Fetched ${r.data.length} properties — page $page',
-        );
+        
+        log.d('Fetched ${r.data.properties.length} properties — page $page');
         if (page == 1) {
-          _properties.assignAll(r.data);
-          _filteredProperties.assignAll(r.data);
+          _properties.assignAll(r.data.properties);
+          _filteredProperties.assignAll(r.data.properties);
         } else {
-          _properties.addAll(r.data);
-          _filteredProperties.addAll(r.data);
+          _properties.addAll(r.data.properties);
+          _filteredProperties.addAll(r.data.properties);
         }
         _isEmpty.value = _properties.isEmpty;
-        currentPage.value = r.pagination?.currentPage ?? 1;
-        totalItems.value = r.pagination?.total ?? _properties.length;
-        lastPage.value = r.pagination?.lastPage ?? 1;
-        perPage.value = r.pagination?.perPage ?? 5;
+        currentPage.value = r.data.pagination?.currentPage ?? 1;
+        totalItems.value = r.data.pagination?.total ?? _properties.length;
+        lastPage.value = r.data.pagination?.lastPage ?? 1;
+        perPage.value = r.data.pagination?.perPage ?? 5;
       },
     );
 

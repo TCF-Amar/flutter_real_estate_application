@@ -2,11 +2,11 @@ import 'package:real_estate_app/features/shared/models/pagination_model.dart';
 import 'package:real_estate_app/features/property/models/property_model.dart';
 
 class PropertyResponseModel {
-  final bool status;
-  final List<Property> data;
+  // final bool status;
+  final List<Property> properties;
   final PaginationModel? pagination;
 
-  PropertyResponseModel({required this.status, required this.data, this.pagination});
+  PropertyResponseModel({ required this.properties, this.pagination});
 
   factory PropertyResponseModel.fromJson(Map<String, dynamic> json) {
     final rawData = json['data'];
@@ -29,8 +29,8 @@ class PropertyResponseModel {
     }
 
     return PropertyResponseModel(
-      status: json['status'] ?? false,
-      data: properties,
+      // status: json['status'] ?? false,
+      properties: properties,
       pagination: pagination,
     );
   }

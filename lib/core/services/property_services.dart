@@ -8,7 +8,7 @@ import 'package:real_estate_app/core/networks/exceptions/api_exceptions.dart';
 import 'package:real_estate_app/core/networks/exceptions/exceptions.dart';
 import 'package:real_estate_app/core/utils/typedef.dart';
 import 'package:real_estate_app/features/favorite/models/favorite_response_model.dart';
-import 'package:real_estate_app/features/property/models/property_detail_response_model.dart';
+import 'package:real_estate_app/features/property/models/property_detail_model.dart';
 import 'package:real_estate_app/features/property/models/property_filter.model.dart';
 import 'package:real_estate_app/features/property/models/property_inquiry_req_model.dart';
 import 'package:real_estate_app/features/property/models/property_response_model.dart';
@@ -16,6 +16,7 @@ import 'package:real_estate_app/features/property/models/review_request_model.da
 import 'package:real_estate_app/features/favorite/models/saved_response.dart';
 import 'package:real_estate_app/features/shared/models/property_search_params.dart';
 import 'package:real_estate_app/features/shared/models/review_response_model.dart';
+import 'package:real_estate_app/features/shared/models/success_response_model.dart';
 
 class PropertyServices extends GetxService {
   final Logger log = Logger();
@@ -40,14 +41,20 @@ class PropertyServices extends GetxService {
 
   // ── Filter Data ─────────────────────────────────────────────
 
-  FutureResult<PropertyFilterModel> getFilterData() async {
+  FutureResult<SuccessResponseModel<PropertyFilterModel>>
+  getFilterData() async {
     log.i('Fetching property filter data...');
     try {
       final response = await dioHelper.request(
         ApiRequest(url: ApiEndpoints.filterData, method: ApiMethod.get),
       );
       log.i('Filter data fetched successfully');
-      return Right(PropertyFilterModel.fromJson(response.data));
+      return Right(
+        SuccessResponseModel<PropertyFilterModel>.fromJson(
+          response.data,
+          (data) => PropertyFilterModel.fromJson(data as Map<String, dynamic>?),
+        ),
+      );
     } on AppException catch (e) {
       log.e('Fetch filter data failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
@@ -59,7 +66,7 @@ class PropertyServices extends GetxService {
 
   // ── Search Properties ───────────────────────────────────────
 
-  FutureResult<PropertyResponseModel> searchProperties({
+  FutureResult<SuccessResponseModel<PropertyResponseModel>> searchProperties({
     PropertySearchParams? params,
   }) async {
     final effectiveParams =
@@ -94,9 +101,22 @@ class PropertyServices extends GetxService {
         ),
       );
 
-      final propertyResponse = PropertyResponseModel.fromJson(response.data);
+      final propertyResponse = SuccessResponseModel.fromJson(response.data, (
+        data,
+      ) {
+        // Handle both Map and List data formats
+        if (data is Map<String, dynamic>) {
+          if (data.containsKey('properties') ||
+              data.containsKey('pagination')) {
+            return PropertyResponseModel.fromJson({'data': data});
+          }
+          return PropertyResponseModel.fromJson(data);
+        } else {
+          return PropertyResponseModel.fromJson({'data': data});
+        }
+      });
       log.i(
-        'Properties search returned ${propertyResponse.data.length} results',
+        'Properties search returned ${propertyResponse.data.properties.length} results',
       );
       return Right(propertyResponse);
     } on AppException catch (e) {
@@ -110,7 +130,7 @@ class PropertyServices extends GetxService {
 
   // ── Toggle Favorite ─────────────────────────────────────────
 
-  FutureResult<SavedResponse> toggleFavoriteProperty({
+  FutureResult<SuccessResponseModel<SavedResponse>> toggleFavoriteProperty({
     required String type,
     required int propertyId,
   }) async {
@@ -125,7 +145,12 @@ class PropertyServices extends GetxService {
       );
       log.d('Toggle favorite response: ${response.data}');
       log.i('Favorite toggled successfully');
-      return Right(SavedResponse.fromJson(response.data));
+      return Right(
+        SuccessResponseModel<SavedResponse>.fromJson(
+          response.data,
+          (data) => SavedResponse.fromJson(data as Map<String, dynamic>),
+        ),
+      );
     } on AppException catch (e) {
       log.e('Toggle favorite failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
@@ -137,14 +162,30 @@ class PropertyServices extends GetxService {
 
   // ── Saved Properties ────────────────────────────────────────
 
-  FutureResult<FavoriteResponseModel> getSavedProperties() async {
+  FutureResult<SuccessResponseModel<FavoriteResponseData>>
+  getSavedProperties() async {
     log.i('Fetching saved properties...');
     try {
       final response = await dioHelper.request(
         ApiRequest(url: ApiEndpoints.getSavedProperties, method: ApiMethod.get),
       );
       log.i('Saved properties fetched successfully');
-      return Right(FavoriteResponseModel.fromJson(response.data));
+      return Right(
+        SuccessResponseModel<FavoriteResponseData>.fromJson(response.data, (
+          data,
+        ) {
+          if (data is Map<String, dynamic>) {
+            if (data.containsKey('properties') ||
+                data.containsKey('agents') ||
+                data.containsKey('developers')) {
+              return FavoriteResponseData.fromJson({"data": data});
+            }
+            return FavoriteResponseData.fromJson(data);
+          }
+          return FavoriteResponseData.fromJson({'data': data});
+          // FavoriteResponseData.fromJson(data as Map<String, dynamic>),
+        }),
+      );
     } on AppException catch (e) {
       log.e('Fetch saved properties failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
@@ -156,7 +197,9 @@ class PropertyServices extends GetxService {
 
   // ── Property Details ────────────────────────────────────────
 
-  FutureResult<PropertyDetailResponseModel> getPropertyDetails(int id) async {
+  FutureResult<SuccessResponseModel<PropertyDetail>> getPropertyDetails(
+    int id,
+  ) async {
     log.i('Fetching property details for id: $id');
     try {
       final response = await dioHelper.request(
@@ -166,7 +209,12 @@ class PropertyServices extends GetxService {
         ),
       );
       log.i('Property details fetched successfully');
-      return Right(PropertyDetailResponseModel.fromJson(response.data));
+      return Right(
+        SuccessResponseModel<PropertyDetail>.fromJson(
+          response.data,
+          (data) => PropertyDetail.fromJson(data as Map<String, dynamic>),
+        ),
+      );
     } on AppException catch (e) {
       log.e('Fetch property details failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
@@ -178,7 +226,7 @@ class PropertyServices extends GetxService {
 
   // ── Property Reviews ────────────────────────────────────────
 
-  FutureResult<ReviewResponse> getReviews(
+  FutureResult<SuccessResponseModel<ReviewResponse>> getReviews(
     int id, {
     int page = 1,
     int perPage = 3,
@@ -197,7 +245,12 @@ class PropertyServices extends GetxService {
         ),
       );
       log.i('Property reviews fetched successfully');
-      return Right(ReviewResponse.fromJson(response.data));
+      return Right(
+        SuccessResponseModel<ReviewResponse>.fromJson(
+          response.data,
+          (data) => ReviewResponse.fromJson(data as Map<String, dynamic>),
+        ),
+      );
     } on AppException catch (e) {
       log.e('Fetch property reviews failed (AppException): ${e.message}');
       return Left(ApiException.map(e));
@@ -235,7 +288,8 @@ class PropertyServices extends GetxService {
 
   // ── Similar Properties ──────────────────────────────────────
 
-  FutureResult<PropertyResponseModel> getSimilarProperties(int id) async {
+  FutureResult<SuccessResponseModel<PropertyResponseModel>>
+  getSimilarProperties(int id) async {
     log.i('Fetching similar properties for id: $id');
     try {
       final response = await dioHelper.request(
@@ -245,7 +299,19 @@ class PropertyServices extends GetxService {
         ),
       );
       log.i('Similar properties fetched successfully');
-      return Right(PropertyResponseModel.fromJson(response.data));
+      return Right(
+        SuccessResponseModel<PropertyResponseModel>.fromJson(response.data, (
+          data,
+        ) {
+          // Handle both Map and List data formats
+          if (data is Map<String, dynamic>) {
+            return PropertyResponseModel.fromJson(data);
+          } else {
+            // If data is a List, wrap it with 'data' key
+            return PropertyResponseModel.fromJson({'data': data});
+          }
+        }),
+      );
     } on AppException catch (e) {
       log.e('Fetch similar properties failed (AppException): ${e.message}');
       return Left(ApiException.map(e));

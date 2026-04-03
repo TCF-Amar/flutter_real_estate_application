@@ -15,21 +15,23 @@ class BookingDetailsController extends GetxController {
   }
 
   final bookingDetails = Rxn<BookingDetailsData>();
-  final bookingDetailsLoading = false.obs;
+  final _bookingDetailsLoading = false.obs;
+  bool get bookingDetailsLoading => _bookingDetailsLoading.value;
+
   final failure = Rxn<Failure>();
 
   Future<void> getBookingDetails() async {
-    bookingDetailsLoading.value = true;
+    _bookingDetailsLoading.value = true;
     failure.value = null;
     final result = await bookingServices.getBookingDetails(bookingId.toInt());
     result.fold(
       (error) {
         failure.value = error;
-        bookingDetailsLoading.value = false;
+        _bookingDetailsLoading.value = false;
       },
       (response) {
         bookingDetails.value = response.data;
-        bookingDetailsLoading.value = false;
+        _bookingDetailsLoading.value = false;
       },
     );
   }

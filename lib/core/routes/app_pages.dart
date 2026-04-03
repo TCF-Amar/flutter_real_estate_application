@@ -19,7 +19,7 @@ import 'package:real_estate_app/features/auth/views/screens/verity_code.dart';
 // Main
 import 'package:real_estate_app/features/main/bindings/main_binding.dart';
 import 'package:real_estate_app/features/main/views/screens/main_screen.dart';
-import 'package:real_estate_app/features/my_booking/bindings/my_bokking_binding.dart';
+import 'package:real_estate_app/features/my_booking/bindings/my_booking_binding.dart';
 import 'package:real_estate_app/features/my_booking/bindings/visit_details_binding.dart';
 import 'package:real_estate_app/features/my_booking/views/screens/booking_details_screen.dart';
 import 'package:real_estate_app/features/my_booking/views/screens/visit/booking_flow_screen.dart';

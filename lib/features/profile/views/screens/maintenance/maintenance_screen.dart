@@ -16,16 +16,18 @@ class MaintenanceScreen extends GetView<MaintenanceController> {
         () => controller.isMaintenanceLoading.value
             ? const Center(child: CircularProgressIndicator())
             : controller.maintenanceList.isEmpty
-                ? const MaintenanceEmptyBody()
-                : const MaintenanceBody(),
+            ? const MaintenanceEmptyBody()
+            : const MaintenanceBody(),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 50),
-        child: AppButton(
-          text: "New Request",
-          onPressed: () => Get.to(() => const MaintenanceRequestScreen()),
-        ),
-      ),
+      bottomNavigationBar: controller.maintenanceList.isEmpty
+          ? null
+          : Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 50),
+              child: AppButton(
+                text: "New Request",
+                onPressed: () => Get.to(() => const MaintenanceRequestScreen()),
+              ),
+            ),
     );
   }
 }

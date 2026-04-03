@@ -16,128 +16,139 @@ class FavoriteCard extends StatelessWidget {
     final controller = Get.find<FavoriteController>();
 
     return GestureDetector(
-      onTap: () => Get.toNamed(
-        AppRoutes.propertyDetails,
-        arguments: {'id': property.id},
-        preventDuplicates: false,
-      ),
-      child: AppContainer(
-        height: 140,
-        padding: const EdgeInsets.all(8),
-        showShadow: true,
-        child: Row(
-          children: [
-            // ── Thumbnail ───────────────────────────────
-            ClipRRect(
-              borderRadius: BorderRadius.circular(14),
-              child: AppImage(
-                path: property.image,
-                height: 110,
-                width: 110,
-                fit: BoxFit.cover,
-                errorIcon: Icons.home_rounded,
-              ),
+      onTap: () => controller.isSelected.value
+          ? controller.toggleSelection(property)
+          : Get.toNamed(
+              AppRoutes.propertyDetails,
+              arguments: {'id': property.id},
+              preventDuplicates: false,
             ),
-
-            // ── Info ────────────────────────────────────
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        if (property.listingCategory != null)
-                          AppTag(
-                            label: property.listingCategory!,
-                            color: Colors.green,
-                          ),
-                        if (property.listingCategory != null)
-                          const SizedBox(width: 6),
-                        if (property.propertyType != null)
-                          AppTag(
-                            label: property.propertyType!,
-                            color: AppColors.primary,
-                          ),
-                        const Spacer(),
-                        InkWell(
-                          onTap: () {
-                            controller.updateFavorite(property);
-                          },
-                          child: Icon(
-                            (property.isFavorited ?? true)
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_border_rounded,
-                            color: AppColors.primary,
-                            size: 22,
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Title
-                    AppText(
-                      property.title ?? "Untitled Property",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.black,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-
-                    // Location
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on_outlined,
-                          size: 12,
-                          color: AppColors.grey,
-                        ),
-                        const SizedBox(width: 3),
-                        Expanded(
-                          child: property.city != null || property.state != null
-                              ? AppText(
-                                  [property.city, property.state]
-                                      .where((e) => e != null && e.isNotEmpty)
-                                      .join(", "),
-                                  fontSize: 11,
-                                  color: AppColors.textSecondary,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                )
-                              : AppText(
-                                  "Location N/A",
-                                  fontSize: 11,
-                                  color: AppColors.textSecondary,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                        ),
-                      ],
-                    ),
-                    // const SizedBox(height: 8),
-                    Spacer(),
-
-                    // Price
-                    Row(
-                      children: [
-                        AppText(
-                          property.formattedPrice ?? "N/A",
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
-                        ),
-                      ],
-                    ),
-                  ],
+      onLongPress: () => controller.toggleSelection(property),
+      child: Obx(
+        () => AppContainer(
+          color: controller.selectedData.contains(property)
+              ? AppColors.primary.withValues(alpha: 0.1)
+              : Colors.white,
+          height: 140,
+          padding: const EdgeInsets.all(8),
+          showShadow: true,
+          child: Row(
+            children: [
+              // ── Thumbnail ───────────────────────────────
+              ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: AppImage(
+                  path: property.image,
+                  height: 110,
+                  width: 110,
+                  fit: BoxFit.cover,
+                  errorIcon: Icons.home_rounded,
                 ),
               ),
-            ),
-          ],
+
+              // ── Info ────────────────────────────────────
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          if (property.listingCategory != null)
+                            AppTag(
+                              label: property.listingCategory!,
+                              color: Colors.green,
+                            ),
+                          if (property.listingCategory != null)
+                            const SizedBox(width: 6),
+                          if (property.propertyType != null)
+                            AppTag(
+                              label: property.propertyType!,
+                              color: AppColors.primary,
+                            ),
+                          const Spacer(),
+                          InkWell(
+                            onTap: () {
+                              controller.isSelected.value
+                                  ? controller.toggleSelection(property)
+                                  : controller.updateFavorite(property);
+                            },
+                            child: Icon(
+                              (property.isFavorited ?? true)
+                                  ? Icons.favorite_rounded
+                                  : Icons.favorite_border_rounded,
+                              color: AppColors.primary,
+                              size: 22,
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Title
+                      AppText(
+                        property.title ?? "Untitled Property",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.black,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+
+                      // Location
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on_outlined,
+                            size: 12,
+                            color: AppColors.grey,
+                          ),
+                          const SizedBox(width: 3),
+                          Expanded(
+                            child:
+                                property.city != null || property.state != null
+                                ? AppText(
+                                    [property.city, property.state]
+                                        .where((e) => e != null && e.isNotEmpty)
+                                        .join(", "),
+                                    fontSize: 11,
+                                    color: AppColors.textSecondary,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : AppText(
+                                    "Location N/A",
+                                    fontSize: 11,
+                                    color: AppColors.textSecondary,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                          ),
+                        ],
+                      ),
+                      // const SizedBox(height: 8),
+                      Spacer(),
+
+                      // Price
+                      Row(
+                        children: [
+                          AppText(
+                            property.formattedPrice ?? "N/A",
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primary,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

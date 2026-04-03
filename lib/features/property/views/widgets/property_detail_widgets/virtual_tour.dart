@@ -21,22 +21,25 @@ class VirtualTour extends StatelessWidget {
     if (virtualTours.isEmpty) return const SizedBox();
 
     final url = virtualTours.first.url;
-    return Container(
+    return AppContainer(
+      onTap: () => Get.dialog(AppPanoramaView(path: url)),
       margin: const EdgeInsets.only(top: 25),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppText.large("360° Virtual Tour"),
-          Container(
+          AppContainer(
             margin: const EdgeInsets.only(top: 16),
             width: double.infinity,
+            borderRadius: BorderRadius.circular(8),
 
             height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Colors.grey[300],
+
+            child: AppImage(
+              path: url,
+              // radius: BorderRadius.circular(8),
+              fit: BoxFit.cover,
             ),
-            child: AppPanoramaView(path: url),
           ),
         ],
       ),

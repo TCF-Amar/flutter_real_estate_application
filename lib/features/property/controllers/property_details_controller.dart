@@ -81,7 +81,7 @@ class PropertyDetailsController extends GetxController {
       (r) {
         _error.value = null;
         log.d(
-          'Fetched property details — images: ${r.data?.media?.images.length}',
+          'Fetched property details — images: ${r.data.media?.images.length}',
         );
         _propertyDetail.value = r.data;
       },
@@ -150,9 +150,9 @@ class PropertyDetailsController extends GetxController {
         _currentPage--; // roll back on failure
       },
       (r) {
-        _reviews.addAll(r.data.reviews);
-        _pagination.value = r.data.pagination;
-        _reviewsSummary.value = r.data.reviewsSummary;
+        _reviews.addAll(r.data.data.reviews);
+        _pagination.value = r.data.data.pagination;
+        _reviewsSummary.value = r.data.data.reviewsSummary;
         log.d(
           'Loaded more reviews — page $_currentPage, total ${_reviews.length}',
         );
@@ -182,10 +182,10 @@ class PropertyDetailsController extends GetxController {
     _isLoadingReviews.value = true;
     final result = await _propertyServices.getReviews(id, page: page);
     result.fold((l) => log.e('Error fetching reviews: ${l.message}'), (r) {
-      log.d('Fetched reviews: ${r.data.reviews.length}');
-      _reviews.value = r.data.reviews;
-      _pagination.value = r.data.pagination;
-      _reviewsSummary.value = r.data.reviewsSummary;
+      log.d('Fetched reviews: ${r.data.data.reviews.length}');
+      _reviews.value = r.data.data.reviews;
+      _pagination.value = r.data.data.pagination;
+      _reviewsSummary.value = r.data.data.reviewsSummary;
     });
     _isLoadingReviews.value = false;
   }
@@ -204,8 +204,8 @@ class PropertyDetailsController extends GetxController {
     result.fold(
       (l) => log.e('Error fetching similar properties: ${l.message}'),
       (r) {
-        log.d('Fetched similar properties: ${r.data.length}');
-        _similarProperties.value = r.data;
+        log.d('Fetched similar properties: ${r.data.properties.length}');
+        _similarProperties.value = r.data.properties;
       },
     );
     _isLoadingSimilar.value = false;

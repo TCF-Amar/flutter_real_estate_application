@@ -147,6 +147,16 @@ class MyBookingController extends GetxController {
     log.d(
       "Filtered lists update - Pending: ${pendingVisitList.length}, Cancelled: ${cancelledVisitList.length}, Completed: ${completedVisitList.length}",
     );
+
+    // Fetch more if pending list has fewer than 10 items
+    if (pendingVisitList.length < 10 && pendingVisitList.isNotEmpty) {
+      loadMoreVisits();
+    }
+
+    // Fetch more if cancelled list has fewer than 10 items
+    if (cancelledVisitList.length < 10 && cancelledVisitList.isNotEmpty) {
+      loadMoreVisits();
+    }
   }
 
   /// BOOK VISIT
@@ -211,7 +221,8 @@ class MyBookingController extends GetxController {
           myBookings.addAll(response.data.bookings);
           bkpl.addAll(
             response.data.bookings.map(
-              (e) => Bkp(pid: e.property!.id, title: e.property!.title ?? "N/A"),
+              (e) =>
+                  Bkp(pid: e.property!.id, title: e.property!.title ?? "N/A"),
             ),
           );
         }

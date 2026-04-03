@@ -172,4 +172,16 @@ class FavoriteController extends GetxController {
       },
     );
   }
+
+  final isSelected = false.obs;
+  final RxList<FavoriteProperty> selectedData = RxList<FavoriteProperty>();
+
+  void toggleSelection(FavoriteProperty property) {
+    if (selectedData.contains(property)) {
+      selectedData.remove(property);
+    } else {
+      selectedData.add(property);
+    }
+    isSelected.value = selectedData.isNotEmpty;
+  }
 }

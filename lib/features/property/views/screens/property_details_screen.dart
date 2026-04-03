@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide Title;
 import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
 import 'package:real_estate_app/core/routes/app_routes.dart';
+import 'package:real_estate_app/core/utils/share_util.dart';
 import 'package:real_estate_app/features/property/views/widgets/property_detail_widgets/index.dart';
 import 'package:real_estate_app/features/property/controllers/property_details_controller.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
@@ -15,7 +16,17 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
     return Scaffold(
       body: Obx(() {
         if (controller.isLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+
+              children: [
+                CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                AppText.small("Holding on tight, fetching property details..."),
+              ],
+            ),
+          );
         }
 
         final property = controller.propertyDetail;
@@ -58,7 +69,9 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                     backgroundColor: AppColors.black.withValues(alpha: 0.4),
                   ),
                   icon: const Icon(Icons.share, color: Colors.white),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await ShareUtil.shareProperty(property.shareData!);
+                  },
                 ),
                 SizedBox(width: 8),
               ],
@@ -179,7 +192,7 @@ class PropertyDetailsScreen extends GetView<PropertyDetailsController> {
                               fontWeight: FontWeight.bold,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            AppText( 
+                            AppText(
                               "${property.address?.city ?? ''} ${property.address?.country ?? ''}",
                               fontSize: 10,
                               color: AppColors.grey,

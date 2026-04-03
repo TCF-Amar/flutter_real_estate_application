@@ -161,7 +161,9 @@ class AppContainer extends StatelessWidget {
       image: image,
       backgroundBlendMode: backgroundBlendMode, // ✅ applied
       border: border ?? (useSolidBorder ? _buildBorderFromSideType() : null),
-      borderRadius: shape == BoxShape.circle ? null : borderRadius,
+      borderRadius: shape == BoxShape.circle
+          ? BorderRadius.circular(16)
+          : borderRadius,
       boxShadow: _buildShadows(),
       shape: shape ?? BoxShape.rectangle,
     );

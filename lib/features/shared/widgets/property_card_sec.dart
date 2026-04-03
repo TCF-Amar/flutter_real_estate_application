@@ -37,16 +37,13 @@ class ModernPropertyCard extends StatelessWidget {
         child: Stack(
           children: [
             /// PROPERTY IMAGE
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: AppImage(
-                path: property.media.images.isNotEmpty == true
-                    ? property.media.images.first.url
-                    : null,
-                width: double.infinity,
-                height: 240,
-                fit: BoxFit.cover,
-              ),
+            AppImage(
+              path: property.media.images.isNotEmpty == true
+                  ? property.media.images.first.url
+                  : null,
+              width: double.infinity,
+              height: 240,
+              fit: BoxFit.cover,
             ),
 
             /// GRADIENT OVERLAY
