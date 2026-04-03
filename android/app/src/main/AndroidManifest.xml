@@ -54,6 +54,10 @@
                     android:scheme="https"
                     android:host="backend-realstate.hktechlabs.com"
                     android:pathPrefix="/property"/>
+                <data
+                    android:scheme="http"
+                    android:host="backend-realstate.hktechlabs.com"
+                    android:pathPrefix="/property"/>
             </intent-filter>
 
             <!-- Handles: https://backend-realstate.hktechlabs.com/agent/* -->
@@ -64,6 +68,10 @@
 
                 <data
                     android:scheme="https"
+                    android:host="backend-realstate.hktechlabs.com"
+                    android:pathPrefix="/agent"/>
+                <data
+                    android:scheme="http"
                     android:host="backend-realstate.hktechlabs.com"
                     android:pathPrefix="/agent"/>
             </intent-filter>

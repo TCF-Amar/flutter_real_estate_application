@@ -1,4 +1,4 @@
-package com.example.real_estate_app
+package com.realestate.user
 
 import io.flutter.embedding.android.FlutterActivity
 
