@@ -226,7 +226,7 @@ class PropertyServices extends GetxService {
 
   // ── Property Reviews ────────────────────────────────────────
 
-  FutureResult<SuccessResponseModel<ReviewResponse>> getReviews(
+  FutureResult<SuccessResponseModel<ReviewData>> getReviews(
     int id, {
     int page = 1,
     int perPage = 3,
@@ -246,9 +246,9 @@ class PropertyServices extends GetxService {
       );
       log.i('Property reviews fetched successfully');
       return Right(
-        SuccessResponseModel<ReviewResponse>.fromJson(
+        SuccessResponseModel<ReviewData>.fromJson(
           response.data,
-          (data) => ReviewResponse.fromJson(data as Map<String, dynamic>),
+          (data) => ReviewData.fromJson(data as Map<String, dynamic>),
         ),
       );
     } on AppException catch (e) {

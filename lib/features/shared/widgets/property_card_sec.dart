@@ -110,6 +110,7 @@ class ModernPropertyCard extends StatelessWidget {
               right: 12,
               bottom: 12,
               child: Container(
+                constraints: const BoxConstraints(maxHeight: 70),
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.92),
@@ -125,7 +126,11 @@ class ModernPropertyCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          AppText(property.title),
+                          AppText(
+                            property.title,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
                           const SizedBox(height: 4),
                           Row(
                             children: [
@@ -135,6 +140,8 @@ class ModernPropertyCard extends StatelessWidget {
                                 child: AppText(
                                   "${property.locality?.capitalize}, ${property.state?.capitalize}",
                                   fontSize: 10,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                 ),
                               ),
                             ],

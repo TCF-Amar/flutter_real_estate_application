@@ -165,9 +165,9 @@ class PropertyDetailsController extends GetxController {
         _currentPage--; // roll back on failure
       },
       (r) {
-        _reviews.addAll(r.data.data.reviews);
-        _pagination.value = r.data.data.pagination;
-        _reviewsSummary.value = r.data.data.reviewsSummary;
+        _reviews.addAll(r.data.reviews);
+        _pagination.value = r.data.pagination;
+        _reviewsSummary.value = r.data.reviewsSummary;
         log.d(
           'Loaded more reviews — page $_currentPage, total ${_reviews.length}',
         );
@@ -197,10 +197,10 @@ class PropertyDetailsController extends GetxController {
     _isLoadingReviews.value = true;
     final result = await _propertyServices.getReviews(id, page: page);
     result.fold((l) => log.e('Error fetching reviews: ${l.message}'), (r) {
-      log.d('Fetched reviews: ${r.data.data.reviews.length}');
-      _reviews.value = r.data.data.reviews;
-      _pagination.value = r.data.data.pagination;
-      _reviewsSummary.value = r.data.data.reviewsSummary;
+      log.d('Fetched reviews: ${r.data.reviews.length}');
+      _reviews.value = r.data.reviews;
+      _pagination.value = r.data.pagination;
+      _reviewsSummary.value = r.data.reviewsSummary;
     });
     _isLoadingReviews.value = false;
   }

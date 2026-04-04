@@ -82,8 +82,7 @@ class PropertyUnitModel {
         status: toStr(json['status']),
         availableUnits: toInt(json['available_units']),
         totalUnits: toInt(json['total_units']),
-        floorPlanImage:
-            "${Environments.baseUrl}${toStr(json['floor_plan_image'])}",
+        floorPlanImage: toStr(json['floor_plan_image']),
       );
 
   Map<String, dynamic> toJson() => {
