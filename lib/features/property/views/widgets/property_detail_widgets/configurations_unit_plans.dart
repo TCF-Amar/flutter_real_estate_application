@@ -206,6 +206,7 @@ class ConfigurationsUnitPlans extends StatelessWidget {
     required PropertyUnitModel unit,
     required BuildContext context,
   }) {
+    final imageTypePdf = imageUrl?.endsWith('.pdf') ?? false;
     return GestureDetector(
       onTap: () => _openPlan(unit),
       child: Container(
@@ -217,23 +218,10 @@ class ConfigurationsUnitPlans extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: imageUrl != null
-              ? Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => _imageError(),
-                )
-              : _imageError(),
+          child: imageTypePdf
+              ? Icon(Icons.picture_as_pdf, size: 50)
+              : AppImage(path: imageUrl),
         ),
-      ),
-    );
-  }
-
-  Widget _imageError() {
-    return Container(
-      color: AppColors.grey.withValues(alpha: 0.05),
-      child: const Center(
-        child: Icon(Icons.image_not_supported, color: AppColors.grey),
       ),
     );
   }
@@ -251,19 +239,38 @@ class ConfigurationsUnitPlans extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (_) {
-        return ListView(
-          children: units.map((unit) {
-            return ListTile(
-              title: Text("${unit.bhk ?? '-'} BHK • ${unit.unitNumber ?? ''}"),
-              subtitle: Text(
-                "₹${unit.price ?? '-'} • ${unit.areaSqft ?? '-'} sqft",
+        return AppContainer(
+          constraints: BoxConstraints(maxHeight: Get.height * 0.8),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              const SizedBox(height: 8),
+              AppContainer(
+                height: 4,
+                width: 50,
+                color: AppColors.grey.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(8),
               ),
-              onTap: () {
-                Navigator.pop(context);
-                _openPlan(unit);
-              },
-            );
-          }).toList(),
+              const SizedBox(height: 8),
+              AppText.large("Select Unit"),
+              Divider(),
+              ListView(
+                shrinkWrap: true,
+                children: units.map((unit) {
+                  return ListTile(
+                    title: Text("${unit.bhk ?? '•'} ${unit.unitNumber ?? ''}"),
+                    subtitle: Text(
+                      "₹${unit.price ?? '-'} • ${unit.areaSqft ?? '-'} sqft",
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _openPlan(unit);
+                    },
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
         );
       },
     );

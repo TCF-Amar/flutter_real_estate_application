@@ -71,15 +71,17 @@ class _AppPanoramaViewState extends State<AppPanoramaView> {
                       ),
                     )
                   : PanoramaViewer(
+                      // maxZoom: 200,
+                      // zoom: 100,
+                      // minZoom: 100,
                       child: Image.network(
                         imageUrl,
                         fit: BoxFit.cover,
+
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                              if (mounted) {
-                                // setState(() => _isLoading = false);
-                              }
+                              if (mounted) {}
                             });
                             return child;
                           }

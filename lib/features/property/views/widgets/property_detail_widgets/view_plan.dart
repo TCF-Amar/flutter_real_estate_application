@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/features/property/models/property_unit_model.dart';
+import 'package:real_estate_app/features/shared/widgets/app_image.dart';
+import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ViewPlan extends StatelessWidget {
   final PropertyUnitModel unit;
@@ -10,7 +12,8 @@ class ViewPlan extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: SizedBox(
+      child: AppContainer(
+        padding: const EdgeInsets.all(12),
         width: double.maxFinite,
         child: SingleChildScrollView(
           child: Column(
@@ -39,22 +42,23 @@ class ViewPlan extends StatelessWidget {
 
               /// Floor Plan Image 🔥
               if (unit.floorPlanImage != null)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: SizedBox(
-                    height: 250,
-                    child: InteractiveViewer(
-                      panEnabled: true,
-                      minScale: 1,
-                      maxScale: 4,
-                      child: Image.network(
-                        unit.floorPlanImage!,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                      ),
-                    ),
-                  ),
-                )
+                unit.floorPlanImage!.endsWith(".pdf")
+                    ? Container(
+                        height: 250,
+                        child: AppPdfViewer(url: unit.floorPlanImage!),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: SizedBox(
+                          height: 250,
+                          child: InteractiveViewer(
+                            panEnabled: true,
+                            minScale: 1,
+                            maxScale: 4,
+                            child: AppImage(path: unit.floorPlanImage),
+                          ),
+                        ),
+                      )
               else
                 const Padding(
                   padding: EdgeInsets.all(20),

@@ -1,4 +1,3 @@
-import 'package:real_estate_app/core/constants/environments.dart';
 import 'package:real_estate_app/core/utils/safe_parser.dart';
 
 class PropertyUnitModel {
