@@ -286,14 +286,7 @@ class PaymentTrackerScreen extends StatelessWidget {
                           const Icon(
                             Icons.download_outlined,
                             color: AppColors.primary,
-                            size: 14,
-                          ),
-                          const SizedBox(width: 4),
-                          const AppText(
-                            "Download",
-                            color: AppColors.primary,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                            size: 18,
                           ),
                         ],
                       ),

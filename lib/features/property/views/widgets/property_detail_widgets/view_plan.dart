@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:real_estate_app/features/property/models/property_unit_model.dart';
-import 'package:real_estate_app/features/shared/widgets/app_image.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
 class ViewPlan extends StatelessWidget {
@@ -43,7 +42,7 @@ class ViewPlan extends StatelessWidget {
               /// Floor Plan Image 🔥
               if (unit.floorPlanImage != null)
                 unit.floorPlanImage!.endsWith(".pdf")
-                    ? Container(
+                    ? SizedBox(
                         height: 250,
                         child: AppPdfViewer(url: unit.floorPlanImage!),
                       )

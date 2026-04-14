@@ -39,15 +39,26 @@ class ReviewData {
 
   factory ReviewData.fromJson(Map<String, dynamic> json) {
     return ReviewData(
-      reviewsSummary: ReviewSummaryModel.fromJson(
-        json['reviews_summary'] as Map<String, dynamic>,
-      ),
-      reviews: (json['reviews'] as List<dynamic>)
-          .map((e) => ReviewModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      pagination: PaginationModel.fromJson(
-        json['pagination'] as Map<String, dynamic>,
-      ),
+      reviewsSummary: json['reviews_summary'] != null
+          ? ReviewSummaryModel.fromJson(
+              json['reviews_summary'] is Map<String, dynamic>
+                  ? json['reviews_summary'] as Map<String, dynamic>
+                  : {},
+            )
+          : ReviewSummaryModel.empty(),
+      reviews: (json['reviews'] as List?)
+              ?.map((e) => e is Map<String, dynamic>
+                  ? ReviewModel.fromJson(e)
+                  : ReviewModel.fromJson({}))
+              .toList() ??
+          [],
+      pagination: json['pagination'] != null
+          ? PaginationModel.fromJson(
+              json['pagination'] is Map<String, dynamic>
+                  ? json['pagination'] as Map<String, dynamic>
+                  : {},
+            )
+          : PaginationModel.empty(),
     );
   }
 

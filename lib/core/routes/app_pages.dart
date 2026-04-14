@@ -24,6 +24,7 @@ import 'package:real_estate_app/features/my_booking/bindings/visit_details_bindi
 import 'package:real_estate_app/features/my_booking/views/screens/booking_details_screen.dart';
 import 'package:real_estate_app/features/my_booking/views/screens/visit/booking_flow_screen.dart';
 import 'package:real_estate_app/features/my_booking/views/screens/visit/visit_details_screen.dart';
+import 'package:real_estate_app/features/my_booking/views/widgets/booking/document_screen.dart';
 import 'package:real_estate_app/features/search/bindings/search_binding.dart';
 
 // Search
@@ -152,6 +153,12 @@ class AppPages {
       name: AppRoutes.transactionHistory,
       page: () => const TransactionHistory(),
       binding: TransactionBinding(),
+    ),
+
+    GetPage(
+      name: AppRoutes.document,
+      page: () => DocumentScreen(documents: Get.arguments),
+      // binding: MyBookingBinding(),
     ),
   ];
 }

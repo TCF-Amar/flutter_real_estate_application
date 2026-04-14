@@ -26,23 +26,28 @@ class BookingDetailsScreen extends StatelessWidget {
     return Scaffold(
       body: Obx(() {
         final bookingDetailsData = controller.bookingDetails.value;
-        if (controller.failure.value != null) {
-          return Center(child: Text(controller.failure.value!.message));
+        final failure = controller.failure.value;
+
+        if (failure != null) {
+          return Center(child: Text(failure.message));
         }
 
         if (controller.bookingDetailsLoading) {
           return Center(child: CircularProgressIndicator());
         }
-        // if (bookingDetailsData == null) {
-        //   return Center(child: Text("No booking details found"));
-        // }
-        final summary = bookingDetailsData?.bookingSummary;
-        final propertyDetail = bookingDetailsData?.propertyDetail;
-        final projectOverview = bookingDetailsData?.projectOverview;
-        final latestUpdate = bookingDetailsData?.latestUpdate;
-        final siteVisitSummary = bookingDetailsData?.siteVisitSummary;
-        final ownerDetail = bookingDetailsData?.ownerDetail;
-        final paymentTracker = bookingDetailsData?.paymentTracker;
+
+        if (bookingDetailsData == null) {
+          return Center(child: Text("No booking details found"));
+        }
+
+        final summary = bookingDetailsData.bookingSummary;
+        final propertyDetail = bookingDetailsData.propertyDetail;
+        final projectOverview = bookingDetailsData.projectOverview;
+        final latestUpdate = bookingDetailsData.latestUpdate;
+        final siteVisitSummary = bookingDetailsData.siteVisitSummary;
+        final ownerDetail = bookingDetailsData.ownerDetail;
+        final paymentTracker = bookingDetailsData.paymentTracker;
+
 
         return Scaffold(
           body: CustomScrollView(
@@ -54,11 +59,9 @@ class BookingDetailsScreen extends StatelessWidget {
                 ),
                 title: AppText.large("Booking Details"),
                 centerTitle: true,
-                // floating: true,
-                // snap: true,
                 pinned: true,
                 expandedHeight: 280,
-                flexibleSpace: BookingHeaderSection(property: propertyDetail!),
+                flexibleSpace: BookingHeaderSection(property: propertyDetail),
               ),
 
               // gallery
@@ -73,12 +76,12 @@ class BookingDetailsScreen extends StatelessWidget {
               // latest update
               if (latestUpdate != null && propertyDetail.isUnderConstruction)
                 LatestUpdateSection(update: latestUpdate),
-              BookedSummary(summary: summary!, property: propertyDetail),
+              BookedSummary(summary: summary, property: propertyDetail),
 
               if (paymentTracker != null && paymentTracker.events.isNotEmpty)
                 PaymentTracker(
                   tracker: paymentTracker,
-                  bookingDetailsData: bookingDetailsData!,
+                  bookingDetailsData: bookingDetailsData,
                 ),
 
               if (siteVisitSummary != null)

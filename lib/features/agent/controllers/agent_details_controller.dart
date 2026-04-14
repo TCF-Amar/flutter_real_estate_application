@@ -170,13 +170,14 @@ class AgentDetailsController extends GetxController {
   }
 
   Future<void> loadMoreReviews() async {
-    if (!hasMore || _isLoadingMoreReviews.value) return;
+    final agent = agentDetails;
+    if (!hasMore || _isLoadingMoreReviews.value || agent == null) return;
 
     _currentPage++;
     _isLoadingMoreReviews.value = true;
 
     final result = await agentServices.getReviews(
-      agentDetails!.id,
+      agent.id,
       page: _currentPage,
     );
     result.fold(
@@ -256,6 +257,26 @@ class AgentDetailsController extends GetxController {
     required String email,
     required String message,
   }) async {
-    return true;
+    if (agentDetails == null) {
+      log.e('Cannot send enquiry: agent details not loaded');
+      return false;
+    }
+
+    _isSendingEnquiry.value = true;
+    try {
+      final result = await agentServices.sendAgentEnquiry(
+        agentDetails!.id,
+        EnquiryRequestModel(
+          name: name,
+          phone: phone,
+          email: email,
+          message: message,
+        ),
+      );
+
+      return result == true;
+    } finally {
+      _isSendingEnquiry.value = false;
+    }
   }
 }

@@ -1,4 +1,7 @@
+import 'package:logger/logger.dart';
 import 'package:real_estate_app/core/utils/safe_parser.dart';
+
+final log = Logger();
 
 class ReviewSummaryModel {
   final int? totalReviews;
@@ -24,7 +27,8 @@ class ReviewSummaryModel {
               )
             : null,
       );
-    } catch (_) {
+    } catch (e) {
+      log.e('Failed to parse ReviewSummaryModel: $e');
       return const ReviewSummaryModel(
         totalReviews: null,
         averageRating: null,
@@ -62,7 +66,8 @@ class RatingBreakdown {
         four: toInt(json['4']),
         five: toInt(json['5']),
       );
-    } catch (_) {
+    } catch (e) {
+      log.e('Failed to parse RatingBreakdown: $e');
       return const RatingBreakdown(
         one: null,
         two: null,

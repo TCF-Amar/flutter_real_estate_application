@@ -21,6 +21,19 @@ enum MaintenanceStatus {
         return "Closed";
     }
   }
+
+  /// Parse from API response, handling both snake_case and camelCase
+  static MaintenanceStatus fromApi(dynamic value) {
+    if (value == null) return open;
+    final normalized = value.toString().toLowerCase();
+    // Handle snake_case variants from API
+    if (normalized == 'in_progress') return inProgress;
+    // Match enum name directly
+    return MaintenanceStatus.values.firstWhere(
+      (e) => e.name.toLowerCase() == normalized,
+      orElse: () => open,
+    );
+  }
 }
 
 class MaintenanceRequestModel {
@@ -55,10 +68,7 @@ class MaintenanceRequestModel {
       title: json['title'] ?? '',
       category: json['category'] ?? '',
       priority: json['priority'] ?? '',
-      status: MaintenanceStatus.values.firstWhere(
-        (e) => e.name == json['status'],
-        orElse: () => MaintenanceStatus.open,
-      ),
+      status: MaintenanceStatus.fromApi(json['status']),
       property: json['property'] != null
           ? MaintenanceProperty.fromJson(json['property'])
           : null,
@@ -181,14 +191,13 @@ class MaintenanceDetailModel {
       description: json['description'] ?? '',
       category: json['category'] ?? '',
       priority: json['priority'] ?? '',
-      status: MaintenanceStatus.values.firstWhere(
-        (e) => e.name == json['status'],
-        orElse: () => MaintenanceStatus.open,
-      ),
+      status: MaintenanceStatus.fromApi(json['status']),
       property: json['property'] != null
           ? MaintenanceProperty.fromJson(json['property'])
           : null,
-      media: MaintenanceMedia.fromJson(json['media'] ?? {}),
+      media: json['media'] != null
+          ? MaintenanceMedia.fromJson(json['media'])
+          : MaintenanceMedia(images: [], videos: []),
       assignedTo: json['assigned_to'] != null
           ? MaintenanceTechnician.fromJson(json['assigned_to'])
           : null,

@@ -32,7 +32,11 @@ class ProfileOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ProfileController>();
-    final user = controller.user.value!;
+    final user = controller.user.value;
+
+    if (user == null) {
+      return const Center(child: Text('User not logged in'));
+    }
 
     final List<ProfileOptionItem> items = [
       ProfileOptionItem(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:real_estate_app/core/constants/app_colors.dart';
+import 'package:real_estate_app/core/routes/app_routes.dart';
 import 'package:real_estate_app/features/my_booking/models/booking_detail_model.dart';
 import 'package:real_estate_app/features/shared/widgets/index.dart';
 
@@ -159,7 +161,9 @@ class BookedSummary extends StatelessWidget {
               showShadow: false,
               isBorder: true,
               borderColor: AppColors.textSecondary,
-              onPressed: () {},
+              onPressed: () {
+                Get.toNamed(AppRoutes.document, arguments: property.documents);
+              },
             ),
           ],
         ),

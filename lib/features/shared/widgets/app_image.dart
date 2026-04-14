@@ -38,7 +38,6 @@ class AppImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(path);
     final url = _imageUrl();
 
     if (url.isEmpty) {

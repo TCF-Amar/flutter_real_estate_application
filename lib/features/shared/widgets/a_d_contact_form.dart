@@ -76,7 +76,7 @@ class _ADContactFormState extends State<ADContactForm> {
               ),
               SizedBox(height: 10),
               AppTextFormField(
-                controller: TextEditingController(),
+                controller: nameController,
                 hintText: "Name",
                 showBorder: true,
                 borderColor: AppColors.grey.withValues(alpha: 0.2),
@@ -89,7 +89,7 @@ class _ADContactFormState extends State<ADContactForm> {
               ),
               SizedBox(height: 10),
               AppTextFormField(
-                controller: TextEditingController(),
+                controller: phoneController,
                 hintText: "Phone",
                 showBorder: true,
                 borderColor: AppColors.grey.withValues(alpha: 0.2),
@@ -102,8 +102,8 @@ class _ADContactFormState extends State<ADContactForm> {
               ),
               SizedBox(height: 10),
               AppTextFormField(
-                controller: TextEditingController(),
-                hintText: "email",
+                controller: emailController,
+                hintText: "Email",
                 showBorder: true,
                 borderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
@@ -115,7 +115,7 @@ class _ADContactFormState extends State<ADContactForm> {
               ),
               SizedBox(height: 10),
               AppTextFormField(
-                controller: TextEditingController(),
+                controller: messageController,
                 hintText: "Message",
                 keyboardType: TextInputType.text,
                 maxLines: 5,
@@ -123,7 +123,7 @@ class _ADContactFormState extends State<ADContactForm> {
                 borderColor: AppColors.grey.withValues(alpha: 0.2),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Please enter a name";
+                    return "Please enter a message";
                   }
                   return null;
                 },

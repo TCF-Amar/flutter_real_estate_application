@@ -171,8 +171,8 @@ class PropertyDetail {
           json['is_favorited'] == true ||
           json['is_favorited'] == 1 ||
           json['is_favorited']?.toString() == "true",
-      deepLink: json['deep_link'] as String?,
-      shareData: json['share_data'] != null
+      deepLink: json['deep_link'] is String ? json['deep_link'] as String? : null,
+      shareData: json['share_data'] != null && json['share_data'] is Map<String, dynamic>
           ? ShareData.fromJson(json['share_data'])
           : null,
     );

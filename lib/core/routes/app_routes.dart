@@ -51,6 +51,7 @@ class AppRoutes {
 
   static const String changePassword = "$profile/change-password";
 
-  static String bookingDetails = "$profile/$property/booking/details";
+  static String bookingDetails = "$property/booking/details";
   static const String transactionHistory = "$profile/transactions";
+  static final String document = "$bookingDetails/document";
 }

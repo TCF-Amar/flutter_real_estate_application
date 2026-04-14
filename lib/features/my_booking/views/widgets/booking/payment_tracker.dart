@@ -87,7 +87,7 @@ class PaymentTracker extends StatelessWidget {
               PaymentEvent event = entry.value;
               return _buildRow(event, index);
             }),
-            if (tracker.events.length > 3) ...[
+            ...[
               const SizedBox(height: 16),
               AppButton(
                 text: "View all",
